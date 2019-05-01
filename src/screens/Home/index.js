@@ -13,7 +13,7 @@ export default class Home extends React.Component {
         return (
             <>
             <Tabbars />
-            <View style={Style.container}></View>
+
             <FooterTabs />
             </>
         );
