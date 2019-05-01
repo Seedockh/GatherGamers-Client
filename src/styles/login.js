@@ -3,10 +3,10 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';;
 
 export default StyleSheet.create({
     keyboardAvoiding: {
-        flex: 1,
+        flex: 3,
         flexDirection: 'column',
         paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight,
-        alignItems: 'center'
+        alignItems: 'center',
     },
 
     mainContainer: {
@@ -34,7 +34,7 @@ export default StyleSheet.create({
     },
 
     button: {
-        backgroundColor: "#B6151F", 
+        backgroundColor: "#000", 
         width: vmin(60), 
         justifyContent: 'center',
         alignSelf: 'center'
@@ -46,7 +46,20 @@ export default StyleSheet.create({
         width: vmin(100),
     },
 
-    centerText: {
+    connectText: {
         color: 'white',
+    },
+
+    formContainer : {
+        flex: 1,
+    },
+
+    touchableOpacity: {
+        padding: 2,
+        alignItems: "center"
+    },
+
+    formText: {
+        color: "#000"
     }
 });
