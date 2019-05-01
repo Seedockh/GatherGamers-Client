@@ -40,7 +40,7 @@ export default class Home extends React.Component {
                                 <Input />
                             </Item>
                             <Item floatingLabel style={Style.item}>
-                                <Label>Mot de Passe</Label>
+                                <Label>Password</Label>
                                 <Input secureTextEntry={true} />
                             </Item>
                         </Form>
@@ -49,7 +49,7 @@ export default class Home extends React.Component {
                             (
                                 <View style={Style.buttonContainer}>
                                     <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                        <Text style={Style.connectText}>Connexion</Text>
+                                        <Text style={Style.connectText}>Sign In</Text>
                                     </Button>
                                 </View>
                             ) : (
