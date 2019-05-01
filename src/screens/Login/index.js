@@ -16,7 +16,7 @@ export default class Home extends React.Component {
         this.props.navigation.navigate('Home')
     }
 
-    registerPress = async () => {
+    onRegisterPress = async () => {
         this.props.navigation.navigate('Register')
     }
 
@@ -64,7 +64,7 @@ export default class Home extends React.Component {
                 </KeyboardAvoidingView>
 
                 <View style={Style.formContainer}>
-                    <TouchableOpacity onPress={this.registerPress.bind(this)} style={Style.touchableOpacity}>
+                    <TouchableOpacity onPress={this.onRegisterPress.bind(this)} style={Style.touchableOpacity}>
                         <Text style={Style.formText} >Create an account here</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={Style.touchableOpacity}>

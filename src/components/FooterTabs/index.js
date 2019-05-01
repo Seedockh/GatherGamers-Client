@@ -8,6 +8,10 @@ export default class FooterTabs extends React.Component {
         this.state = {}
     }
 
+    onProfilePress =  () => {
+        this.props.navigation.navigate('Profile')
+    }
+
     render() {
         return (
             <Footer>
@@ -18,7 +22,7 @@ export default class FooterTabs extends React.Component {
                     <Button>
                         <Text>Games</Text>
                     </Button>
-                    <Button>
+                    <Button onPress={this.onProfilePress.bind(this)}>
                         <Text>Profile</Text>
                     </Button>
                     <Button>
