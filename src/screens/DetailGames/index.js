@@ -24,6 +24,10 @@ export default class DetailGames extends React.Component {
         this.props.navigation.navigate('GamersAround')
     }
 
+    onCreateEvent() {
+        this.props.navigation.navigate('CreateEvent')
+    }
+
     render() {
         return (
             <>
@@ -46,7 +50,7 @@ export default class DetailGames extends React.Component {
                     </View>
 
                     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-                        <Button block light style={{ marginVertical: 8 }}>
+                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onCreateEvent()}>
                             <Text>Create Event</Text>
                         </Button>
                         <Button block light style={{ marginVertical: 8 }} onPress={() => this.onJoinEvent()}>

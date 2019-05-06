@@ -9,6 +9,7 @@ import JoinEvent from './screens/JoinEvent'
 import DetailEvents from './screens/DetailEvents'
 import GamersAround from './screens/GamersAround'
 import Friends from './screens/Friends'
+import CreateEvent from './screens/CreateEvent'
 
 const AppNavigator = createStackNavigator({
     Login: {
@@ -55,10 +56,13 @@ const AppNavigator = createStackNavigator({
     },
     Friends: {
         screen: Friends
+    },
+    CreateEvent : {
+        screen: CreateEvent
     }
 },
     {
-        initialRouteName: 'Friends',
+        initialRouteName: 'CreateEvent',
         headerMode: 'float'
     });
 
