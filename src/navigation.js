@@ -5,6 +5,8 @@ import Register from './screens/Register'
 import Profile from './screens/Profile'
 import Games from './screens/Games'
 import DetailGames from './screens/DetailGames'
+import JoinEvent from './screens/JoinEvent'
+import DetailEvents from './screens/DetailEvents'
 
 const AppNavigator = createStackNavigator({
     Login: {
@@ -39,10 +41,16 @@ const AppNavigator = createStackNavigator({
     },
     DetailGames: {
         screen: DetailGames,
+    },
+    JoinEvent: {
+        screen: JoinEvent,
+    },
+    DetailEvents: {
+        screen: DetailEvents
     }
 },
     {
-        initialRouteName: 'DetailGames',
+        initialRouteName: 'DetailEvents',
         headerMode: 'float'
     });
 
