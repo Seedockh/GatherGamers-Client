@@ -62,7 +62,7 @@ const AppNavigator = createStackNavigator({
     }
 },
     {
-        initialRouteName: 'CreateEvent',
+        initialRouteName: 'Profile',
         headerMode: 'float'
     });
 
