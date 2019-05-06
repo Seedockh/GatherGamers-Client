@@ -1,5 +1,9 @@
-const NODE_ENV = "dev"
-const LOCAL_API_URL = "http://10.3.3.21:3000/api/auth/register"
-const HEROKU_API_URL = "https://gathergamers.herokuapp.com/api/auth/register"
+const localIPAdress = "10.3.3.21"
 
-export default {NODE_ENV, LOCAL_API_URL, HEROKU_API_URL}
+export default {
+    NODE_ENV: "dev",
+    LOCAL_API_URL_REGISTER: `http://${localIPAdress}:3000/api/auth/register`,
+    HEROKU_API_URL_REGISTER: "https://gathergamers.herokuapp.com/api/auth/register",
+    LOCAL_API_URL_LOGIN: `http://${localIPAdress}:3000/api/auth/login`,
+    HEROKU_API_URL_LOGIN: "https://gathergamers.herokuapp.com/api/auth/login"    
+}

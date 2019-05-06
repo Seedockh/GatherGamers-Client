@@ -2,18 +2,52 @@ import React from 'react';
 import { View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
 import Style from '../../styles/login'
+import ENV from '../../../env.js'
 
 export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
+            email: "",
+            password: ""
         }
     }
 
     onLoginPress = async () => {
+        const { email, password } = this.state
         this.setState({ loading: true })
-        this.props.navigation.navigate('Home')
+        const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_LOGIN : ENV.HEROKU_API_URL_LOGIN
+        if(email != "" && password != "") {
+            try {
+                let response = await fetch(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: this.state.email,
+                        password: this.state.password,
+                    })
+                }
+                );
+                if (response.status >= 200 && response.status < 300) {
+                    alert("Succesfully logged in!")
+                    this.props.navigation.navigate('Home')
+                } else {
+                    alert("Nickname and password are not matching!")
+                    this.setState({ loading: false })
+                }
+            } catch (errors) {
+                alert(errors);
+            }
+        } else {
+            alert("Nickname and password are not matching!")
+            this.setState({ loading: false }) 
+        }
     }
 
     onRegisterPress = async () => {
@@ -37,11 +71,11 @@ export default class Home extends React.Component {
                         <Form>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Email</Label>
-                                <Input />
+                                <Input onChangeText={(email) => this.setState({email})}/>
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Password</Label>
-                                <Input secureTextEntry={true} />
+                                <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
                             </Item>
                         </Form>
 

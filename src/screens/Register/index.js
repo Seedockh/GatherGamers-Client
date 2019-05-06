@@ -26,7 +26,7 @@ export default class Home extends React.Component {
                     if (nickname.length > 5 && password.length > 7) {
                         if (/\S+@\S+\.\S+/.test(email)) {
                             this.setState({ loading: true })
-                            const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL : ENV.HEROKU_API_URL
+                            const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_REGISTER : ENV.HEROKU_API_URL_REGISTER
                             try {
                                 let response = await fetch(
                                 url,
