@@ -1,6 +1,7 @@
 import React from 'react';
 import { Font } from "expo";
 import AppNavigator from './src/navigation'
+
 export default class App extends React.Component {
 
   state = { loading: true }

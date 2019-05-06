@@ -1,19 +1,74 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, Image, KeyboardAvoidingView } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
 import Style from '../../styles/register'
+import ENV from '../../../env.js'
 
 export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
+            firstname: "",
+            lastname: "",
+            nickname: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
         }
     }
 
     onLoginPress = async () => {
-        this.setState({ loading: true })
-        this.props.navigation.navigate('Login')
+        const { firstname, lastname, nickname, email, password, password_confirmation } = this.state
+        if (firstname != "" && lastname != "" && nickname != "" && email != "" && password != "" && password_confirmation != "") {
+            if (password == password_confirmation) {
+                if (nickname != password) {
+                    if (nickname.length > 5 && password.length > 7) {
+                        if (/\S+@\S+\.\S+/.test(email)) {
+                            this.setState({ loading: true })
+                            const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL : ENV.HEROKU_API_URL
+                            try {
+                                let response = await fetch(
+                                url,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Accept": "application/json",
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        nickname: this.state.nickname,
+                                        email: this.state.email,
+                                        password: this.state.password,
+                                        password_confirmation: this.state.password_confirmation
+                                    })
+                                }
+                                );
+                                if (response.status >= 200 && response.status < 300) {
+                                    this.setState({ loading: false })
+                                    this.props.navigation.navigate('Login')
+                                    alert("Account successfully created!")
+                                } else {
+                                    alert(JSON.stringify(response))
+                                }
+                            } catch (errors) {
+                                alert(errors);
+                            }
+                        } else {
+                            alert("Email is not valid!")
+                        }
+                    } else {
+                        alert("Nickname size must be greater than 5 and Password than 7!")
+                    }
+                } else {
+                    alert("Nickname and Password must be different!")
+                }
+            } else {
+                alert("Password must be equals!")
+            }
+        } else {
+            alert("You must fill all inputs!")
+        }
     }
 
     render() {
@@ -32,27 +87,27 @@ export default class Home extends React.Component {
                     <Form>
                         <Item floatingLabel style={Style.item}>
                             <Label>Firstname</Label>
-                            <Input />
+                            <Input onChangeText={(firstname) => this.setState({firstname})}/>
                         </Item>
                         <Item floatingLabel style={Style.item}>
                             <Label>Lastname</Label>
-                            <Input />
+                            <Input onChangeText={(lastname) => this.setState({lastname})}/>
                         </Item>
                         <Item floatingLabel style={Style.item}>
                             <Label>Pseudo</Label>
-                            <Input />
+                            <Input onChangeText={(nickname) => this.setState({nickname})}/>
                         </Item>
                         <Item floatingLabel style={Style.item}>
                             <Label>Email</Label>
-                            <Input />
+                            <Input onChangeText={(email) => this.setState({email})}/>
                         </Item>
                         <Item floatingLabel style={Style.item}>
                             <Label>Password</Label>
-                            <Input secureTextEntry={true} />
+                            <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
                         </Item>
                         <Item floatingLabel style={Style.item}>
                             <Label>Confirm Password</Label>
-                            <Input secureTextEntry={true} />
+                            <Input secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({password_confirmation})}/>
                         </Item>
                     </Form>
 
@@ -68,7 +123,8 @@ export default class Home extends React.Component {
                                 <Button style={Style.button}>
                                     <Spinner color='white' size="small" />
                                 </Button>
-                            </View>)
+                            </View>
+                        )
                     }
 
                 </View>
