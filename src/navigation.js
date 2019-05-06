@@ -1,6 +1,8 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import Home from './screens/Home'
 import Login from './screens/Login'
+import Register from './screens/Register'
+import Profile from './screens/Profile'
 
 const AppNavigator = createStackNavigator({
     Login: {
@@ -8,10 +10,16 @@ const AppNavigator = createStackNavigator({
     },
     Home: {
         screen: Home
+    },
+    Register: {
+        screen: Register
+    },
+    Profile: {
+        screen: Profile
     }
 },
     {
-        initialRouteName: 'Login',
+        initialRouteName: 'Login', //Penser à exclure initialRouteName: 'Profile' du commit
         headerMode: 'none'
     });
 
