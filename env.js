@@ -1,4 +1,6 @@
-const localIPAdress = "10.3.3.21"
+const localIPAdress = "192.168.0.16"
+//192.168.0.16
+//10.3.3.21
 
 export default {
     NODE_ENV: "dev",

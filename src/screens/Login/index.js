@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, Image, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
 import Style from '../../styles/login'
 import ENV from '../../../env.js'
@@ -10,11 +10,46 @@ export default class Home extends React.Component {
         this.state = {
             loading: false,
             email: "",
-            password: ""
+            password: "",
+            token: ""
+        }
+        this.restoreData()
+    }
+
+    storeData = async (email, password, token) => {
+        try {
+            await AsyncStorage.setItem('email', email);
+            await AsyncStorage.setItem('password', password);
+            await AsyncStorage.setItem('token', token);
+            this.setState({
+                email: email,
+                password: password,
+                token: token
+            });
+        } catch (error) {
+            throw error
+        }
+    }
+    
+    restoreData = async () => {
+        try {
+            const email = await AsyncStorage.getItem('email');
+            const password = await AsyncStorage.getItem('password');
+            const token = await AsyncStorage.getItem('token');
+            if (token !== null && password != "" && email != "") {
+                await this.setState({
+                    email: email,
+                    password: password,
+                    token: token 
+                });
+                this.login()
+            }
+        } catch (error) {
+            throw error
         }
     }
 
-    onLoginPress = async () => {
+    login = async () => {
         const { email, password } = this.state
         this.setState({ loading: true })
         const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_LOGIN : ENV.HEROKU_API_URL_LOGIN
@@ -36,11 +71,11 @@ export default class Home extends React.Component {
                 .then(async (response) => {
                     if(response.status == 400) {
                         const errMessage = "Wrong password or email"
+                        this.setState({ loading: false })
                         alert(errMessage)
                     } else {
                         let responseJSON = await response.json()
-                        //TODO: Persisting token until logged out
-                        //alert(responseJSON.meta.token) 
+                        this.storeData(email, password, responseJSON.meta.token)
                         this.props.navigation.navigate('Home')
                     }
                 })
@@ -86,7 +121,7 @@ export default class Home extends React.Component {
                         {!loading ?
                             (
                                 <View style={Style.buttonContainer}>
-                                    <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
+                                    <Button title="Connexion" onPress={this.login.bind(this)} style={Style.button}>
                                         <Text style={Style.connectText}>Sign In</Text>
                                     </Button>
                                 </View>
