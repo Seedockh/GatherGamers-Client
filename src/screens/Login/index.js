@@ -9,8 +9,8 @@ export default class Home extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            email: "",
-            password: ""
+            email: "sevenchars@gmail.com",
+            password: "sevenchars"
         }
     }
 
@@ -35,19 +35,26 @@ export default class Home extends React.Component {
                 }
                 );
                 if (response.status >= 200 && response.status < 300) {
-                    alert("Succesfully logged in!")
-                    this.props.navigation.navigate('Home')
+                    let responseBody = JSON.stringify(response._bodyInit).replace(/\\/g, "")
+                    responseBody = JSON.parse(responseBody.substring(1, responseBody.length-1));
+                    token = JSON.stringify(responseBody.meta.token)
+                    alert(token)
+                    //alert("Succesfully logged in!")
+                    //this.props.navigation.navigate('Home')
                 } else {
-                    alert("Nickname and password are not matching!")
-                    this.setState({ loading: false })
+                    this.loginError()
                 }
             } catch (errors) {
                 alert(errors);
             }
         } else {
-            alert("Nickname and password are not matching!")
-            this.setState({ loading: false }) 
+            this.loginError()
         }
+    }
+
+    loginError() {
+        alert("Nickname and password are not matching!")
+        this.setState({ loading: false }) 
     }
 
     onRegisterPress = async () => {
