@@ -34,13 +34,14 @@ export default class Home extends React.Component {
                 }
                 )
                 .then(async (response) => {
-                    alert(response.status)
                     if(response.status == 400) {
                         const errMessage = "Wrong password or email"
                         alert(errMessage)
                     } else {
                         let responseJSON = await response.json()
-                        alert(responseJSON.meta.token) // Must be a persisting data ** TODO
+                        //TODO: Persisting token until logged out
+                        //alert(responseJSON.meta.token) 
+                        this.props.navigation.navigate('Home')
                     }
                 })
         } else {
