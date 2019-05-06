@@ -3,21 +3,19 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';;
 
 export default StyleSheet.create({
     keyboardAvoiding: {
-        flex: 3,
+        flex: 1,
         flexDirection: 'column',
         paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight,
         alignItems: 'center',
     },
 
     mainContainer: {
-        justifyContent: "center", 
-        alignItems: "center", 
         flex: 1,
     },
 
     logoContainer: {
         flexDirection: 'column',
-        alignItems: 'center',
+        alignSelf: 'center',
         width: vmin(60),
         height: vmin(40),
         marginBottom: vmin(5)
@@ -25,7 +23,8 @@ export default StyleSheet.create({
 
     logo: {
         width: vmin(40),
-        height: vmin(40)
+        height: vmin(40),
+        alignSelf: 'center',
     },
 
     item: {
@@ -49,17 +48,4 @@ export default StyleSheet.create({
     connectText: {
         color: 'white',
     },
-
-    formContainer : {
-        flex: 1,
-    },
-
-    touchableOpacity: {
-        padding: 2,
-        alignItems: "center"
-    },
-
-    formText: {
-        color: "#000"
-    }
 });

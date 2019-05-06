@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
-import Style from '../../styles/login'
+import Style from '../../styles/register'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -13,20 +13,16 @@ export default class Home extends React.Component {
 
     onLoginPress = async () => {
         this.setState({ loading: true })
-        this.props.navigation.navigate('Home')
-    }
-
-    onRegisterPress = async () => {
-        this.props.navigation.navigate('Register')
+        this.props.navigation.navigate('Login')
     }
 
     render() {
-
         const { loading } = this.state
 
         return (
-            <>
-                <KeyboardAvoidingView behavior="padding" style={Style.keyboardAvoiding} enabled>
+
+            <KeyboardAvoidingView behavior="padding" style={Style.keyboardAvoiding} enabled>
+                <ScrollView>
                     <View style={Style.mainContainer}>
                         <View style={Style.logoContainer}>
                             <Image
@@ -36,11 +32,27 @@ export default class Home extends React.Component {
                         </View>
                         <Form>
                             <Item floatingLabel style={Style.item}>
+                                <Label>Firstname</Label>
+                                <Input />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Lastname</Label>
+                                <Input />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Pseudo</Label>
+                                <Input />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
                                 <Label>Email</Label>
                                 <Input />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Password</Label>
+                                <Input secureTextEntry={true} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Confirm Password</Label>
                                 <Input secureTextEntry={true} />
                             </Item>
                         </Form>
@@ -49,7 +61,7 @@ export default class Home extends React.Component {
                             (
                                 <View style={Style.buttonContainer}>
                                     <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                        <Text style={Style.connectText}>Sign In</Text>
+                                        <Text style={Style.connectText}>Register</Text>
                                     </Button>
                                 </View>
                             ) : (
@@ -59,19 +71,9 @@ export default class Home extends React.Component {
                                     </Button>
                                 </View>)
                         }
-
                     </View>
-                </KeyboardAvoidingView>
-
-                <View style={Style.formContainer}>
-                    <TouchableOpacity onPress={this.onRegisterPress.bind(this)} style={Style.touchableOpacity}>
-                        <Text style={Style.formText} >Create an account here</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Style.touchableOpacity}>
-                        <Text style={Style.formText} >Forgot password ?</Text>
-                    </TouchableOpacity>
-                </View>
-            </>
+                </ScrollView>
+            </KeyboardAvoidingView>
         )
     }
 }

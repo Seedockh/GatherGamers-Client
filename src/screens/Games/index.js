@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import Style from '../../styles/home'
+import Style from '../../styles/games'
 import FooterTabs from '../../components/FooterTabs'
-import Tabbars from '../../components/Tabbars'
+import ListGames from './listgames'
 
-export default class Home extends React.Component {
+export default class Games extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {}
@@ -13,9 +14,8 @@ export default class Home extends React.Component {
     render() {
         return (
             <>
-            <Tabbars />
-
-            <FooterTabs {...this.props} />
+                <ListGames {...this.props} />
+                <FooterTabs {...this.props} />
             </>
         );
     }
