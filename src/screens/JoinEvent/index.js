@@ -3,6 +3,7 @@ import { View, Image } from 'react-native';
 import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body, Right, Button } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class JoinEvents extends React.Component {
 
@@ -25,6 +26,21 @@ export default class JoinEvents extends React.Component {
             },
             {
                 title: "Event 3",
+                text1: "Cool",
+                text2: "Chouette"
+            },
+            {
+                title: "Event 4",
+                text1: "Cool",
+                text2: "Chouette"
+            },
+            {
+                title: "Event 4",
+                text1: "Cool",
+                text2: "Chouette"
+            },
+            {
+                title: "Event 4",
                 text1: "Cool",
                 text2: "Chouette"
             },
@@ -56,25 +72,27 @@ export default class JoinEvents extends React.Component {
                         </Item>
                     </Header>
 
-                    {data.length > 0 ? (
-                        data.map((item, index) => (
-                            <List key={index} >
-                                <ListItem thumbnail>
-                                    <Left>
-                                        <Thumbnail square source={require('../../../assets/rouge.jpg')} />
-                                    </Left>
-                                    <Body>
-                                        <Text>{item.title}</Text>
-                                        <Text note numberOfLines={1}>{item.text1}</Text>
-                                        <Text note numberOfLines={1}>{item.text2}</Text>
-                                    </Body>
-                                </ListItem>
-                            </List>
-                        ))
-                    ) : (
-                            <Text>Pas d'events</Text>
-                        )}
+                    <ScrollView>
+                        {data.length > 0 ? (
+                            data.map((item, index) => (
 
+                                <List key={index} >
+                                    <ListItem thumbnail>
+                                        <Left>
+                                            <Thumbnail square source={require('../../../assets/rouge.jpg')} />
+                                        </Left>
+                                        <Body>
+                                            <Text>{item.title}</Text>
+                                            <Text note numberOfLines={1}>{item.text1}</Text>
+                                            <Text note numberOfLines={1}>{item.text2}</Text>
+                                        </Body>
+                                    </ListItem>
+                                </List>
+                            ))
+                        ) : (
+                                <Text>Pas d'events</Text>
+                            )}
+                    </ScrollView>
                 </View>
 
                 <FooterTabs {...this.props} />

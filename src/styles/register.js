@@ -10,14 +10,12 @@ export default StyleSheet.create({
     },
 
     mainContainer: {
-        justifyContent: "center", 
-        alignItems: "center", 
         flex: 1,
     },
 
     logoContainer: {
         flexDirection: 'column',
-        alignItems: 'center',
+        alignSelf: 'center',
         width: vmin(60),
         height: vmin(40),
         marginBottom: vmin(5)
@@ -25,7 +23,8 @@ export default StyleSheet.create({
 
     logo: {
         width: vmin(40),
-        height: vmin(40)
+        height: vmin(40),
+        alignSelf: 'center',
     },
 
     item: {

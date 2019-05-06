@@ -50,16 +50,16 @@ export default class DetailGames extends React.Component {
                     </View>
 
                     <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onCreateEvent()}>
+                        <Button block style={{ marginVertical: 8, backgroundColor:"black" }} onPress={() => this.onCreateEvent()}>
                             <Text>Create Event</Text>
                         </Button>
-                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onJoinEvent()}>
+                        <Button block style={{ marginVertical: 8, backgroundColor:"black" }} onPress={() => this.onJoinEvent()}>
                             <Text>Join Event</Text>
                         </Button>
-                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onGamersAround()}>
+                        <Button block style={{ marginVertical: 8, backgroundColor:"black" }} onPress={() => this.onGamersAround()}>
                             <Text>Check for gamers</Text>
                         </Button>
-                        <Button block light style={{ marginVertical: 8 }}>
+                        <Button block style={{ marginVertical: 8, backgroundColor:"black" }}>
                             <Text>Forum</Text>
                         </Button>
                     </View>

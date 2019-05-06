@@ -40,7 +40,7 @@ export default class ListCard extends React.Component {
                 <Card>
                     <CardItem header bordered>
                         <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                            <Text style={{ color: "black" }}>Amis</Text>
+                            <Text style={{ color: "black" }}>Participants</Text>
                         </View>
                     </CardItem>
                     <CardItem bordered>
@@ -62,7 +62,7 @@ export default class ListCard extends React.Component {
                                     </List>
                                 ))
                             ) : (
-                                    <Text>Pas d'amis</Text>
+                                    <Text>Pas de participants</Text>
                                 )}
                         </Content>
                     </CardItem>
