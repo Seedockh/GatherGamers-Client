@@ -9,8 +9,8 @@ export default class Home extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            email: "sevenchars@gmail.com",
-            password: "sevenchars"
+            email: "",
+            password: ""
         }
     }
 
@@ -36,8 +36,8 @@ export default class Home extends React.Component {
                 .then(async (response) => {
                     alert(response.status)
                     if(response.status == 400) {
-                        alert("message erreur kom dab")
-                        return { error: "message erreur kom dab" }
+                        const errMessage = "Wrong password or email"
+                        alert(errMessage)
                     } else {
                         let responseJSON = await response.json()
                         alert(responseJSON.meta.token) // Must be a persisting data ** TODO
