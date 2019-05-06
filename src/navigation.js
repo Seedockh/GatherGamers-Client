@@ -62,7 +62,7 @@ const AppNavigator = createStackNavigator({
     }
 },
     {
-        initialRouteName: 'Profile',
+        initialRouteName: 'Login',
         headerMode: 'float'
     });
 
