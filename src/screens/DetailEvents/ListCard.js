@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail } from 'native-base';
 
-export default class InfoCard extends React.Component {
+export default class ListCard extends React.Component {
 
     constructor(props) {
         super(props);

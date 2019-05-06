@@ -16,6 +16,14 @@ export default class DetailGames extends React.Component {
         this.state = {}
     }
 
+    onJoinEvent() {
+        this.props.navigation.navigate('JoinEvent')
+    }
+
+    onGamersAround() {
+        this.props.navigation.navigate('GamersAround')
+    }
+
     render() {
         return (
             <>
@@ -41,10 +49,10 @@ export default class DetailGames extends React.Component {
                         <Button block light style={{ marginVertical: 8 }}>
                             <Text>Create Event</Text>
                         </Button>
-                        <Button block light style={{ marginVertical: 8 }}>
+                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onJoinEvent()}>
                             <Text>Join Event</Text>
                         </Button>
-                        <Button block light style={{ marginVertical: 8 }}>
+                        <Button block light style={{ marginVertical: 8 }} onPress={() => this.onGamersAround()}>
                             <Text>Check for gamers</Text>
                         </Button>
                         <Button block light style={{ marginVertical: 8 }}>
