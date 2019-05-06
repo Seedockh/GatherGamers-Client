@@ -8,6 +8,7 @@ import DetailGames from './screens/DetailGames'
 import JoinEvent from './screens/JoinEvent'
 import DetailEvents from './screens/DetailEvents'
 import GamersAround from './screens/GamersAround'
+import Friends from './screens/Friends'
 
 const AppNavigator = createStackNavigator({
     Login: {
@@ -51,10 +52,13 @@ const AppNavigator = createStackNavigator({
     },
     GamersAround: {
         screen: GamersAround
+    },
+    Friends: {
+        screen: Friends
     }
 },
     {
-        initialRouteName: 'GamersAround',
+        initialRouteName: 'Friends',
         headerMode: 'float'
     });
 
