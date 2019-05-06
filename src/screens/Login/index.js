@@ -19,8 +19,7 @@ export default class Home extends React.Component {
         this.setState({ loading: true })
         const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_LOGIN : ENV.HEROKU_API_URL_LOGIN
         if(email != "" && password != "") {
-            try {
-                let response = await fetch(
+                return await fetch(
                 url,
                 {
                     method: "POST",
@@ -33,20 +32,17 @@ export default class Home extends React.Component {
                         password: this.state.password,
                     })
                 }
-                );
-                if (response.status >= 200 && response.status < 300) {
-                    let responseBody = JSON.stringify(response._bodyInit).replace(/\\/g, "")
-                    responseBody = JSON.parse(responseBody.substring(1, responseBody.length-1));
-                    token = JSON.stringify(responseBody.meta.token)
-                    alert(token)
-                    //alert("Succesfully logged in!")
-                    //this.props.navigation.navigate('Home')
-                } else {
-                    this.loginError()
-                }
-            } catch (errors) {
-                alert(errors);
-            }
+                )
+                .then(async (response) => {
+                    alert(response.status)
+                    if(response.status == 400) {
+                        alert("message erreur kom dab")
+                        return { error: "message erreur kom dab" }
+                    } else {
+                        let responseJSON = await response.json()
+                        alert(responseJSON.meta.token) // Must be a persisting data ** TODO
+                    }
+                })
         } else {
             this.loginError()
         }
