@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Image, TextInput } from 'react-native';
-import { Item, Input, Label, Text, Button } from 'native-base';
+import { View, Image, TextInput, AsyncStorage } from 'react-native';
+import { Item, Input, Label, Text, Button, DatePicker } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
+import ENV from '../../../env'
+import JWT from 'expo-jwt'
 
 export default class CreateEvent extends React.Component {
 
@@ -13,18 +15,100 @@ export default class CreateEvent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            cover: null,
+            name: null,
+            nameEvent: "",
+            typeEvent: "",
+            playersEvent: "",
+            dateEvent: "",
+            priceEvent: "",
+            placeEvent: "",
+            token: null
         }
     }
 
+    componentDidMount() {
+        this.fetchGames()
+    }
+
+    getToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        this.setState({ token })
+    }
+
+    fetchGames = async () => {
+        await this.getToken()
+        const url = "https://gathergamers.herokuapp.com/api/game/" + this.props.navigation.state.params.navigation.state.params.id
+        await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+            }
+        )
+            .then(async (response) => {
+                if (response.status == 401) {
+                    alert("Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    this.setState({ cover: responseJSON.cover, name: responseJSON.name })
+                }
+            })
+    }
+
+    createEvent = async () => {
+
+        await this.getToken()
+        const { token, id } = this.state
+        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
+
+        const url = "https://gathergamers.herokuapp.com/api/event/create"
+        await fetch(
+            url,
+            {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+                body: JSON.stringify({
+                    name: this.state.nameEvent,
+                    place: this.state.placeEvent,
+                    date: this.state.dateEvent,
+                    UserId: decodedToken.id,
+                    GameId: this.props.navigation.state.params.navigation.state.params.id,
+                    price: this.state.priceEvent,
+                    players: this.state.playersEvent,
+                    type: this.state.typeEvent,
+                })
+            }
+        )
+            .then(async (response) => {
+                if (response.status == 401) {
+                    alert("Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    this.setState({ cover: responseJSON.cover, name: responseJSON.name })
+                }
+            })
+        this.props.navigation.navigate('Home')
+    }
+
     render() {
-        alert(JSON.stringify(this.props))
+        const { cover } = this.state
+
         return (
             <>
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                         <Image
                             style={{ width: vmin(20), height: vmin(30), flex: 1 }}
-                            source={require('../../../assets/rouge.jpg')}
+                            source={{ uri: cover }}
                         />
                     </View>
 
@@ -32,31 +116,45 @@ export default class CreateEvent extends React.Component {
                         <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
                             <Item regular >
                                 <Label>Event Name</Label>
-                                <Input />
+                                <Input onChangeText={(nameEvent) => this.setState({ nameEvent })} />
                             </Item>
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between" }}>
-                            <Text>Event Type :</Text>
-                            <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                            <Text style={{ flex: 1 }}>Event Type :</Text>
+                            <TextInput onChangeText={(typeEvent) => this.setState({ typeEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between" }}>
-                            <Text>Number of players :</Text>
-                            <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                            <Text style={{ flex: 1 }} >Number of players :</Text>
+                            <TextInput onChangeText={(playersEvent) => this.setState({ playersEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between" }}>
-                            <Text>Date :</Text>
-                            <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                            <Text style={{ flex: 1 }} >Date :</Text>
+                            <DatePicker
+                                defaultDate={new Date(2019, 4, 14)}
+                                minimumDate={new Date(2019, 4, 14)}
+                                maximumDate={new Date(2020, 4, 14)}
+                                locale={"en"}
+                                timeZoneOffsetInMinutes={undefined}
+                                modalTransparent={false}
+                                animationType={"fade"}
+                                androidMode={"default"}
+                                placeHolderText="Select date"
+                                textStyle={{ color: "black" }}
+                                placeHolderTextStyle={{ color: "black" }}
+                                onDateChange={(dateEvent) => this.setState({dateEvent})}
+                                disabled={false}
+                            />
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between" }}>
-                            <Text>Cash Price :</Text>
-                            <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                            <Text style={{ flex: 1 }} >Cash Price :</Text>
+                            <TextInput onChangeText={(priceEvent) => this.setState({ priceEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
                             <Text>Adresse</Text>
-                            <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                            <TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
-                            <Button block success>
+                            <Button block success onPress={this.createEvent.bind(this)}>
                                 <Text>Create Event</Text>
                             </Button>
                         </View>
