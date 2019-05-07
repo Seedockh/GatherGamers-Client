@@ -134,8 +134,6 @@ export default class CreateEvent extends React.Component {
                                 <Picker.Item label="Esport" value="key3" />
                                 <Picker.Item label="Autres" value="key4" />
                             </Picker>
-
-                            {/* <TextInput onChangeText={(typeEvent) => this.setState({ typeEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} /> */}
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ flex: 1 }} >Number of players :</Text>
