@@ -22,39 +22,47 @@ export default class Profile extends React.Component {
     onEditTrue() {
         this.setState({ edit: true })
     }
-    
+
     logout = async () => {
         await AsyncStorage.multiRemove(['email', 'password', 'token'], (err) => {
-            this.props.navigation.navigate('Login', {connected: false})
-        });    
+            this.props.navigation.navigate('Login', { connected: false })
+        });
     }
 
     render() {
         const { edit } = this.state
 
         return (
-            
-            <>
-            <View style={{ marginTop: 48, marginBottom: 16 }}>
-                <Image 
-                    style={{ width: vmin(40), height: vmin(40), borderRadius: 50, alignSelf: "center" }}
-                    source={require('../../../assets/rouge.jpg')}
-                />
-            </View>
 
-            {!edit ? 
-                <CardFix  onEditTrue={this.onEditTrue.bind(this)} />
-                :
-                <CardEdit  onEditFalse={this.onEditFalse.bind(this)} />
-            }
-            <Form style={Style.formContainer}>
-                <View style={Style.buttonContainer}>
-                    <Button title="Déconnexion" onPress={this.logout.bind(this)} style={Style.button}>
-                        <Text style={Style.connectText}>Logout</Text>
-                    </Button>
+            <>
+                <View style={{ marginTop: 48, marginBottom: 16 }}>
+                    <Image
+                        style={{ width: vmin(40), height: vmin(40), borderRadius: 50, alignSelf: "center" }}
+                        source={require('../../../assets/rouge.jpg')}
+                    />
                 </View>
-            </Form>
-            <FooterTabs {...this.props} />
+
+                {!edit ?
+                    <>
+                        <CardFix onEditTrue={this.onEditTrue.bind(this)} />
+
+                        <View style={{ marginHorizontal: 16, flex: 1, justifyContent: "space-around" }}>
+                            <Button block dark onPress={() => this.onEditTrue()} >
+                                <Text>Update Account Informations</Text>
+                            </Button>
+                            <Button block dark onPress={() => this.onEditTrue()} >
+                                <Text>Update Password</Text>
+                            </Button>
+                            <Button block dark onPress={this.logout.bind(this)} >
+                                <Text>Log Out</Text>
+                            </Button>
+                        </View>
+                    </>
+                    :
+                    <CardEdit onEditFalse={this.onEditFalse.bind(this)} />
+                }
+
+                <FooterTabs {...this.props} />
             </>
         )
     }
