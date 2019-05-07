@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView } from 'react-native';
+import { View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
 import Style from '../../styles/register'
 import ENV from '../../../env.js'
@@ -79,6 +79,7 @@ export default class Home extends React.Component {
         return (
 
             <KeyboardAvoidingView behavior="padding" style={Style.keyboardAvoiding} enabled>
+              <ScrollView>
                 <View style={Style.mainContainer}>
                     <View style={Style.logoContainer}>
                         <Image
@@ -129,7 +130,22 @@ export default class Home extends React.Component {
                         )
                     }
 
-                </View>
+                        {!loading ?
+                            (
+                                <View style={Style.buttonContainer}>
+                                    <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
+                                        <Text style={Style.connectText}>Register</Text>
+                                    </Button>
+                                </View>
+                            ) : (
+                                <View style={Style.buttonContainer}>
+                                    <Button style={Style.button}>
+                                        <Spinner color='white' size="small" />
+                                    </Button>
+                                </View>)
+                        }
+                    </View>
+                </ScrollView>
             </KeyboardAvoidingView>
         )
     }

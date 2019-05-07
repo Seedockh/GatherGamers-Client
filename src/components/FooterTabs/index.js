@@ -12,14 +12,22 @@ export default class FooterTabs extends React.Component {
         this.props.navigation.navigate('Profile')
     }
 
+    onGamesPress =  () => {
+        this.props.navigation.navigate('Games')
+    }
+
+    onHomePress =  () => {
+        this.props.navigation.navigate('Home')
+    }
+
     render() {
         return (
             <Footer>
                 <FooterTab>
-                    <Button>
+                    <Button onPress={this.onHomePress.bind(this)}>
                         <Text>Home</Text>
                     </Button>
-                    <Button>
+                    <Button onPress={this.onGamesPress.bind(this)}>
                         <Text>Games</Text>
                     </Button>
                     <Button onPress={this.onProfilePress.bind(this)}>
