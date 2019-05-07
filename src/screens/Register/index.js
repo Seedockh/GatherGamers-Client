@@ -118,7 +118,7 @@ export default class Home extends React.Component {
                         (
                             <View style={Style.buttonContainer}>
                                 <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                    <Text style={Style.connectText}>Register</Text>
+                                    <Text style={Style.disconnectText}>Register</Text>
                                 </Button>
                             </View>
                         ) : (
@@ -129,21 +129,6 @@ export default class Home extends React.Component {
                             </View>
                         )
                     }
-
-                        {!loading ?
-                            (
-                                <View style={Style.buttonContainer}>
-                                    <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                        <Text style={Style.connectText}>Register</Text>
-                                    </Button>
-                                </View>
-                            ) : (
-                                <View style={Style.buttonContainer}>
-                                    <Button style={Style.button}>
-                                        <Spinner color='white' size="small" />
-                                    </Button>
-                                </View>)
-                        }
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

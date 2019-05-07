@@ -11,9 +11,26 @@ export default class Home extends React.Component {
             loading: false,
             email: "",
             password: "",
+            token: "",
+        }   
+    }
+
+    componentDidMount() {
+        this.load()
+    }
+
+    load = async () => {
+        await this.clearState()
+        await this.restoreData()
+    }
+
+    clearState() {
+        this.setState({
+            loading: false,
+            email: "",
+            password: "",
             token: ""
-        }
-        this.restoreData()
+        });
     }
 
     storeData = async (email, password, token) => {
@@ -21,7 +38,7 @@ export default class Home extends React.Component {
             await AsyncStorage.setItem('email', email);
             await AsyncStorage.setItem('password', password);
             await AsyncStorage.setItem('token', token);
-            this.setState({
+            await this.setState({
                 email: email,
                 password: password,
                 token: token
@@ -36,7 +53,7 @@ export default class Home extends React.Component {
             const email = await AsyncStorage.getItem('email');
             const password = await AsyncStorage.getItem('password');
             const token = await AsyncStorage.getItem('token');
-            if (token != "" && password != "" && email != "") {
+            if (token !== null && password !== null && email !== null) {
                 await this.setState({
                     email: email,
                     password: password,
@@ -51,34 +68,35 @@ export default class Home extends React.Component {
 
     login = async () => {
         const { email, password } = this.state
-        this.setState({ loading: true })
         const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_LOGIN : ENV.HEROKU_API_URL_LOGIN
         if(email != "" && password != "") {
-                return await fetch(
-                url,
-                {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        email: this.state.email,
-                        password: this.state.password,
-                    })
-                }
-                )
-                .then(async (response) => {
-                    if(response.status == 400) {
-                        const errMessage = "Wrong password or email"
-                        this.setState({ loading: false })
-                        alert(errMessage)
-                    } else {
-                        let responseJSON = await response.json()
-                        this.storeData(email, password, responseJSON.meta.token)
-                        this.props.navigation.navigate('Home')
-                    }
+            this.setState({ loading: true })
+            await fetch(
+            url,
+            {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: this.state.email,
+                    password: this.state.password,
                 })
+            }
+            )
+            .then(async (response) => {
+                if(response.status == 400) {
+                    const errMessage = "Wrong password or email"
+                    this.setState({ loading: false })
+                    alert(errMessage)
+                } else {
+                    let responseJSON = await response.json()
+                    await this.storeData(email, password, responseJSON.meta.token)
+                    await this.clearState()
+                    this.props.navigation.navigate('Home')
+                }
+            })
         } else {
             this.loginError()
         }
@@ -107,24 +125,26 @@ export default class Home extends React.Component {
                                 source={require('../../../assets/logo.png')}
                             />
                         </View>
-                        <Form>
-                            <Item floatingLabel style={Style.item}>
-                                <Label>Email</Label>
-                                <Input onChangeText={(email) => this.setState({email})}/>
-                            </Item>
-                            <Item floatingLabel style={Style.item}>
-                                <Label>Password</Label>
-                                <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
-                            </Item>
-                        </Form>
 
                         {!loading ?
                             (
+                                <>
+                                <Form>
+                                <Item floatingLabel style={Style.item}>
+                                    <Label>Email</Label>
+                                    <Input onChangeText={(email) => this.setState({email})}/>
+                                </Item>
+                                <Item floatingLabel style={Style.item}>
+                                    <Label>Password</Label>
+                                    <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
+                                </Item>
+                                </Form>
                                 <View style={Style.buttonContainer}>
                                     <Button title="Connexion" onPress={this.login.bind(this)} style={Style.button}>
                                         <Text style={Style.connectText}>Sign In</Text>
                                     </Button>
                                 </View>
+                                </>
                             ) : (
                                 <View style={Style.buttonContainer}>
                                     <Button style={Style.button}>
