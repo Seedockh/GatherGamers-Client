@@ -16,7 +16,7 @@
 |---------|--------|-------|------------|-----|
 | **Register** | ✅ | Done | Antoine | 🆗 |
 | **Registered mail** | ⌛ | Not working yet | Maxime | ⭐ |
-| **Logout** | ⌛ | Style is not good |  |
+| **Logout** | ⌛ | Waiting approval | Antoine | 🚫 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ❌ | Fake data | Adrien | 🚫 |
