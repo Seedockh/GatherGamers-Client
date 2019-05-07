@@ -1,4 +1,5 @@
 import React from 'react';
+import { Root } from "native-base";
 import { Font } from "expo";
 import AppNavigator from './src/navigation'
 
@@ -19,9 +20,11 @@ export default class App extends React.Component {
     if (this.state.loading) {
       return <Expo.AppLoading />;
     }
-    
-    return ( 
-      <AppNavigator ref={navigatorRef => this.navigatorRef = navigatorRef} /> 
+
+    return (
+      <Root>
+        <AppNavigator ref={navigatorRef => this.navigatorRef = navigatorRef} />
+      </Root>
     )
   }
 }
