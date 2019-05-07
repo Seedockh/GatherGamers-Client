@@ -34,7 +34,7 @@ export default class FooterTabs extends React.Component {
                         <Text>Profile</Text>
                     </Button>
                     <Button>
-                        <Text>Messenger</Text>
+                        <Text>Chat</Text>
                     </Button>
                 </FooterTab>
             </Footer>
