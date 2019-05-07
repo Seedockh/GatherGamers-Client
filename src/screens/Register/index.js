@@ -9,12 +9,12 @@ export default class Home extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            firstname: "Antoine",
-            lastname: "Nivoy",
-            nickname: "Cracky",
-            email: "cracky.studio@gmail.com",
-            password: "12345678",
-            password_confirmation: "12345678",
+            firstname: "",
+            lastname: "",
+            nickname: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
         }
     }
 
