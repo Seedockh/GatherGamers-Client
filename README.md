@@ -1,10 +1,12 @@
 # GatherGamers-Client
 
-## Crew
-- Adrien Masson
-- Maxime Gouénard
-- Antoine Nivoy
-- Pierre Hérissé
+## CREW
+| name | role |
+|------|------|
+| Adrien Masson | **Client-side** : creating the screens |
+| Antoine Nivoy | **Client-side** : client->server connexion |
+| Maxime Gouénard | **Both sides** : API routes + client->server connexions |
+| Pierre Hérissé | **Server side** : Database + API Routes |
 
 ## ToDo
 
@@ -29,7 +31,7 @@
 | **My favorites** | ❌ | Fake favorites | | 🚫 |
 | **AWS service** | ❌ | Not started | | 🚫 |
 
-## Abandoned features
+## Future features
 
 | Feature | Status | Notes | Affected to | MVP |
 |---------|--------|-------|------------|-----|
