@@ -34,6 +34,7 @@ export default class Home extends React.Component {
     }
 
     storeData = async (email, password, token) => {
+        
         try {
             await AsyncStorage.setItem('email', email);
             await AsyncStorage.setItem('password', password);
@@ -43,6 +44,7 @@ export default class Home extends React.Component {
                 password: password,
                 token: token
             });
+            
         } catch (error) {
             throw error
         }
@@ -70,18 +72,33 @@ export default class Home extends React.Component {
         const { email, password } = this.state
         const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_LOGIN : ENV.HEROKU_API_URL_LOGIN
         if(email != "" && password != "") {
-            this.setState({ loading: true })
-            await fetch(
-            url,
-            {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password,
+
+                return await fetch(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: this.state.email,
+                        password: this.state.password,
+                    })
+                }
+                )
+                .then(async (response) => {
+                    if(response.status == 400) {
+                        const errMessage = "Wrong password or email"
+                        this.setState({ loading: false })
+                        alert(errMessage)
+                    } else {
+                        let responseJSON = await response.json()
+                        await this.storeData(email, password, responseJSON.meta.token)
+                        //this.setState({ token: responseJSON.meta.token })
+                        this.props.navigation.navigate('Home' )
+                    }
+
                 })
             }
             )

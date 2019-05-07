@@ -29,22 +29,22 @@ export default class Home extends React.Component {
                             const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_REGISTER : ENV.HEROKU_API_URL_REGISTER
                             try {
                                 let response = await fetch(
-                                url,
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Accept": "application/json",
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify({
-                                        firstname: this.state.firstname,
-                                        lastname: this.state.lastname,
-                                        nickname: this.state.nickname,
-                                        email: this.state.email,
-                                        password: this.state.password,
-                                        password_confirmation: this.state.password_confirmation
-                                    })
-                                }
+                                    url,
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Accept": "application/json",
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            firstname: this.state.firstname,
+                                            lastname: this.state.lastname,
+                                            nickname: this.state.nickname,
+                                            email: this.state.email,
+                                            password: this.state.password,
+                                            password_confirmation: this.state.password_confirmation
+                                        })
+                                    }
                                 );
                                 if (response.status >= 200 && response.status < 300) {
                                     this.setState({ loading: false })
@@ -79,40 +79,41 @@ export default class Home extends React.Component {
         return (
 
             <KeyboardAvoidingView behavior="padding" style={Style.keyboardAvoiding} enabled>
-              <ScrollView>
-                <View style={Style.mainContainer}>
-                    <View style={Style.logoContainer}>
-                        <Image
-                            style={Style.logo}
-                            source={require('../../../assets/logo.png')}
-                        />
-                    </View>
-                    <Form>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Firstname</Label>
-                            <Input onChangeText={(firstname) => this.setState({firstname})}/>
-                        </Item>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Lastname</Label>
-                            <Input onChangeText={(lastname) => this.setState({lastname})}/>
-                        </Item>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Pseudo</Label>
-                            <Input onChangeText={(nickname) => this.setState({nickname})}/>
-                        </Item>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Email</Label>
-                            <Input onChangeText={(email) => this.setState({email})}/>
-                        </Item>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Password</Label>
-                            <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
-                        </Item>
-                        <Item floatingLabel style={Style.item}>
-                            <Label>Confirm Password</Label>
-                            <Input secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({password_confirmation})}/>
-                        </Item>
-                    </Form>
+                <ScrollView>
+                    <View style={Style.mainContainer}>
+                        <View style={Style.logoContainer}>
+                            <Image
+                                style={Style.logo}
+                                source={require('../../../assets/logo.png')}
+                            />
+                        </View>
+                        <Form>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Firstname</Label>
+                                <Input onChangeText={(firstname) => this.setState({ firstname })} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Lastname</Label>
+                                <Input onChangeText={(lastname) => this.setState({ lastname })} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Pseudo</Label>
+                                <Input onChangeText={(nickname) => this.setState({ nickname })} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Email</Label>
+                                <Input onChangeText={(email) => this.setState({ email })} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Password</Label>
+                                <Input secureTextEntry={true} onChangeText={(password) => this.setState({ password })} />
+                            </Item>
+                            <Item floatingLabel style={Style.item}>
+                                <Label>Confirm Password</Label>
+                                <Input secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({ password_confirmation })} />
+                            </Item>
+                        </Form>
+
 
                     {!loading ?
                         (
@@ -129,6 +130,7 @@ export default class Home extends React.Component {
                             </View>
                         )
                     }
+
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
