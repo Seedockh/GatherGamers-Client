@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, TextInput, AsyncStorage } from 'react-native';
-import { Item, Input, Label, Text, Button, DatePicker } from 'native-base';
+import { Item, Input, Label, Text, Button, DatePicker, Picker, Icon } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import ENV from '../../../env'
@@ -18,7 +18,7 @@ export default class CreateEvent extends React.Component {
             cover: null,
             name: null,
             nameEvent: "",
-            typeEvent: "",
+            typeEvent: "LAN",
             playersEvent: "",
             dateEvent: "",
             priceEvent: "",
@@ -120,12 +120,29 @@ export default class CreateEvent extends React.Component {
                             </Item>
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                            <Text style={{ flex: 1 }}>Event Type :</Text>
-                            <TextInput onChangeText={(typeEvent) => this.setState({ typeEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                            <Text style={{ flex: 2 }}>Event Type :</Text>
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{ flex: 1 }}
+                                placeholder="Select type"
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={this.state.typeEvent}
+                                onValueChange={(typeEvent) => this.setState({ typeEvent })}
+                            >
+                                <Picker.Item label="LAN" value="key0" />
+                                <Picker.Item label="Speed Run" value="key1" />
+                                <Picker.Item label="Tournois" value="key2" />
+                                <Picker.Item label="Esport" value="key3" />
+                                <Picker.Item label="Autres" value="key4" />
+                            </Picker>
+
+                            {/* <TextInput onChangeText={(typeEvent) => this.setState({ typeEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} /> */}
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ flex: 1 }} >Number of players :</Text>
-                            <TextInput onChangeText={(playersEvent) => this.setState({ playersEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                            <TextInput onChangeText={(playersEvent) => this.setState({ playersEvent })} keyboardType={"numeric"} maxLength={3} style={{ width: 40, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ flex: 1 }} >Date :</Text>
@@ -141,19 +158,19 @@ export default class CreateEvent extends React.Component {
                                 placeHolderText="Select date"
                                 textStyle={{ color: "black" }}
                                 placeHolderTextStyle={{ color: "black" }}
-                                onDateChange={(dateEvent) => this.setState({dateEvent})}
+                                onDateChange={(dateEvent) => this.setState({ dateEvent })}
                                 disabled={false}
                             />
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, marginBottom: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ flex: 1 }} >Cash Price :</Text>
-                            <TextInput onChangeText={(priceEvent) => this.setState({ priceEvent })} style={{ flex: 1, height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                            <TextInput onChangeText={(priceEvent) => this.setState({ priceEvent })} keyboardType={"numeric"} maxLength={6} style={{ width: 40, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
-                            <Text>Adresse</Text>
-                            <TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} />
+                            <Text>Address :</Text>
+                            <TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={{ borderColor: 'gray', borderBottomWidth: 1 }} />
                         </View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
+                        <View style={{ marginHorizontal: 16, marginTop: 36 }}>
                             <Button block success onPress={this.createEvent.bind(this)}>
                                 <Text>Create Event</Text>
                             </Button>
