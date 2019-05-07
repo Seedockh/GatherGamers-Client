@@ -25,7 +25,7 @@ export default class DetailGames extends React.Component {
     }
 
     onCreateEvent() {
-        this.props.navigation.navigate('CreateEvent')
+        this.props.navigation.navigate('CreateEvent', {...this.props})
     }
 
     render() {

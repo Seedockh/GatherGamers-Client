@@ -17,7 +17,7 @@ export default class CreateEvent extends React.Component {
     }
 
     render() {
-
+        alert(JSON.stringify(this.props))
         return (
             <>
                 <View style={{ flex: 1 }}>
