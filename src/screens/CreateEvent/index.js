@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, TextInput, AsyncStorage } from 'react-native';
-import { Item, Input, Label, Text, Button, DatePicker, Picker, Icon } from 'native-base';
+import { Item, Input, Label, Text, Button, DatePicker, Picker, Icon, Toast } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import ENV from '../../../env'
@@ -17,12 +17,12 @@ export default class CreateEvent extends React.Component {
         this.state = {
             cover: null,
             name: null,
-            nameEvent: "",
+            nameEvent: null,
             typeEvent: "LAN",
-            playersEvent: "",
-            dateEvent: "",
-            priceEvent: "",
-            placeEvent: "",
+            playersEvent: null,
+            dateEvent: null,
+            priceEvent: null,
+            placeEvent: null,
             token: null
         }
     }
@@ -60,43 +60,80 @@ export default class CreateEvent extends React.Component {
             })
     }
 
+    toastMessage(message) {
+        Toast.show({
+            text: `${message}`,
+            buttonText: "Okay",
+            type: "danger",
+            duration: 3000
+        })
+    }
+
     createEvent = async () => {
+        const { nameEvent, playersEvent, dateEvent, priceEvent, placeEvent } = this.state
 
-        await this.getToken()
-        const { token, id } = this.state
-        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
+        if (nameEvent != null) {
+            if (playersEvent != null) {
+                if (dateEvent != null) {
+                    if (priceEvent != null) {
+                        if (placeEvent != null) {
 
-        const url = "https://gathergamers.herokuapp.com/api/event/create"
-        await fetch(
-            url,
-            {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-                body: JSON.stringify({
-                    name: this.state.nameEvent,
-                    place: this.state.placeEvent,
-                    date: this.state.dateEvent,
-                    UserId: decodedToken.id,
-                    GameId: this.props.navigation.state.params.navigation.state.params.id,
-                    price: this.state.priceEvent,
-                    players: this.state.playersEvent,
-                    type: this.state.typeEvent,
-                })
-            }
-        )
-            .then(async (response) => {
-                if (response.status == 401) {
-                    alert("Unauthorized!")
+                            await this.getToken()
+                            const { token, id } = this.state
+                            let decodedToken = JWT.decode(token, ENV.JWT_KEY)
+
+                            const url = "https://gathergamers.herokuapp.com/api/event/create"
+                            await fetch(
+                                url,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Accept": "application/json",
+                                        "Content-Type": "application/json",
+                                        "Authorization": "Bearer " + this.state.token
+                                    },
+                                    body: JSON.stringify({
+                                        name: this.state.nameEvent,
+                                        place: this.state.placeEvent,
+                                        date: this.state.dateEvent,
+                                        UserId: decodedToken.id,
+                                        GameId: this.props.navigation.state.params.navigation.state.params.id,
+                                        price: this.state.priceEvent,
+                                        players: this.state.playersEvent,
+                                        type: this.state.typeEvent,
+                                    })
+                                }
+                            )
+                                .then(async (response) => {
+                                    if (response.status == 401) {
+                                        alert("Unauthorized!")
+                                    } else {
+                                        let responseJSON = await response.json()
+                                        this.setState({ cover: responseJSON.cover, name: responseJSON.name })
+                                    }
+                                })
+                            this.props.navigation.navigate('Home')
+
+                        } else {
+                            console.log("Wrong Address !")
+                            this.toastMessage("Wrong Address !")
+                        }
+                    } else {
+                        console.log("Wrong Cash Price!")
+                        this.toastMessage("Wrong Cash Price !")
+                    }
                 } else {
-                    let responseJSON = await response.json()
-                    this.setState({ cover: responseJSON.cover, name: responseJSON.name })
+                    console.log("Wrong Date !")
+                    this.toastMessage("Wrong Date !")
                 }
-            })
-        this.props.navigation.navigate('Home')
+            } else {
+                console.log("Wrong Numbers of Players !")
+                this.toastMessage("Wrong Numbers of Players !")
+            }
+        } else {
+            console.log("Wrong Event Name !")
+            this.toastMessage("Wrong Event Name !")
+        }
     }
 
     render() {
