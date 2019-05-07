@@ -114,36 +114,23 @@ export default class Home extends React.Component {
                             </Item>
                         </Form>
 
-                        {!loading ?
-                            (
-                                <View style={Style.buttonContainer}>
-                                    <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                        <Text style={Style.connectText}>Register</Text>
-                                    </Button>
-                                </View>
-                            ) : (
-                                <View style={Style.buttonContainer}>
-                                    <Button style={Style.button}>
-                                        <Spinner color='white' size="small" />
-                                    </Button>
-                                </View>
-                            )
-                        }
 
-                        {!loading ?
-                            (
-                                <View style={Style.buttonContainer}>
-                                    <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
-                                        <Text style={Style.connectText}>Register</Text>
-                                    </Button>
-                                </View>
-                            ) : (
-                                <View style={Style.buttonContainer}>
-                                    <Button style={Style.button}>
-                                        <Spinner color='white' size="small" />
-                                    </Button>
-                                </View>)
-                        }
+                    {!loading ?
+                        (
+                            <View style={Style.buttonContainer}>
+                                <Button title="Connexion" onPress={this.onLoginPress.bind(this)} style={Style.button}>
+                                    <Text style={Style.disconnectText}>Register</Text>
+                                </Button>
+                            </View>
+                        ) : (
+                            <View style={Style.buttonContainer}>
+                                <Button style={Style.button}>
+                                    <Spinner color='white' size="small" />
+                                </Button>
+                            </View>
+                        )
+                    }
+
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
