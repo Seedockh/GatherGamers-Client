@@ -113,11 +113,8 @@ export default class CreateEvent extends React.Component {
                     </View>
 
                     <View>
-                        <View style={{ marginHorizontal: 16, marginVertical: 4 }}>
-                            <Item regular >
-                                <Label>Event Name</Label>
-                                <Input onChangeText={(nameEvent) => this.setState({ nameEvent })} />
-                            </Item>
+                        <View style={{ marginHorizontal: 16, marginVertical: 4, marginTop: 24 }}>
+                            <TextInput onChangeText={(nameEvent) => this.setState({ nameEvent })} placeholder={"Event Name"} style={{ width: "100%", borderColor: 'gray', borderBottomWidth: 1, textAlign: "center", fontSize: 24 }} />
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ flex: 2 }}>Event Type :</Text>
