@@ -3,6 +3,7 @@ import { View, AsyncStorage } from 'react-native';
 import { Content, Card, CardItem, Body, Text, Icon, Switch, Item, Label, Input } from 'native-base';
 import Style from '../../styles/profile'
 import JWT from 'expo-jwt'
+import ENV from '../../../env'
 export default class CardFix extends React.Component {
     constructor(props) {
         super(props);
@@ -24,6 +25,7 @@ export default class CardFix extends React.Component {
     }
 
     onPressEdit() {
+        this.updateData()
         this.props.onEditFalse()
     }
 
@@ -35,9 +37,9 @@ export default class CardFix extends React.Component {
     recoverData = async () => {
         
         await this.getToken()
-        const { token, key } = this.state
+        const { token } = this.state
 
-        let decodedToken = JWT.decode(token, key)
+        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
 
         let response = await fetch("https://gathergamers.herokuapp.com/api/user/" + decodedToken.id, {
             headers: {
@@ -54,6 +56,33 @@ export default class CardFix extends React.Component {
         } else {
             this.setState({ firstname: json.firstname, lastname: json.lastname, email: json.email, nickname: json.nickname })
         }
+    }
+
+    updateData = async () => {
+
+        const { token, key } = this.state
+
+        await this.getToken()
+
+        let decodedToken = JWT.decode(token, key)
+
+        let response = await fetch("https://gathergamers.herokuapp.com/api/user/update/" + decodedToken.id, {
+            headers: {
+                "Authorization": 'Bearer ' + token,
+                "Content-Type": 'application/json'
+            },
+            method: "PUT",
+            body: JSON.stringify({
+                email: this.state.email,
+                nickname: this.state.nickname,
+                lastname: this.state.lastname,
+                firstname: this.state.firstname,
+                email: this.state.email,
+                token: token,
+            })
+        })
+        .catch( error => {return console.log("error", error)})
+
     }
 
     render() {

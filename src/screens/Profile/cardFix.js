@@ -3,7 +3,7 @@ import { View, AsyncStorage } from 'react-native';
 import { Content, Card, CardItem, Body, Text, Icon, Switch } from 'native-base';
 import JWT from 'expo-jwt'
 import Style from '../../styles/profile'
-
+import ENV from '../../../env'
 
 export default class CardFix extends React.Component {
     constructor(props) {
@@ -26,9 +26,9 @@ export default class CardFix extends React.Component {
     recoverData = async () => {
         
         await this.getToken()
-        const { token, key } = this.state
+        const { token } = this.state
 
-        let decodedToken = JWT.decode(token, key)
+        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
 
         let response = await fetch("https://gathergamers.herokuapp.com/api/user/" + decodedToken.id, {
             headers: {
