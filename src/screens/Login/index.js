@@ -96,24 +96,10 @@ export default class Home extends React.Component {
                         let responseJSON = await response.json()
                         await this.storeData(email, password, responseJSON.meta.token)
                         //this.setState({ token: responseJSON.meta.token })
-                        this.props.navigation.navigate('Home' )
+                        this.props.navigation.navigate('Home')
                     }
 
                 })
-            }
-            )
-            .then(async (response) => {
-                if(response.status == 400) {
-                    const errMessage = "Wrong password or email"
-                    this.setState({ loading: false })
-                    alert(errMessage)
-                } else {
-                    let responseJSON = await response.json()
-                    await this.storeData(email, password, responseJSON.meta.token)
-                    await this.clearState()
-                    this.props.navigation.navigate('Home')
-                }
-            })
         } else {
             this.loginError()
         }
