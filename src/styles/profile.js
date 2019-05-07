@@ -12,9 +12,14 @@ export default StyleSheet.create({
         alignSelf: 'center'
     },
     buttonContainer: {
-        marginTop: 36,
         justifyContent: "center",
-        width: vmin(100),
+        width: vmin(80),
         backgroundColor: "black"
+    },
+    formContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: vmin(15)
     }
 })
