@@ -29,7 +29,7 @@
 | **News** | ❌ | Fake news | | 🚫 | 
 | **My events** | ❌ | Fake events | | ⭐ |
 | **My favorites** | ❌ | Fake favorites | | 🚫 |
-| **AWS service** | ❌ | Not started | | 🚫 |
+| **AWS service** | ❌ | Not started | | ⭐ |
 
 ## Future features
 
