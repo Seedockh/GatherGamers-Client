@@ -11,12 +11,13 @@ export default class Home extends React.Component {
             loading: false,
             email: "",
             password: "",
-            token: ""
+            token: null
         }
         this.restoreData()
     }
 
     storeData = async (email, password, token) => {
+        
         try {
             await AsyncStorage.setItem('email', email);
             await AsyncStorage.setItem('password', password);
@@ -26,6 +27,7 @@ export default class Home extends React.Component {
                 password: password,
                 token: token
             });
+            
         } catch (error) {
             throw error
         }
@@ -75,8 +77,9 @@ export default class Home extends React.Component {
                         alert(errMessage)
                     } else {
                         let responseJSON = await response.json()
-                        this.storeData(email, password, responseJSON.meta.token)
-                        this.props.navigation.navigate('Home')
+                        await this.storeData(email, password, responseJSON.meta.token)
+                        //this.setState({ token: responseJSON.meta.token })
+                        this.props.navigation.navigate('Home' )
                     }
                 })
         } else {
