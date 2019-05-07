@@ -9,12 +9,12 @@ export default class Home extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            firstname: "",
-            lastname: "",
-            nickname: "",
-            email: "",
-            password: "",
-            password_confirmation: "",
+            firstname: "Antoine",
+            lastname: "Nivoy",
+            nickname: "Cracky",
+            email: "cracky.studio@gmail.com",
+            password: "12345678",
+            password_confirmation: "12345678",
         }
     }
 
@@ -37,6 +37,8 @@ export default class Home extends React.Component {
                                         "Content-Type": "application/json"
                                     },
                                     body: JSON.stringify({
+                                        firstname: this.state.firstname,
+                                        lastname: this.state.lastname,
                                         nickname: this.state.nickname,
                                         email: this.state.email,
                                         password: this.state.password,

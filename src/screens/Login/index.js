@@ -36,7 +36,7 @@ export default class Home extends React.Component {
             const email = await AsyncStorage.getItem('email');
             const password = await AsyncStorage.getItem('password');
             const token = await AsyncStorage.getItem('token');
-            if (token !== null && password != "" && email != "") {
+            if (token != "" && password != "" && email != "") {
                 await this.setState({
                     email: email,
                     password: password,
