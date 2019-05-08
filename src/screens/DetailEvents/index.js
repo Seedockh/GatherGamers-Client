@@ -30,9 +30,9 @@ export default class DetailEvents extends React.Component {
                         />
                     </View>
 
-                    <InfoCard />
+                    <InfoCard {...this.props}/>
 
-                    <ListCard />
+                    <ListCard {...this.props}/>
 
                 </ScrollView>
 

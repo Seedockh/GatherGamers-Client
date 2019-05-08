@@ -17,7 +17,7 @@ export default class DetailGames extends React.Component {
     }
 
     onJoinEvent() {
-        this.props.navigation.navigate('JoinEvent')
+        this.props.navigation.navigate('JoinEvent', {gameid: this.props.navigation.state.params.id})
     }
 
     onGamersAround() {
