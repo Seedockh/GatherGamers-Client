@@ -36,7 +36,6 @@ export default class CardDelete extends React.Component {
             })
         })
         .catch( error => {return console.log("error", error)})
-        console.log("response", response)
         this.props.onLogOut()
     }
 

@@ -23,7 +23,7 @@ export default class Tabbars extends React.Component {
                         <Tab2 />
                     </Tab>
                     <Tab heading={<TabHeading><Text>My Favorites</Text></TabHeading>}>
-                        <Tab3 />
+                        <Tab3 {...this.props} />
                     </Tab>
                 </Tabs>
             </>

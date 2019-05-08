@@ -20,15 +20,17 @@
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
+
 | **Create an event** | ✅ | Done | Adrien | 🆗 |
 | **Join an event** | ⌛ | Started | Antoine | ⭐ |
 | **Check for gamers** | ❌ | Not started | | 🚫 |
-| **Add a game to favorite** | ⌛ | In progress | | 🚫 |
-| **Show my profile** | ⌛ | Not merged to master | Adrien | 🚫 |
+| **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
+| **Show my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
+
 | **Geolocalisation** | ⌛ | Not working | Peter | ⭐ |
 | **News** | ❌ | Fake news | | 🚫 | 
-| **My events** | ❌ | Fake events | | ⭐ |
-| **My favorites** | ❌ | Fake favorites | | 🚫 |
+| **My events** | ⌛ | In Progress | Adrien | ⭐ |
+| **My favorites** | ✅ | Done | Adrien | 🆗 |
 | **AWS service** | ❌ | Not started | | ⭐ |
 
 ## Future features
