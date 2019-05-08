@@ -17,16 +17,19 @@ export default class DetailGames extends React.Component {
         super(props);
         this.state = {
             token: null,
-            name: null,
+            name: "",
             cover: null,
             summary: null,
             text: false,
-            switchValue: false
+            switchValue: false,
+            nameFetch: null,
+            gamesFetch: null
         }
     }
 
     componentDidMount() {
         this.fetchGames()
+        this.fetchFavorite()
     }
 
     getToken = async () => {
@@ -58,6 +61,40 @@ export default class DetailGames extends React.Component {
             })
     }
 
+    fetchFavorite = async () => {
+
+        await this.getToken()
+        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+
+        const url = "https://gathergamers.herokuapp.com/api/favourite/user/" + decodedToken.id
+        await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status == 401) {
+                    alert("Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    console.log(responseJSON)
+                    this.setState({ gamesFetch: responseJSON.data.favourite.Games })
+                    for (let gameObject of this.state.gamesFetch) {
+                        if (gameObject.name === this.state.name) {
+                            this.setState({ switchValue: true })
+                        }
+                    }
+                }
+            })
+    }
+
     onJoinEvent() {
         this.props.navigation.navigate('JoinEvent')
     }
@@ -72,7 +109,7 @@ export default class DetailGames extends React.Component {
 
     CHANGEDESTATETAMERE() {
         const { switchValue } = this.state
-        console.log( "avant", switchValue)
+        console.log("avant", switchValue)
         this.setState({ switchValue: !this.state.switchValue }, () => this.onSwitch())
         console.log("apres", switchValue)
     }
@@ -81,8 +118,8 @@ export default class DetailGames extends React.Component {
         const { switchValue } = this.state
 
         let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
-        
-        if (switchValue === true ) {
+
+        if (switchValue === true) {
 
             const url = "https://gathergamers.herokuapp.com/api/favourite/add"
             let response = await fetch(
@@ -100,7 +137,7 @@ export default class DetailGames extends React.Component {
                     })
                 })
             console.log(response)
-        } else if (switchValue === false ) {
+        } else if (switchValue === false) {
 
             const url = "https://gathergamers.herokuapp.com/api/favourite/delete/" + decodedToken.id + "/" + this.props.navigation.state.params.id
             let response = await fetch(

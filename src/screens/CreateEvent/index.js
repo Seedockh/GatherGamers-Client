@@ -160,11 +160,11 @@ export default class CreateEvent extends React.Component {
                                 selectedValue={this.state.typeEvent}
                                 onValueChange={(typeEvent) => this.setState({ typeEvent })}
                             >
-                                <Picker.Item label="LAN" value="key0" />
-                                <Picker.Item label="Speed Run" value="key1" />
-                                <Picker.Item label="Tournois" value="key2" />
-                                <Picker.Item label="Esport" value="key3" />
-                                <Picker.Item label="Autres" value="key4" />
+                                <Picker.Item label="LAN" value="LAN" />
+                                <Picker.Item label="Speed Run" value="Speed Run" />
+                                <Picker.Item label="Tournois" value="Tournois" />
+                                <Picker.Item label="Esport" value="Esport" />
+                                <Picker.Item label="Autres" value="Autres" />
                             </Picker>
                         </View>
                         <View style={{ marginHorizontal: 16, marginVertical: 4, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
