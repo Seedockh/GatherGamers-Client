@@ -90,7 +90,7 @@ export default class CardEdit extends React.Component {
                     })
                 })
                     .catch(error => { return console.log("error", error) })
-                    this.props.onEditFalse()
+                    this.props.onFix()
             } else {
                 this.toastMessage("Wrong Email !")
             }
@@ -139,8 +139,11 @@ export default class CardEdit extends React.Component {
                 </View>
 
                 <View style={{ marginHorizontal: 16, flex: 1, marginTop: 40 }}>
-                    <Button block dark onPress={() => this.onPressEdit()} >
+                    <Button block dark onPress={() => this.onPressEdit()} style={{ marginVertical: 8 }} >
                         <Text>Save</Text>
+                    </Button>
+                    <Button block dark onPress={() => this.props.onFix()} style={{ marginVertical: 8 }}>
+                        <Text>Cancel</Text>
                     </Button>
                 </View>
 
