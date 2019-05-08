@@ -14,7 +14,7 @@ export default class Home extends React.Component {
 
         return (
             <>
-            <Tabbars/>
+            <Tabbars {...this.props} />
 
             <FooterTabs {...this.props} />
             </>
