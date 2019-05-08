@@ -20,11 +20,13 @@
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
-| **Create an event** | ⌛ | Unknown | Adrien | ⭐ |
-| **Join an event** | ❌ | Not started | | ⭐ |
+
+| **Create an event** | ✅ | Done | Adrien | 🆗 |
+| **Join an event** | ⌛ | Started | Antoine | ⭐ |
 | **Check for gamers** | ❌ | Not started | | 🚫 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Show my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
+
 | **Geolocalisation** | ⌛ | Not working | Peter | ⭐ |
 | **News** | ❌ | Fake news | | 🚫 | 
 | **My events** | ⌛ | In Progress | Adrien | ⭐ |
