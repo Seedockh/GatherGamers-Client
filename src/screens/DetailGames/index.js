@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Image, AsyncStorage, ScrollView } from 'react-native';
 import { Text, Switch, Button } from 'native-base'
-import ViewMoreText from 'react-native-view-more-text'
 import { vmin } from 'react-native-expo-viewport-units';
 import Style from '../../styles/games'
 import FooterTabs from '../../components/FooterTabs'
+import JWT from 'expo-jwt'
+import ENV from '../../../env'
 
 export default class DetailGames extends React.Component {
 
@@ -19,7 +20,8 @@ export default class DetailGames extends React.Component {
             name: null,
             cover: null,
             summary: null,
-            text: false
+            text: false,
+            switchValue: false
         }
     }
 
@@ -68,8 +70,55 @@ export default class DetailGames extends React.Component {
         this.props.navigation.navigate('CreateEvent', { ...this.props })
     }
 
+    CHANGEDESTATETAMERE() {
+        const { switchValue } = this.state
+        console.log( "avant", switchValue)
+        this.setState({ switchValue: !this.state.switchValue }, () => this.onSwitch())
+        console.log("apres", switchValue)
+    }
+
+    onSwitch = async () => {
+        const { switchValue } = this.state
+
+        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+        
+        if (switchValue === true ) {
+
+            const url = "https://gathergamers.herokuapp.com/api/favourite/add"
+            let response = await fetch(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.state.token
+                    },
+                    body: JSON.stringify({
+                        UserId: decodedToken.id,
+                        GameId: this.props.navigation.state.params.id
+                    })
+                })
+            console.log(response)
+        } else if (switchValue === false ) {
+
+            const url = "https://gathergamers.herokuapp.com/api/favourite/delete/" + decodedToken.id + "/" + this.props.navigation.state.params.id
+            let response = await fetch(
+                url,
+                {
+                    headers: {
+                        "Accept": "application/json",
+                        "Authorization": 'Bearer ' + this.state.token,
+                        "Content-Type": 'application/json'
+                    },
+                    method: "DELETE"
+                })
+            console.log(response)
+        }
+    }
+
     render() {
-        const { cover, summary, text } = this.state
+        const { cover, summary, text, switchValue } = this.state
         return (
             <>
                 <ScrollView>
@@ -82,13 +131,13 @@ export default class DetailGames extends React.Component {
                         </View>
 
                         <View style={{ flex: 2, justifyContent: "center", alignItems: "center", marginHorizontal: 16, marginVertical: 16 }}>
-                            <Text onPress={() => this.setState({text : !this.state.text})} numberOfLines={ text ? null : 5}>{summary}</Text>
+                            <Text onPress={() => this.setState({ text: !this.state.text })} numberOfLines={text ? null : 5}>{summary}</Text>
                         </View>
 
 
                         <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", marginHorizontal: 16 }}>
                             <Text>Add Titre du Jeu as favorite</Text>
-                            <Switch value={true} />
+                            <Switch value={switchValue} onValueChange={() => this.CHANGEDESTATETAMERE()} />
                         </View>
 
                         <View style={{ marginHorizontal: 16, marginTop: 16 }}>
