@@ -115,23 +115,18 @@ export default class CreateEvent extends React.Component {
                             this.props.navigation.navigate('Home')
 
                         } else {
-                            console.log("Wrong Address !")
                             this.toastMessage("Wrong Address !")
                         }
                     } else {
-                        console.log("Wrong Cash Price!")
                         this.toastMessage("Wrong Cash Price !")
                     }
                 } else {
-                    console.log("Wrong Date !")
                     this.toastMessage("Wrong Date !")
                 }
             } else {
-                console.log("Wrong Numbers of Players !")
                 this.toastMessage("Wrong Numbers of Players !")
             }
         } else {
-            console.log("Wrong Event Name !")
             this.toastMessage("Wrong Event Name !")
         }
     }
