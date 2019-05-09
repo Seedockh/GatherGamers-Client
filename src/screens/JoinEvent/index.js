@@ -4,6 +4,7 @@ import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body,
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import { ScrollView } from 'react-native-gesture-handler';
+import { MapView, Location } from 'expo';
 
 const events = []
 export default class JoinEvents extends React.Component {
@@ -18,17 +19,37 @@ export default class JoinEvents extends React.Component {
             searchText: "",
             token: "",
             eventsCount: 0,
+            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            locationResult: null,
+            location: { coords: {
+                latitude: 37.78825,
+                longitude: -122.4324
+            } },
         }
         events.length = 0
     }
 
     componentDidMount() {
-        this.fetchEvents()
+        this.fetchEvents();
+        this.getUserLocation();
     }
+
+    handleMapRegionChange = mapRegion => {
+      this.setState({ mapRegion });
+    };
 
     getToken = async () => {
         const token = await AsyncStorage.getItem('token');
         this.setState({ token })
+    }
+
+    async getUserLocation() {
+      if (await Location.hasServicesEnabledAsync()) {
+        let location = await Location.getCurrentPositionAsync({accuracy: 2});
+        this.setState({ location: location, locationResult: JSON.stringify(location) })
+      } else {
+        this.state({ locationResult: 'Location permission not enabled !'});
+      }
     }
 
     fetchEvents = async () => {
@@ -102,6 +123,10 @@ export default class JoinEvents extends React.Component {
     render() {
         return (
             <>
+                <MapView
+                  style={{ flex: 1 }}
+                  initialRegion={this.state.mapRegion}
+                />
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                         <Image
