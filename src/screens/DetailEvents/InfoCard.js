@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, AsyncStorage } from 'react-native';
-import { Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Content, Card, CardItem, Body, Text, Button, Toast } from 'native-base';
 
 export default class InfoCard extends React.Component {
 
