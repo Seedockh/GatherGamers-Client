@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
-import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
+import { Form, Item, Input, Label, Button, Spinner, Text, Toast } from 'native-base'
 import Style from '../../styles/login'
 import ENV from '../../../env.js'
 
@@ -91,7 +91,12 @@ export default class Home extends React.Component {
                     if(response.status == 400) {
                         const errMessage = "Wrong password or email"
                         this.setState({ loading: false })
-                        alert(errMessage)
+                        Toast.show({
+                            text: `${errMessage}`,
+                            buttonText: "Okay",
+                            type: "danger",
+                            duration: 3000
+                        })
                     } else {
                         let responseJSON = await response.json()
                         await this.storeData(email, password, responseJSON.meta.token)
@@ -106,7 +111,12 @@ export default class Home extends React.Component {
     }
 
     loginError() {
-        alert("Nickname and password are not matching!")
+        Toast.show({
+            text: "Nickname and password are not matching!",
+            buttonText: "Okay",
+            type: "danger",
+            duration: 3000
+        })
         this.setState({ loading: false }) 
     }
 
