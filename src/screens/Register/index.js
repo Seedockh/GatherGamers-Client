@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
+import { Form, Item, Input, Label, Button, Spinner, Text, Toast } from 'native-base'
 import Style from '../../styles/register'
 import ENV from '../../../env.js'
 
@@ -49,28 +49,38 @@ export default class Home extends React.Component {
                                 if (response.status >= 200 && response.status < 300) {
                                     this.setState({ loading: false })
                                     this.props.navigation.navigate('Login')
-                                    alert("Account successfully created!")
+                                    this.toastMessage("success", "Account successfully created!")
                                 } else {
-                                    alert(JSON.stringify(response))
+                                    this.toastMessage("danger", `${JSON.stringify(response)}`)
                                 }
                             } catch (errors) {
-                                alert(errors);
+                                //alert(errors);
+                                throw errors;
                             }
                         } else {
-                            alert("Email is not valid!")
+                            this.toastMessage("danger", "Email is not valid!")
                         }
                     } else {
-                        alert("Nickname size must be greater than 5 and Password than 7!")
+                        this.toastMessage("danger", "Nickname size must be greater than 5 and Password than 7!")
                     }
                 } else {
-                    alert("Nickname and Password must be different!")
+                    this.toastMessage("danger", "Nickname and Password must be different!")
                 }
             } else {
-                alert("Password must be equals!")
+                this.toastMessage("danger", "Password must be equals!")
             }
         } else {
-            alert("You must fill all inputs!")
+            this.toastMessage("danger", "You must fill all inputs!")
         }
+    }
+
+    toastMessage(status, message) {
+        Toast.show({
+            text: `${message}`,
+            buttonText: "Okay",
+            type: `${status}`,
+            duration: 3000
+        })
     }
 
     render() {
