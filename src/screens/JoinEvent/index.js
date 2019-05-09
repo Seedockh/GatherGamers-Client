@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, AsyncStorage, TouchableOpacity } from 'react-native';
 import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body, Right, Button } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import { ScrollView } from 'react-native-gesture-handler';
 
+const events = []
 export default class JoinEvents extends React.Component {
 
     static navigationOptions = {
@@ -14,48 +15,91 @@ export default class JoinEvents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [{
-                title: "Event 1",
-                text1: "Cool",
-                text2: "Chouette"
-            },
+            searchText: "",
+            token: "",
+            eventsCount: 0,
+        }
+        events.length = 0
+    }
+
+    componentDidMount() {
+        this.fetchEvents()
+    }
+
+    getToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        this.setState({ token })
+    }
+
+    fetchEvents = async () => {
+        await this.getToken()
+        const url = "https://gathergamers.herokuapp.com/api/event/"
+        await fetch(
+            url,
             {
-                title: "Event 2",
-                text1: "Cool",
-                text2: "Chouette"
-            },
-            {
-                title: "Event 3",
-                text1: "Cool",
-                text2: "Chouette"
-            },
-            {
-                title: "Event 4",
-                text1: "Cool",
-                text2: "Chouette"
-            },
-            {
-                title: "Event 4",
-                text1: "Cool",
-                text2: "Chouette"
-            },
-            {
-                title: "Event 4",
-                text1: "Cool",
-                text2: "Chouette"
-            },
-            {
-                title: "Event 4",
-                text1: "Cool",
-                text2: "Chouette"
-            }]
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+            }
+            )
+            .then(async (response) => {
+                if(response.status == 401) {
+                    alert("Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    responseJSON.data.events.forEach(function(event) {
+                        let eventToPush = {
+                            id: event.id,
+                            title: event.name,
+                            date: event.date,
+                            place: event.place,
+                            gameid: event.GameId,
+                            players: event.players,
+                            price: event.price,
+                            type: event.type,
+                            user: event.UserId
+                        }
+                        events.push(eventToPush)
+                    });
+                }
+        })
+        this.setState({eventsCount: events.length})
+    }
+
+    onDetails(index) {
+        this.props.navigation.navigate('DetailEvents', {event: events[index]})
+    }
+
+    renderItem(item, index) {
+        if (item.title.indexOf(this.state.searchText) !== -1) {
+            if (item.gameid == this.props.navigation.state.params.gameid) {
+                return(
+                    <List key={index} >
+                        <ListItem thumbnail>
+                        <TouchableOpacity key={index} activeOpacity={0} style={{flexDirection : "row"}} onPress={() => this.onDetails(index)}>
+                            <Left>
+                                <Thumbnail square source={require('../../../assets/rouge.jpg')} />
+                            </Left>
+                            <Body>
+                                <Text>{item.title}</Text>
+                                <Text note numberOfLines={1}>{item.date}</Text>
+                                <Text note numberOfLines={1}>{item.place}</Text>
+                            </Body>
+                        </TouchableOpacity>
+                        </ListItem>
+                    </List>)
+            } else {
+                return null
+            }
+        } else {
+            return null
         }
     }
 
     render() {
-
-        const { data } = this.state
-
         return (
             <>
                 <View style={{ flex: 1 }}>
@@ -68,30 +112,12 @@ export default class JoinEvents extends React.Component {
                     <Header searchBar rounded>
                         <Item>
                             <Icon name="ios-search" />
-                            <Input placeholder="Search" />
+                            <Input placeholder="Search" onChangeText={(searchText) => this.setState({searchText})} />
                         </Item>
                     </Header>
 
                     <ScrollView>
-                        {data.length > 0 ? (
-                            data.map((item, index) => (
-
-                                <List key={index} >
-                                    <ListItem thumbnail>
-                                        <Left>
-                                            <Thumbnail square source={require('../../../assets/rouge.jpg')} />
-                                        </Left>
-                                        <Body>
-                                            <Text>{item.title}</Text>
-                                            <Text note numberOfLines={1}>{item.text1}</Text>
-                                            <Text note numberOfLines={1}>{item.text2}</Text>
-                                        </Body>
-                                    </ListItem>
-                                </List>
-                            ))
-                        ) : (
-                                <Text>Pas d'events</Text>
-                            )}
+                        {events.length > 0 ? events.map((item, index) => this.renderItem(item, index)) : null}
                     </ScrollView>
                 </View>
 

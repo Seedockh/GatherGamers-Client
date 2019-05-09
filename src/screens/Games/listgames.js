@@ -17,6 +17,7 @@ export default class ListGames extends React.Component {
             token: "",
             gamesCount: 0
         }
+        games.length = 0
     }
 
     componentDidMount() {
