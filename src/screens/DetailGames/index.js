@@ -6,18 +6,13 @@ import Style from '../../styles/games'
 import FooterTabs from '../../components/FooterTabs'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
-
 export default class DetailGames extends React.Component {
-
-    static navigationOptions = {
-        headerTitle: "Titre du Jeu"
-    }
 
     constructor(props) {
         super(props);
         this.state = {
             token: null,
-            name: "",
+            name: null,
             cover: null,
             summary: null,
             text: false,
@@ -84,19 +79,43 @@ export default class DetailGames extends React.Component {
                     alert("Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    console.log(responseJSON)
                     this.setState({ gamesFetch: responseJSON.data.favourite.Games })
                     for (let gameObject of this.state.gamesFetch) {
                         if (gameObject.name === this.state.name) {
                             this.setState({ switchValue: true })
                         }
                     }
+
+                    await this.pushNotif(`You have added ${this.state.name} to your favorites`, 1)
                 }
+            })
+
+    }
+
+    pushNotif = async (message, type) => {
+
+        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        let response = await fetch(
+            url,
+            {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+                body: JSON.stringify({
+                    UserId: decodedToken.id,
+                    message: message,
+                    type: type
+                })
             })
     }
 
     onJoinEvent() {
-        this.props.navigation.navigate('JoinEvent', {gameid: this.props.navigation.state.params.id})
+        this.props.navigation.navigate('JoinEvent', { gameid: this.props.navigation.state.params.id })
     }
 
     onGamersAround() {
@@ -109,9 +128,7 @@ export default class DetailGames extends React.Component {
 
     CHANGEDESTATETAMERE() {
         const { switchValue } = this.state
-        console.log("avant", switchValue)
         this.setState({ switchValue: !this.state.switchValue }, () => this.onSwitch())
-        console.log("apres", switchValue)
     }
 
     onSwitch = async () => {
@@ -136,7 +153,7 @@ export default class DetailGames extends React.Component {
                         GameId: this.props.navigation.state.params.id
                     })
                 })
-            console.log(response)
+
         } else if (switchValue === false) {
 
             const url = "https://gathergamers.herokuapp.com/api/favourite/delete/" + decodedToken.id + "/" + this.props.navigation.state.params.id
@@ -150,12 +167,12 @@ export default class DetailGames extends React.Component {
                     },
                     method: "DELETE"
                 })
-            console.log(response)
+
         }
     }
 
     render() {
-        const { cover, summary, text, switchValue } = this.state
+        const { cover, summary, text, switchValue, name } = this.state
         return (
             <>
                 <ScrollView>
@@ -173,7 +190,7 @@ export default class DetailGames extends React.Component {
 
 
                         <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", marginHorizontal: 16 }}>
-                            <Text>Add Titre du Jeu as favorite</Text>
+                            <Text>Add {name} as favorite</Text>
                             <Switch value={switchValue} onValueChange={() => this.CHANGEDESTATETAMERE()} />
                         </View>
 

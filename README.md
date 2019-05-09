@@ -26,8 +26,8 @@
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Show my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
 | **Geolocalisation** | ⌛ | Not working | Peter | ⭐ |
-| **News** | ❌ | Fake news | | 🚫 | 
-| **My events** | ⌛ | In Progress | Adrien | ⭐ |
+| **My News** | ✅ | Done | Adrien | 🆗 | 
+| **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
 | **AWS service** | ❌ | Not started | | ⭐ |
 

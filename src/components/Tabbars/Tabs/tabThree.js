@@ -45,7 +45,6 @@ export default class TabThree extends React.Component {
                     alert("Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    console.log(responseJSON)
                     this.setState({ gamesFetch: responseJSON.data.favourite.Games })
                 }
             })
