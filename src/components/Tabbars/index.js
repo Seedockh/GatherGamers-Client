@@ -16,11 +16,11 @@ export default class Tabbars extends React.Component {
             <>
                 <Header hasTabs />
                 <Tabs>
-                    <Tab heading={<TabHeading><Text>News</Text></TabHeading>}>
+                    <Tab heading={<TabHeading><Text>My News</Text></TabHeading>}>
                         <Tab1 />
                     </Tab>
                     <Tab heading={<TabHeading><Text>My Events</Text></TabHeading>}>
-                        <Tab2 />
+                        <Tab2 {...this.props}/>
                     </Tab>
                     <Tab heading={<TabHeading><Text>My Favorites</Text></TabHeading>}>
                         <Tab3 {...this.props} />

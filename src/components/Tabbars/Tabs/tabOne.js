@@ -1,59 +1,77 @@
 import React from 'react';
-import { ScrollView, View, Image } from 'react-native';
-import { Text } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';;
+import { ScrollView, View, Image, AsyncStorage } from 'react-native';
+import { Text, Card, CardItem, Body } from 'native-base';
+import { vmin } from 'react-native-expo-viewport-units';
+import JWT from 'expo-jwt'
+import ENV from '../../../../env'
 export default class TabOne extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            data: [{
-                title: "Jenna Added You",
-                date: "06/05/2019"
-            },
-            {
-                title: "New Event in Paris",
-                date: "06/05/2019"
-            },
-            {
-                title: "Mark answered you",
-                date: "06/05/2019"
-            },
-            {
-                title: "Tyrion Added You",
-                date: "06/05/2019"
-            }]
+            token: null,
+            notifsFetch: null
         }
+    }
+
+    componentDidMount() {
+        this.fetchNotif()
+    }
+
+    getToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        this.setState({ token })
+    }
+
+    fetchNotif = async () => {
+
+        await this.getToken()
+        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+
+        const url = "https://gathergamers.herokuapp.com/api/notification/user/" + decodedToken.id
+        await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                },
+            }
+        )
+            .then(async (response) => {
+
+                if (response.status == 401) {
+                    alert("Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    this.setState({ notifsFetch: responseJSON.data.notifs })
+                }
+            })
     }
 
     render() {
 
-        const { data } = this.state
+        const { notifsFetch } = this.state
 
         return (
             <ScrollView style={{ flex: 1 }}>
 
-                {data.length > 0 ? (
-                    data.map((item, index) => (
+                {notifsFetch ? (
+                    notifsFetch.map((item, index) => (
 
-                        <View key={index} style={{ borderWidth: 3, borderColor: "#000", marginHorizontal: 24, marginVertical: 16, justifyContent: "center", alignItems: "center" }}>
-                            <View style={{ marginTop: -12, paddingHorizontal: 8, backgroundColor:"white", alignSelf: "flex-start", marginLeft: 4 }}>
-                                <Text note>{item.date}</Text>
-                            </View>
-
-                            <View style={{ padding: 8 }}>
-                                <Image
-                                    style={{ width: vmin(20), height: vmin(20) }}
-                                    source={require('../../../../assets/logo.png')}
-                                />
-                            </View>
-                            <View style={{ paddingBottom: 8, justifyContent: "center", alignItems: "center" }}>
-                                <Text style={{ fontWeight: "500" }}>{item.title}</Text>
-                            </View>
-                        </View>
-
+                        <Card key={index} >
+                            <CardItem style={{ backgroundColor: item.type ? "green" : "red" }}>
+                                <View>
+                                    <Text>{item.message}</Text>
+                                    <Text>{item.createdAt}</Text>
+                                </View>
+                            </CardItem>
+                        </Card>
                     ))
                 ) : (
-                        <Text>Pas de news</Text>
+                        <Text>You have no notifications</Text>
                     )}
 
             </ScrollView>
