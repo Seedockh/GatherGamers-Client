@@ -7,7 +7,7 @@ import JWT from 'expo-jwt'
 import Style from '../../styles/createevent'
 
 export default class CreateEvent extends React.Component {
-
+    
     static navigationOptions = {
         headerTitle: "Create Event"
     }

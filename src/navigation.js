@@ -57,13 +57,19 @@ const AppNavigator = createStackNavigator({
     Friends: {
         screen: Friends
     },
-    CreateEvent : {
+    CreateEvent: {
         screen: CreateEvent
     }
 },
     {
         initialRouteName: 'Login',
-        headerMode: 'float'
+        headerMode: 'float',
+        defaultNavigationOptions: {
+            headerTintColor: '#fff',
+            headerStyle: {
+                backgroundColor: '#000',
+            },
+        },
     });
 
 export default createAppContainer(AppNavigator);
