@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Image, AsyncStorage } from 'react-native';
+import { ScrollView, View, Image, AsyncStorage, ActivityIndicator, RefreshControl } from 'react-native';
 import { Text, Card, CardItem } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import JWT from 'expo-jwt'
@@ -9,12 +9,20 @@ export default class TabTwo extends React.Component {
         super(props);
         this.state = {
             token: null,
-            eventsFetch: null
+            eventsFetch: null,
+            refreshing: false,
         }
     }
 
     componentDidMount() {
         this.eventsFetch()
+    }
+
+    _onRefresh = () => {
+      this.setState({refreshing: true});
+      this.eventsFetch().then(() => {
+        this.setState({refreshing: false});
+      });
     }
 
     getToken = async () => {
@@ -55,24 +63,34 @@ export default class TabTwo extends React.Component {
 
         const { eventsFetch } = this.state
         return (
-            <ScrollView style={{ flex: 1 }}>
-                
-                {eventsFetch ? (
-                    eventsFetch.map((item, index) => (
+            <ScrollView style={{ flex: 1 }} refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }>
+              {!eventsFetch &&(
+                <View style={{ flex: 1, justifyContent: 'center'}}>
+                  <ActivityIndicator style={{marginTop:20}} size="large" color="#000000" />
+                </View>
+              )}
+              {eventsFetch && eventsFetch.length>0 && (
+                eventsFetch.map((item, index) => (
+                    <Card key={index} >
+                        <CardItem>
+                            <View>
+                                <Text>{item.name}</Text>
+                                <Text>{item.date}</Text>
+                                <Text>{item.players}</Text>
+                            </View>
+                        </CardItem>
+                    </Card>
+                ))
+              )}
+              {eventsFetch && eventsFetch.length===0 &&(
+                <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> You're not participating to any event yet. </Text>
+              )}
 
-                        <Card key={index} >
-                            <CardItem>
-                                <View>
-                                    <Text>{item.name}</Text>
-                                    <Text>{item.date}</Text>
-                                    <Text>{item.players}</Text>
-                                </View>
-                            </CardItem>
-                        </Card>
-                    ))
-                ) : (
-                        <Text>You have no notifications</Text>
-                    )}
                 {/* {data.length > 0 ? (
                     data.map((item, index) => (
 

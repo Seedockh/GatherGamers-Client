@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 32232,
+  "expoServerNgrokUrl": "https://pv-ade.anonymous.gathergamers-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.pv-ade.anonymous.gathergamers-client.exp.direct",
+  "ngrokPid": 56044,
+  "webpackServerPort": null
 }

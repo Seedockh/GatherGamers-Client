@@ -1,7 +1,6 @@
 import React from 'react';
 import { Root } from "native-base";
 import { Font, Permissions } from "expo";
-import * as Persmissions from 'expo-permissions';
 import AppNavigator from './src/navigation'
 
 export default class App extends React.Component {
