@@ -9,6 +9,7 @@ import KEY from '../../../secretenv.js'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MapView, Location } from 'expo';
+import Style from '../../styles/createevent'
 
 export default class CreateEvent extends React.Component {
     
