@@ -19,10 +19,10 @@ export default class TabThree extends React.Component {
     }
 
     _onRefresh = () => {
-      this.setState({refreshing: true});
-      this.fetchFavorite().then(() => {
-        this.setState({refreshing: false});
-      });
+        this.setState({ refreshing: true });
+        this.fetchFavorite().then(() => {
+            this.setState({ refreshing: false });
+        });
     }
 
     getToken = async () => {
@@ -60,7 +60,7 @@ export default class TabThree extends React.Component {
 
     onDetails(index) {
         const { gamesFetch } = this.state
-        this.props.navigation.navigate('DetailGames', {id: gamesFetch[index].id})
+        this.props.navigation.navigate('DetailGames', { id: gamesFetch[index].id })
     }
 
     render() {
@@ -69,39 +69,39 @@ export default class TabThree extends React.Component {
 
         return (
 
-            <ScrollView style={{ flex: 1 }} refreshControl={
+            <ScrollView style={Style.scrollview} refreshControl={
                 <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this._onRefresh}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh}
                 />
-              }>
-                {!gamesFetch &&(
-                  <View style={{ flex: 1, justifyContent: 'center'}}>
-                    <ActivityIndicator style={{marginTop:20}} size="large" color="#000000" />
-                  </View>
+            }>
+                {!gamesFetch && (
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000" />
+                    </View>
                 )}
-                {gamesFetch && gamesFetch.length>0 && (
-                  gamesFetch.map((item, index) => (
-                      <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.onDetails(index)}>
-                          <View style={{ borderWidth: 3, borderColor: "#000", marginHorizontal: 24, marginVertical: 16, justifyContent: "center", alignItems: "center" }}>
+                {gamesFetch && gamesFetch.length > 0 && (
+                    gamesFetch.map((item, index) => (
+                        <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.onDetails(index)}>
+                            <View style={Style.container}>
 
-                              <View style={{ paddingBottom: 8, justifyContent: "center", alignItems: "center", backgroundColor: "white", marginTop: -12, paddingHorizontal: 8 }}>
-                                  <Text style={{ fontWeight: "500" }}>{item.name}</Text>
-                              </View>
+                                <View style={Style.view}>
+                                    <Image
+                                        style={Style.picture}
+                                        source={{ uri: item.cover }}
+                                    />
+                                </View>
 
-                              <View style={{ padding: 8 }}>
-                                  <Image
-                                      style={{ width: vmin(20), height: vmin(20) }}
-                                      source={{ uri: item.cover }}
-                                  />
-                              </View>
+                                <View style={Style.viewname}>
+                                    <Text style={Style.name}>{item.name}</Text>
+                                </View>
 
-                          </View>
-                      </TouchableOpacity>
-                  ))
+                            </View>
+                        </TouchableOpacity>
+                    ))
                 )}
-                {gamesFetch && gamesFetch.length===0 &&(
-                  <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> You have no favorites yet. </Text>
+                {gamesFetch && gamesFetch.length === 0 && (
+                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: 20 }}> You have no favorites yet. </Text>
                 )}
 
             </ScrollView>

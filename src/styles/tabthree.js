@@ -33,6 +33,8 @@ export default StyleSheet.create({
         textAlign: "center"
     },
     textnonotif: {
-        alignSelf: "center"
+        fontSize: 20, 
+        textAlign: 'center', 
+        marginTop: 20 
     }
 });

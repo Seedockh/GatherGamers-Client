@@ -20,6 +20,9 @@ export default StyleSheet.create({
     },
 
     textnonotif: {
+        fontSize:20, 
+        textAlign:'center', 
+        marginTop:20,
         alignSelf: "center"
     }
 });
