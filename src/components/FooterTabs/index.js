@@ -1,7 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
 import { Footer, FooterTab, Button, Text } from 'native-base';
-
 export default class FooterTabs extends React.Component {
     constructor(props) {
         super(props);
@@ -22,22 +20,22 @@ export default class FooterTabs extends React.Component {
 
     render() {
         return (
-            <Footer>
-                <FooterTab>
+            <Footer >
+                <FooterTab style={{ backgroundColor: "black"}}>
                     <Button onPress={this.onHomePress.bind(this)}>
-                        <Text>Home</Text>
+                        <Text style={{color:"white"}}>Home</Text>
                     </Button>
                     <Button onPress={this.onGamesPress.bind(this)}>
-                        <Text>Games</Text>
+                        <Text style={{color:"white"}}>Games</Text>
                     </Button>
                     <Button onPress={this.onProfilePress.bind(this)}>
-                        <Text>Profile</Text>
+                        <Text style={{color:"white"}}>Profile</Text>
                     </Button>
                     <Button>
-                        <Text>Chat</Text>
+                        <Text style={{color:"white"}}>Chat</Text>
                     </Button>
                 </FooterTab>
             </Footer>
-        );
+        )
     }
 }

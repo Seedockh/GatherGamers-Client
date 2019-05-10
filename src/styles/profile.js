@@ -2,24 +2,25 @@ import { StyleSheet, Platform } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';;
 
 export default StyleSheet.create({
-    disconnectText: {
-        color: 'white',
+    viewimage: {
+        marginTop: 48, 
+        marginBottom: 16
     },
+
+    image: {
+        width: vmin(40), 
+        height: vmin(40), 
+        borderRadius: 50, 
+        alignSelf: "center"
+    },
+
+    view: {
+        marginHorizontal: 16, 
+        flex: 1, 
+        justifyContent: "space-around"
+    },
+
     button: {
-        backgroundColor: "black", 
-        width: vmin(60), 
-        justifyContent: 'center',
-        alignSelf: 'center'
-    },
-    buttonContainer: {
-        justifyContent: "center",
-        width: vmin(80),
-        backgroundColor: "black"
-    },
-    formContainer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingBottom: vmin(15)
+        marginVertical: 8
     }
 })

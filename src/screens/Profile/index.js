@@ -49,10 +49,10 @@ export default class Profile extends React.Component {
                 <ScrollView>
                     {edit != "delete" ?
 
-                        <View style={{ marginTop: 48, marginBottom: 16 }}>
+                        <View style={Style.viewimage}>
                             <Image
-                                style={{ width: vmin(40), height: vmin(40), borderRadius: 50, alignSelf: "center" }}
-                                source={require('../../../assets/rouge.jpg')}
+                                style={Style.image}
+                                source={require('../../../assets/picture.png')}
                             />
                         </View>
 
@@ -62,17 +62,17 @@ export default class Profile extends React.Component {
                         <>
                             <CardFix />
 
-                            <View style={{ marginHorizontal: 16, flex: 1, justifyContent: "space-around" }}>
-                                <Button block dark onPress={() => this.onEdit()} style={{ marginVertical: 8 }}>
+                            <View style={Style.view}>
+                                <Button block dark onPress={() => this.onEdit()} style={Style.button}>
                                     <Text>Update Account Informations</Text>
                                 </Button>
-                                <Button block dark onPress={() => this.onPass()} style={{ marginVertical: 8 }}>
+                                <Button block dark onPress={() => this.onPass()} style={Style.button}>
                                     <Text>Update Password</Text>
                                 </Button>
-                                <Button block dark onPress={() => this.onDelete()} style={{ marginVertical: 8 }}>
+                                <Button block dark onPress={() => this.onDelete()} style={Style.button}>
                                     <Text>Delete Account</Text>
                                 </Button>
-                                <Button block dark onPress={this.logout.bind(this)} style={{ marginVertical: 8 }}>
+                                <Button block dark onPress={this.logout.bind(this)} style={Style.button}>
                                     <Text>Log Out</Text>
                                 </Button>
                             </View>

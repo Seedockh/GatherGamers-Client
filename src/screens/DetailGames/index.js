@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Image, AsyncStorage, ScrollView, ActivityIndicator } from 'react-native';
 import { Text, Switch, Button } from 'native-base'
-import { vmin } from 'react-native-expo-viewport-units';
-import Style from '../../styles/games'
+import Style from '../../styles/detailgame'
 import FooterTabs from '../../components/FooterTabs'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
@@ -188,35 +187,35 @@ export default class DetailGames extends React.Component {
               )}
               {fetchesDone && (
                 <ScrollView>
-                    <View style={{ flex: 1 }}>
-                        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                    <View style={Style.container}>
+                        <View style={Style.viewimage}>
                             <Image
-                                style={{ width: vmin(20), height: vmin(30), flex: 1 }}
+                                style={Style.image}
                                 source={{ uri: cover }}
                             />
                         </View>
 
-                        <View style={{ flex: 2, justifyContent: "center", alignItems: "center", marginHorizontal: 16, marginVertical: 16 }}>
+                        <View style={Style.viewsummary}>
                             <Text onPress={() => this.setState({ text: !this.state.text })} numberOfLines={text ? null : 5}>{summary}</Text>
                         </View>
 
 
-                        <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", marginHorizontal: 16 }}>
+                        <View style={Style.viewswitch}>
                             <Text>Add {name} as favorite</Text>
                             <Switch value={switchValue} onValueChange={()=>this.CHANGEDESTATETAMERE()} />
                         </View>
 
-                        <View style={{ marginHorizontal: 16, marginTop: 16 }}>
-                            <Button block style={{ marginVertical: 8, backgroundColor: "black" }} onPress={() => this.onCreateEvent()}>
+                        <View style={Style.viewbutton}>
+                            <Button block style={Style.button} onPress={() => this.onCreateEvent()}>
                                 <Text>Create Event</Text>
                             </Button>
-                            <Button block style={{ marginVertical: 8, backgroundColor: "black" }} onPress={() => this.onJoinEvent()}>
+                            <Button block style={Style.button} onPress={() => this.onJoinEvent()}>
                                 <Text>Join Event</Text>
                             </Button>
-                            <Button block style={{ marginVertical: 8, backgroundColor: "black" }} onPress={() => this.onGamersAround()}>
+                            <Button block style={Style.button} onPress={() => this.onGamersAround()}>
                                 <Text>Check for gamers</Text>
                             </Button>
-                            <Button block style={{ marginVertical: 8, backgroundColor: "black" }}>
+                            <Button block style={Style.button}>
                                 <Text>Forum</Text>
                             </Button>
                         </View>

@@ -4,6 +4,7 @@ import { Text, Card, CardItem, Body, Button } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
+import Style from '../../../styles/tabone'
 export default class TabOne extends React.Component {
 
     constructor(props) {
@@ -90,6 +91,7 @@ export default class TabOne extends React.Component {
         const { notifsFetch, deleting } = this.state
 
         return (
+
             <ScrollView style={{ flex: 1 }} refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}

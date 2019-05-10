@@ -4,6 +4,7 @@ import { Text, Card, CardItem } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
+import Style from '../../../styles/tabtwo'
 export default class TabTwo extends React.Component {
     constructor(props) {
         super(props);
@@ -51,6 +52,7 @@ export default class TabTwo extends React.Component {
                 if (response.status == 401) {
                     alert("Unauthorized!")
                 } else {
+
                     let responseJSON = await response.json();
                     this.setState({ eventsFetch: responseJSON.data.events })
                 }
@@ -60,7 +62,9 @@ export default class TabTwo extends React.Component {
     render() {
 
         const { eventsFetch } = this.state
+
         return (
+
             <ScrollView style={{ flex: 1 }} refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
@@ -108,11 +112,10 @@ export default class TabTwo extends React.Component {
                                 <Text style={{ fontWeight: "500" }}>{item.title}</Text>
                             </View>
                         </View>
-
                     ))
                 ) : (
-                        <Text>Pas de news</Text>
-                    )} */}
+                        <Text style={Style.textnonotif}>You have no events</Text>
+                    )}
 
             </ScrollView>
         );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, AsyncStorage, TextInput } from 'react-native';
 import { Card, CardItem, Body, Text, Button, Toast } from 'native-base';
-import Style from '../../styles/profile'
+import Style from '../../styles/cardedit'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
 export default class CardEdit extends React.Component {
@@ -105,32 +105,32 @@ export default class CardEdit extends React.Component {
         return (
 
             <>
-                <View style={{ marginHorizontal: 16, flex: 2 }}>
+                <View style={Style.content}>
                     <Card>
                         <CardItem header bordered>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                                <Text style={{ color: "black" }}>Informations</Text>
+                            <View style={Style.headerview}>
+                                <Text style={Style.text}>Informations</Text>
                             </View>
 
                         </CardItem>
                         <CardItem bordered>
                             <Body>
 
-                                <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 4 }}>
+                                <View style={Style.view}>
                                     <Text>Nickname :</Text>
-                                    <TextInput value={nickname} onChangeText={(nickname) => this.setState({ nickname })} style={{ width: 100, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
+                                    <TextInput value={nickname} onChangeText={(nickname) => this.setState({ nickname })} style={Style.textinput} />
                                 </View>
-                                <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 4 }}>
+                                <View style={Style.view}>
                                     <Text>Firstname :</Text>
-                                    <TextInput value={firstname} onChangeText={(firstname) => this.setState({ firstname })} style={{ width: 100, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
+                                    <TextInput value={firstname} onChangeText={(firstname) => this.setState({ firstname })} style={Style.textinput} />
                                 </View>
-                                <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 4 }}>
+                                <View style={Style.view}>
                                     <Text>Lastname :</Text>
-                                    <TextInput value={lastname} onChangeText={(lastname) => this.setState({ lastname })} style={{ width: 100, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
+                                    <TextInput value={lastname} onChangeText={(lastname) => this.setState({ lastname })} style={Style.textinput} />
                                 </View>
-                                <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 4 }}>
+                                <View style={Style.view}>
                                     <Text>Email :</Text>
-                                    <TextInput value={email} onChangeText={(email) => this.setState({ email })} style={{ width: 150, height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "right", marginRight: 4 }} />
+                                    <TextInput value={email} onChangeText={(email) => this.setState({ email })} style={Style.lastinput} />
                                 </View>
 
                             </Body>
@@ -138,11 +138,11 @@ export default class CardEdit extends React.Component {
                     </Card>
                 </View>
 
-                <View style={{ marginHorizontal: 16, flex: 1, marginTop: 40 }}>
-                    <Button block dark onPress={() => this.onPressEdit()} style={{ marginVertical: 8 }} >
+                <View style={Style.viewbutton}>
+                    <Button block dark onPress={() => this.onPressEdit()} style={Style.button} >
                         <Text>Save</Text>
                     </Button>
-                    <Button block dark onPress={() => this.props.onFix()} style={{ marginVertical: 8 }}>
+                    <Button block dark onPress={() => this.props.onFix()} style={Style.button}>
                         <Text>Cancel</Text>
                     </Button>
                 </View>

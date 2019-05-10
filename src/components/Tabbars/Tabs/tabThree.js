@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView, View, Image, AsyncStorage, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { Text } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
+import Style from '../../../styles/tabthree'
 export default class TabThree extends React.Component {
     constructor(props) {
         super(props);
@@ -68,6 +68,7 @@ export default class TabThree extends React.Component {
         const { gamesFetch } = this.state
 
         return (
+
             <ScrollView style={{ flex: 1 }} refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
@@ -102,6 +103,7 @@ export default class TabThree extends React.Component {
                 {gamesFetch && gamesFetch.length===0 &&(
                   <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> You have no favorites yet. </Text>
                 )}
+
             </ScrollView>
         );
     }
