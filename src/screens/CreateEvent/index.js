@@ -118,6 +118,7 @@ export default class CreateEvent extends React.Component {
                             await this.getToken()
                             const { token, id } = this.state
                             let decodedToken = JWT.decode(token, ENV.JWT_KEY)
+
                             const url = "https://gathergamers.herokuapp.com/api/event/create"
                             await fetch(
                                 url,
