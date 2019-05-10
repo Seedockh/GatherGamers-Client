@@ -48,12 +48,10 @@ export default class TabTwo extends React.Component {
             }
         )
             .then(async (response) => {
-
                 if (response.status == 401) {
                     alert("Unauthorized!")
                 } else {
-                    let responseJSON = await response.json()
-                    console.log(responseJSON)
+                    let responseJSON = await response.json();
                     this.setState({ eventsFetch: responseJSON.data.events })
                 }
             })
