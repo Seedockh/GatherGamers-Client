@@ -45,7 +45,7 @@ export default StyleSheet.create({
         width: vmin(100),
     },
 
-    connectText: {
+    registerText: {
         color: 'white',
     },
 });
