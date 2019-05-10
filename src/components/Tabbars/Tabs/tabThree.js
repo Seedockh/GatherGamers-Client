@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView, View, Image, AsyncStorage, TouchableOpacity } from 'react-native';
 import { Text } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
+import Style from '../../../styles/tabthree'
 export default class TabThree extends React.Component {
     constructor(props) {
         super(props);
@@ -60,23 +60,23 @@ export default class TabThree extends React.Component {
         const { gamesFetch } = this.state
 
         return (
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView style={Style.scrollview}>
 
                 {gamesFetch ? (
                     gamesFetch.map((item, index) => (
 
                         <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.onDetails(index)}>
-                            <View style={{ borderWidth: 3, borderColor: "#000", marginHorizontal: 24, marginVertical: 16, justifyContent: "center", alignItems: "center" }}>
+                            <View style={Style.container}>
 
-                                <View style={{ paddingBottom: 8, justifyContent: "center", alignItems: "center", backgroundColor: "white", marginTop: -12, paddingHorizontal: 8 }}>
-                                    <Text style={{ fontWeight: "500" }}>{item.name}</Text>
-                                </View>
-
-                                <View style={{ padding: 8 }}>
+                                <View style={Style.view}>
                                     <Image
-                                        style={{ width: vmin(20), height: vmin(20) }}
+                                        style={Style.picture}
                                         source={{ uri: item.cover }}
                                     />
+                                </View>
+
+                                <View style={Style.viewname}>
+                                    <Text style={Style.name}>{item.name}</Text>
                                 </View>
 
                             </View>
@@ -84,7 +84,7 @@ export default class TabThree extends React.Component {
 
                     ))
                 ) : (
-                        <Text>You have no favorites</Text>
+                        <Text tyle={Style.textnonotif}>You have no favorites</Text>
                     )}
 
             </ScrollView>

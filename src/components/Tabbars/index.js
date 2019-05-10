@@ -14,15 +14,15 @@ export default class Tabbars extends React.Component {
     render() {
         return (
             <>
-                <Header hasTabs />
-                <Tabs>
-                    <Tab heading={<TabHeading><Text>My News</Text></TabHeading>}>
+                <View style={{ height: 24 }}></View>
+                <Tabs tabBarUnderlineStyle={{ backgroundColor: "white"}}>
+                    <Tab style={{ backgroundColor:"white"}} heading={<TabHeading style={{ backgroundColor:"black"}}><Text style={{color:"white"}}>My News</Text></TabHeading>}>
                         <Tab1 />
                     </Tab>
-                    <Tab heading={<TabHeading><Text>My Events</Text></TabHeading>}>
+                    <Tab heading={<TabHeading style={{ backgroundColor:"black"}}><Text style={{color:"white"}}>My Events</Text></TabHeading>}>
                         <Tab2 {...this.props}/>
                     </Tab>
-                    <Tab heading={<TabHeading><Text>My Favorites</Text></TabHeading>}>
+                    <Tab heading={<TabHeading style={{ backgroundColor:"black"}}><Text style={{color:"white"}}>My Favorites</Text></TabHeading>}>
                         <Tab3 {...this.props} />
                     </Tab>
                 </Tabs>
