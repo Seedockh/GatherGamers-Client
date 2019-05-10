@@ -4,7 +4,10 @@ import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body,
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import { ScrollView } from 'react-native-gesture-handler';
-import { MapView, Location } from 'expo';
+import { MapView, Location, Permissions } from 'expo';
+import ENV from '../../../env'
+import JWT from 'expo-jwt'
+import KEY from '../../../secretenv.js'
 
 const events = []
 export default class JoinEvents extends React.Component {
@@ -19,37 +22,32 @@ export default class JoinEvents extends React.Component {
             searchText: "",
             token: "",
             eventsCount: 0,
-            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
-            locationResult: false,
-            location: { coords: {
-                latitude: 37.78825,
-                longitude: -122.4324
-            } },
+            token: null,
+            allowGeoloc: false,
+            location: {
+              type: 'Point',
+              coordinates: [37.78825,-122.4324]
+            },
+            locationResult: false
         }
         events.length = 0
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.checkGeolocation();
         this.fetchEvents();
-        this.getUserLocation();
+        if (this.state.allowGeoloc) this.getUserLocation();
     }
 
-    handleMapRegionChange = mapRegion => {
-      this.setState({ mapRegion });
-    };
-
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
-    async getUserLocation() {
-      if (await Location.hasServicesEnabledAsync()) {
-        let location = await Location.getCurrentPositionAsync({accuracy: 2});
-        this.setState({ location: location, locationResult: true })
-        //console.log(this.state.location);
+    async checkGeolocation() {
+      // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
+      const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status === 'granted') {
+        this.setState({ allowGeoloc: true })
+        return Location.getCurrentPositionAsync({enableHighAccuracy: true});
       } else {
-        this.state({ locationResult: 'Location permission not enabled !'});
+        this.setState({ allowGeoloc: false })
+        alert('Location permission not granted');
       }
     }
 
@@ -87,8 +85,60 @@ export default class JoinEvents extends React.Component {
                         events.push(eventToPush)
                     });
                 }
+                console.log(events);
         })
         this.setState({eventsCount: events.length})
+    }
+
+    // Checks if user has Accepted Geolocation and returns his position to DB
+    async getUserLocation() {
+      if (await Location.hasServicesEnabledAsync()) {
+        let location = await Location.getCurrentPositionAsync({accuracy: 2});
+        await this.setState({ location: {
+          type: 'Point',
+          coordinates: [location.coords.latitude,location.coords.longitude]
+        }, locationResult: true })
+
+        // Sending last User Location to DB
+        this.updateUserLocation();
+      } else {
+        this.state({ locationResult: 'Location permission not enabled !'});
+      }
+    }
+
+    async updateUserLocation() {
+      await this.getToken()
+      const { token, id, location } = this.state
+      let decodedToken = JWT.decode(token, ENV.JWT_KEY)
+      const url = "https://gathergamers.herokuapp.com/api/user/updatelocation/"+decodedToken.id
+      await fetch( url, {
+        method: "PUT",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + this.state.token
+        },
+        body: JSON.stringify({
+            latitude: location.coordinates[0],
+            longitude: location.coordinates[1],
+        })
+      }).then(async (response) => {
+        if (response.status == 401) {
+          console.log(response);
+          alert("Unauthorized!")
+        } else {
+          let responseJSON = await response.json();
+        }
+      });
+    }
+
+    handleMapRegionChange = mapRegion => {
+      this.setState({ mapRegion });
+    };
+
+    getToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        this.setState({ token })
     }
 
     onDetails(index) {
@@ -108,7 +158,7 @@ export default class JoinEvents extends React.Component {
                             <Body>
                                 <Text>{item.title}</Text>
                                 <Text note numberOfLines={1}>{item.date}</Text>
-                                <Text note numberOfLines={1}>{item.place}</Text>
+                                <Text note numberOfLines={1}>{item.place.coordinates}</Text>
                             </Body>
                         </TouchableOpacity>
                         </ListItem>
@@ -124,23 +174,26 @@ export default class JoinEvents extends React.Component {
     render() {
         return (
             <>
-              {!this.state.locationResult &&
+              {this.state.allowGeoloc && !this.state.locationResult &&
                 <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row'}}>
                   <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
                 </View>
               }
-              {this.state.locationResult &&
+              {this.state.allowGeoloc && this.state.locationResult &&
                 <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
                     style={{ flex: 1 }}
                     initialRegion={{
-                      latitude: this.state.location.coords.latitude,
-                      longitude: this.state.location.coords.longitude,
+                      latitude: this.state.location.coordinates[0],
+                      longitude: this.state.location.coordinates[1],
                       latitudeDelta: 0.0922,
                       longitudeDelta: 0.0421,
                     }}
                   >
                   <MapView.Marker
-                    coordinate={this.state.location.coords}
+                    coordinate={{
+                      latitude: this.state.location.coordinates[0],
+                      longitude: this.state.location.coordinates[1]
+                    }}
                     title="Your position"
                     description="This where you are actually located."
                   />

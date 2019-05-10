@@ -115,11 +115,9 @@ export default class CreateEvent extends React.Component {
                 if (dateEvent != null) {
                     if (priceEvent != null) {
                         if (placeEvent != null) {
-
                             await this.getToken()
                             const { token, id } = this.state
                             let decodedToken = JWT.decode(token, ENV.JWT_KEY)
-                            console.log("====== CALLING EVENT/CREATE ROUTE ");
                             const url = "https://gathergamers.herokuapp.com/api/event/create"
                             await fetch(
                                 url,
@@ -141,17 +139,32 @@ export default class CreateEvent extends React.Component {
                                         type: this.state.typeEvent,
                                     })
                                 }
-                            )
-                                .then(async (response) => {
-                                    if (response.status == 401) {
-
-                                        alert("Unauthorized!")
-                                    } else if (response.status>401 || response.status<200) {
-                                      console.log(response);
-                                    } else {
-                                        let responseJSON = await response.json()
-                                        this.setState({ cover: responseJSON.cover, name: responseJSON.name })
-                                    }
+                            ).then(async (response) => {
+                                if (response.status == 401) {
+                                    alert("Unauthorized!")
+                                } else {
+                                    let responseJSON = await response.json()
+                                    this.setState({ cover: responseJSON.cover, name: responseJSON.name });
+                                    console.log(responseJSON);
+                                    // Once the user creates an event, he is automatically participant
+                                    const url = "https://gathergamers.herokuapp.com/api/participant/add"
+                                    await fetch(
+                                        url,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "Accept": "application/json",
+                                                "Content-Type": "application/json",
+                                                "Authorization": "Bearer " + this.state.token
+                                            },
+                                            body: JSON.stringify({
+                                                UserId: decodedToken.id,
+                                                EventId: responseJSON.data.event.id
+                                            })
+                                        }).then( lastres => {
+                                          console.log(lastres);
+                                        })
+                                  }
                                 })
                             this.props.navigation.navigate('Home')
 
