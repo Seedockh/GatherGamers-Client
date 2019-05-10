@@ -1,9 +1,9 @@
 import React from 'react';
-import { ScrollView, View, Image, AsyncStorage } from 'react-native';
-import { Text, Card, CardItem, Body } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';
+import { ScrollView, View, AsyncStorage } from 'react-native';
+import { Text, CardItem } from 'native-base';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
+import Style from '../../../styles/tabone'
 export default class TabOne extends React.Component {
 
     constructor(props) {
@@ -56,22 +56,22 @@ export default class TabOne extends React.Component {
         const { notifsFetch } = this.state
 
         return (
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView style={Style.scrollview}>
 
                 {notifsFetch ? (
                     notifsFetch.map((item, index) => (
 
-                        <Card key={index} >
-                            <CardItem style={{ backgroundColor: item.type ? "green" : "red" }}>
+                        <View key={index} style={{ marginHorizontal: 16, marginVertical: 4, marginTop: index === 0 ? 8 : 0 }}>
+                            <CardItem style={{ backgroundColor: item.type ? "#48CA75" : "#EE4F5E", borderRadius: 10}}>
                                 <View>
                                     <Text>{item.message}</Text>
-                                    <Text>{item.createdAt}</Text>
+                                    <Text note style={Style.textnote} >{item.createdAt}</Text>
                                 </View>
                             </CardItem>
-                        </Card>
+                        </View>
                     ))
                 ) : (
-                        <Text>You have no notifications</Text>
+                        <Text style={Style.textnonotif}>You have no notifications</Text>
                     )}
 
             </ScrollView>
