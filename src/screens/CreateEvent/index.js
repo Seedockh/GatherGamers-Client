@@ -50,16 +50,14 @@ export default class CreateEvent extends React.Component {
     };
 
     validateAddress = async () => {
-      /*console.log("======= ADDRESS DATA =========");
-      console.log(this.state.addressData);
-      console.log("======= ADDRESS DETAILS =========");
-      console.log(this.state.addressDetails);*/
-
       if (this.state.addressData!==null && this.state.addressDetails!==null) {
-        await this.setState({ placeEvent: `Point(${this.state.addressDetails.geometry.location.lat}, ${this.state.addressDetails.geometry.location.lng})`, lockCreation: false });
+        await this.setState({
+          placeEvent: {
+            type: 'Point',
+            coordinates: [this.state.addressDetails.geometry.location.lat,this.state.addressDetails.geometry.location.lng]
+          },
+          lockCreation: false });
       }
-
-      //this.setState({ lockCreation: false })
     }
 
     async getUserLocation() {
@@ -121,7 +119,7 @@ export default class CreateEvent extends React.Component {
                             await this.getToken()
                             const { token, id } = this.state
                             let decodedToken = JWT.decode(token, ENV.JWT_KEY)
-
+                            console.log("====== CALLING EVENT/CREATE ROUTE ");
                             const url = "https://gathergamers.herokuapp.com/api/event/create"
                             await fetch(
                                 url,
@@ -145,6 +143,7 @@ export default class CreateEvent extends React.Component {
                                 }
                             )
                                 .then(async (response) => {
+                                  console.log(response);
                                     if (response.status == 401) {
                                         alert("Unauthorized!")
                                     } else {
