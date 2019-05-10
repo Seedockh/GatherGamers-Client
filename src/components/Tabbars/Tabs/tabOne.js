@@ -1,7 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Image, AsyncStorage, ActivityIndicator, RefreshControl  } from 'react-native';
-import { Text, Card, CardItem, Body, Button } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';
+import { ScrollView, View, AsyncStorage, ActivityIndicator, RefreshControl  } from 'react-native';
+import { Text, Card, CardItem, Button } from 'native-base';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
 import Style from '../../../styles/tabone'
@@ -92,7 +91,7 @@ export default class TabOne extends React.Component {
 
         return (
 
-            <ScrollView style={{ flex: 1 }} refreshControl={
+            <ScrollView style={Style.scrollview} refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
                   onRefresh={this._onRefresh}
@@ -109,14 +108,14 @@ export default class TabOne extends React.Component {
                         <Text>Clear All</Text>
                     </Button>
                       {notifsFetch.map((item, index) => (
-                          <Card key={index} >
-                              <CardItem style={{ backgroundColor: item.type ? "green" : "red" }}>
-                                  <View>
-                                      <Text>{item.message}</Text>
-                                      <Text>{item.createdAt}</Text>
-                                  </View>
-                              </CardItem>
-                          </Card>
+                        <View key={index} style={{ marginHorizontal: 16, marginVertical: 4, marginTop: index === 0 ? 8 : 0 }}>
+                            <CardItem style={{ backgroundColor: item.type ? "#48CA75" : "#EE4F5E", borderRadius: 10}}>
+                                <View>
+                                    <Text>{item.message}</Text>
+                                    <Text note style={Style.textnote} >{item.createdAt}</Text>
+                                </View>
+                            </CardItem>
+                        </View>
                       ))}
                     </>
                 )}
