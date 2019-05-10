@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, AsyncStorage, ScrollView } from 'react-native';
+import { View, Image, AsyncStorage, ScrollView, ActivityIndicator } from 'react-native';
 import { Text, Switch, Button } from 'native-base'
 import { vmin } from 'react-native-expo-viewport-units';
 import Style from '../../styles/games'
@@ -12,19 +12,26 @@ export default class DetailGames extends React.Component {
         super(props);
         this.state = {
             token: null,
+            gameid: null,
             name: null,
             cover: null,
             summary: null,
             text: false,
             switchValue: false,
             nameFetch: null,
-            gamesFetch: null
+            gamesFetch: null,
+            fetchesDone: false
         }
     }
 
     componentDidMount() {
-        this.fetchGames()
-        this.fetchFavorite()
+        this.fetchGames();
+        this.fetchFavorite();
+    }
+
+    setFetchStatus = async() => {
+      if (this.state.cover && this.state.gamesFetch) this.setState({ fetchesDone: true });
+      else this.setState({ fetchesDone: false});
     }
 
     getToken = async () => {
@@ -51,7 +58,9 @@ export default class DetailGames extends React.Component {
                     alert("Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    this.setState({ cover: responseJSON.cover, name: responseJSON.name, summary: responseJSON.summary })
+                    this.setState({ cover: responseJSON.cover, name: responseJSON.name, summary: responseJSON.summary });
+                    this.props.navigation.setParams({title: responseJSON.name});
+                    this.setFetchStatus();
                 }
             })
     }
@@ -74,44 +83,41 @@ export default class DetailGames extends React.Component {
             }
         )
             .then(async (response) => {
-
                 if (response.status == 401) {
                     alert("Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
                     this.setState({ gamesFetch: responseJSON.data.favourite.Games })
-                    for (let gameObject of this.state.gamesFetch) {
+                    this.setState({ switchValue: false })
+                    for await (let gameObject of this.state.gamesFetch) {
                         if (gameObject.name === this.state.name) {
-                            this.setState({ switchValue: true })
+                          this.setState({ switchValue: true, gameid: gameObject.id })
                         }
                     }
-
-                    await this.pushNotif(`You have added ${this.state.name} to your favorites`, 1)
+                    this.setFetchStatus();
                 }
             })
 
     }
 
     pushNotif = async (message, type) => {
-
-        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
-
-        const url = "https://gathergamers.herokuapp.com/api/notification/add"
-        let response = await fetch(
-            url,
-            {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-                body: JSON.stringify({
-                    UserId: decodedToken.id,
-                    message: message,
-                    type: type
-                })
-            })
+      let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+      const url = "https://gathergamers.herokuapp.com/api/notification/add"
+      let response = await fetch(
+          url,
+          {
+              method: "POST",
+              headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + this.state.token
+              },
+              body: JSON.stringify({
+                  UserId: decodedToken.id,
+                  message: message,
+                  type: type
+              })
+          })
     }
 
     onJoinEvent() {
@@ -126,37 +132,38 @@ export default class DetailGames extends React.Component {
         this.props.navigation.navigate('CreateEvent', { ...this.props })
     }
 
-    CHANGEDESTATETAMERE() {
-        const { switchValue } = this.state
-        this.setState({ switchValue: !this.state.switchValue }, () => this.onSwitch())
+    async CHANGEDESTATETAMERE () {
+        await this.setState({ switchValue: !this.state.switchValue });
+        await this.onSwitch();
+
+        if (this.state.switchValue) {
+          await this.pushNotif(`You have added ${this.state.name} to your favorites`, 1)
+        } else {
+          await this.pushNotif(`You have deleted ${this.state.name} from your favorites`, 0)
+        }
     }
 
     onSwitch = async () => {
-        const { switchValue } = this.state
-
         let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
 
-        if (switchValue === true) {
-
-            const url = "https://gathergamers.herokuapp.com/api/favourite/add"
-            let response = await fetch(
-                url,
-                {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + this.state.token
-                    },
-                    body: JSON.stringify({
-                        UserId: decodedToken.id,
-                        GameId: this.props.navigation.state.params.id
-                    })
-                })
-
-        } else if (switchValue === false) {
-
-            const url = "https://gathergamers.herokuapp.com/api/favourite/delete/" + decodedToken.id + "/" + this.props.navigation.state.params.id
+        if (this.state.switchValue === true) {
+          const url = "https://gathergamers.herokuapp.com/api/favourite/add"
+          let response = await fetch(
+              url,
+              {
+                  method: "POST",
+                  headers: {
+                      "Accept": "application/json",
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer " + this.state.token
+                  },
+                  body: JSON.stringify({
+                      UserId: decodedToken.id,
+                      GameId: this.props.navigation.state.params.id
+                  })
+              })
+        } else if (this.state.switchValue === false) {
+            const url = "https://gathergamers.herokuapp.com/api/favourite/delete/"+decodedToken.id+"/"+this.state.gameid;
             let response = await fetch(
                 url,
                 {
@@ -167,14 +174,19 @@ export default class DetailGames extends React.Component {
                     },
                     method: "DELETE"
                 })
-
         }
     }
 
     render() {
-        const { cover, summary, text, switchValue, name } = this.state
+        const { cover, summary, text, switchValue, name, fetchesDone } = this.state
         return (
             <>
+              {!fetchesDone &&(
+                <View style={{ flex: 1, justifyContent: 'center'}}>
+                  <ActivityIndicator style={{marginTop:20}} size="large" color="#000000" />
+                </View>
+              )}
+              {fetchesDone && (
                 <ScrollView>
                     <View style={{ flex: 1 }}>
                         <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
@@ -191,7 +203,7 @@ export default class DetailGames extends React.Component {
 
                         <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", marginHorizontal: 16 }}>
                             <Text>Add {name} as favorite</Text>
-                            <Switch value={switchValue} onValueChange={() => this.CHANGEDESTATETAMERE()} />
+                            <Switch value={switchValue} onValueChange={()=>this.CHANGEDESTATETAMERE()} />
                         </View>
 
                         <View style={{ marginHorizontal: 16, marginTop: 16 }}>
@@ -210,6 +222,7 @@ export default class DetailGames extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
+              )}
                 <FooterTabs {...this.props} />
             </>
         )

@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Image, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, Image, AsyncStorage, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body, Right, Button } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import { ScrollView } from 'react-native-gesture-handler';
+import { MapView, Location } from 'expo';
 
 const events = []
 export default class JoinEvents extends React.Component {
@@ -18,17 +19,38 @@ export default class JoinEvents extends React.Component {
             searchText: "",
             token: "",
             eventsCount: 0,
+            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            locationResult: false,
+            location: { coords: {
+                latitude: 37.78825,
+                longitude: -122.4324
+            } },
         }
         events.length = 0
     }
 
     componentDidMount() {
-        this.fetchEvents()
+        this.fetchEvents();
+        this.getUserLocation();
     }
+
+    handleMapRegionChange = mapRegion => {
+      this.setState({ mapRegion });
+    };
 
     getToken = async () => {
         const token = await AsyncStorage.getItem('token');
         this.setState({ token })
+    }
+
+    async getUserLocation() {
+      if (await Location.hasServicesEnabledAsync()) {
+        let location = await Location.getCurrentPositionAsync({accuracy: 2});
+        this.setState({ location: location, locationResult: true })
+        //console.log(this.state.location);
+      } else {
+        this.state({ locationResult: 'Location permission not enabled !'});
+      }
     }
 
     fetchEvents = async () => {
@@ -74,7 +96,7 @@ export default class JoinEvents extends React.Component {
     }
 
     renderItem(item, index) {
-        if (item.title.indexOf(this.state.searchText) !== -1) {
+        if (item.title.indexOf(this.state.searchText) !== -1 && this.props.navigation.state.params!==undefined) {
             if (item.gameid == this.props.navigation.state.params.gameid) {
                 return(
                     <List key={index} >
@@ -102,13 +124,29 @@ export default class JoinEvents extends React.Component {
     render() {
         return (
             <>
+              {!this.state.locationResult &&
+                <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row'}}>
+                  <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+                </View>
+              }
+              {this.state.locationResult &&
+                <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
+                    style={{ flex: 1 }}
+                    initialRegion={{
+                      latitude: this.state.location.coords.latitude,
+                      longitude: this.state.location.coords.longitude,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }}
+                  >
+                  <MapView.Marker
+                    coordinate={this.state.location.coords}
+                    title="Your position"
+                    description="This where you are actually located."
+                  />
+                </MapView>
+              }
                 <View style={{ flex: 1 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                        <Image
-                            style={{ width: vmin(20), height: vmin(30), flex: 1 }}
-                            source={require('../../../assets/rouge.jpg')}
-                        />
-                    </View>
                     <Header searchBar rounded>
                         <Item>
                             <Icon name="ios-search" />
