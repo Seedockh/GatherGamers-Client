@@ -1,10 +1,14 @@
 import React from 'react';
-import { View, Image, TextInput, AsyncStorage } from 'react-native';
-import { Text, Button, DatePicker, Picker, Icon, Toast } from 'native-base';
+import { View, Image, TextInput, AsyncStorage, ActivityIndicator } from 'react-native';
+import { Item, Input, Label, Text, Button, DatePicker, Picker, Icon, Toast } from 'native-base';
+import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 import ENV from '../../../env'
 import JWT from 'expo-jwt'
-import Style from '../../styles/createevent'
+import KEY from '../../../secretenv.js'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { ScrollView } from 'react-native-gesture-handler';
+import { MapView, Location } from 'expo';
 
 export default class CreateEvent extends React.Component {
     
@@ -23,12 +27,46 @@ export default class CreateEvent extends React.Component {
             dateEvent: null,
             priceEvent: null,
             placeEvent: null,
-            token: null
+            token: null,
+            addressData: null,
+            addressDetails: null,
+            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            locationResult: false,
+            location: { coords: {
+                latitude: 37.78825,
+                longitude: -122.4324
+            } },
+            lockCreation: true,
         }
     }
 
     componentDidMount() {
-        this.fetchGames()
+        this.fetchGames();
+        this.getUserLocation();
+    }
+
+    handleMapRegionChange = mapRegion => {
+      this.setState({ mapRegion });
+    };
+
+    validateAddress = async () => {
+      if (this.state.addressData!==null && this.state.addressDetails!==null) {
+        await this.setState({
+          placeEvent: {
+            type: 'Point',
+            coordinates: [this.state.addressDetails.geometry.location.lat,this.state.addressDetails.geometry.location.lng]
+          },
+          lockCreation: false });
+      }
+    }
+
+    async getUserLocation() {
+      if (await Location.hasServicesEnabledAsync()) {
+        let location = await Location.getCurrentPositionAsync({accuracy: 2});
+        this.setState({ location: location, locationResult: true })
+      } else {
+        this.state({ locationResult: 'Location permission not enabled !'});
+      }
     }
 
     getToken = async () => {
@@ -77,7 +115,6 @@ export default class CreateEvent extends React.Component {
                 if (dateEvent != null) {
                     if (priceEvent != null) {
                         if (placeEvent != null) {
-
                             await this.getToken()
                             const { token, id } = this.state
                             let decodedToken = JWT.decode(token, ENV.JWT_KEY)
@@ -103,14 +140,32 @@ export default class CreateEvent extends React.Component {
                                         type: this.state.typeEvent,
                                     })
                                 }
-                            )
-                                .then(async (response) => {
-                                    if (response.status == 401) {
-                                        alert("Unauthorized!")
-                                    } else {
-                                        let responseJSON = await response.json()
-                                        this.setState({ cover: responseJSON.cover, name: responseJSON.name })
-                                    }
+                            ).then(async (response) => {
+                                if (response.status == 401) {
+                                    alert("Unauthorized!")
+                                } else {
+                                    let responseJSON = await response.json()
+                                    this.setState({ cover: responseJSON.cover, name: responseJSON.name });
+                                    console.log(responseJSON);
+                                    // Once the user creates an event, he is automatically participant
+                                    const url = "https://gathergamers.herokuapp.com/api/participant/add"
+                                    await fetch(
+                                        url,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "Accept": "application/json",
+                                                "Content-Type": "application/json",
+                                                "Authorization": "Bearer " + this.state.token
+                                            },
+                                            body: JSON.stringify({
+                                                UserId: decodedToken.id,
+                                                EventId: responseJSON.data.event.id
+                                            })
+                                        }).then( lastres => {
+                                          console.log(lastres);
+                                        })
+                                  }
                                 })
                             this.props.navigation.navigate('Home')
 
@@ -132,12 +187,14 @@ export default class CreateEvent extends React.Component {
     }
 
     render() {
-        const { cover } = this.state
+        const { cover, lockCreation } = this.state
 
         return (
             <>
-                <View style={Style.scrollview}>
-                    <View style={Style.viewimage}>
+
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+
                         <Image
                             style={Style.image}
                             source={{ uri: cover }}
@@ -193,17 +250,85 @@ export default class CreateEvent extends React.Component {
                             <Text style={Style.text} >Cash Price :</Text>
                             <TextInput onChangeText={(priceEvent) => this.setState({ priceEvent })} keyboardType={"numeric"} maxLength={6} style={Style.textinput2} />
                         </View>
-                        <View style={Style.viewadresse}>
+
+                        <View style={{ marginHorizontal: 16, marginVertical: 16, flex: 1 }}>
                             <Text>Address :</Text>
-                            <TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={Style.adresseinput} />
+                            <GooglePlacesAutocomplete
+                              placeholder='Search'
+                              minLength={2} // minimum length of text to search
+                              autoFocus={false}
+                              returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                              keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+                              listViewDisplayed='false'    // true/false/undefined
+                              fetchDetails={true}
+                              renderDescription={row => row.description} // custom description render
+                              onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                                //console.log(data, details);
+                                this.setState({ addressData: data, addressDetails: details })
+                              }}
+
+                              getDefaultValue={() => ''}
+
+                              query={{
+                                // available options: https://developers.google.com/places/web-service/autocomplete
+                                key: KEY.MAPS_API_KEY,
+                                language: 'fr', // language of the results
+                                types: 'address' // default: 'geocode'
+                              }}
+
+                              styles={{
+                                textInputContainer: {
+                                  width: '100%'
+                                },
+                                description: {
+                                  fontWeight: 'bold'
+                                },
+                                predefinedPlacesDescription: {
+                                  color: '#1faadb'
+                                }
+                              }}
+
+                              //currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                              //currentLocationLabel="Current location"
+                              //nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                              GoogleReverseGeocodingQuery={{
+                                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                              }}
+                              GooglePlacesSearchQuery={{
+                                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                                rankby: 'distance',
+                                type: 'geocode'
+                              }}
+
+                              GooglePlacesDetailsQuery={{
+                                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                                fields: 'formatted_address',
+                              }}
+
+                              filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                              //predefinedPlaces={}
+
+                              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+                              //renderLeftButton={()  => <Text>renderLeftButton</Text>}
+                              renderRightButton={()=>
+                                <View style={{ flex: 1 }}>
+                                  <Button block info onPress={this.validateAddress.bind(this)}>
+                                    <Text>OK</Text>
+                                  </Button>
+                                </View>
+                               }
+                            />
+                            {/*<TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={{ borderColor: 'gray', borderBottomWidth: 1 }} />*/}
                         </View>
-                        <View style={Style.viewevent}>
-                            <Button block success onPress={this.createEvent.bind(this)}>
+
+                        <View style={{ marginHorizontal: 16,  marginVertical: 32, flex: 1 }}>
+                            <Button block success onPress={this.createEvent.bind(this)} disabled={lockCreation}>
+
                                 <Text>Create Event</Text>
                             </Button>
                         </View>
                     </View>
-                </View>
+                </ScrollView>
 
                 <FooterTabs {...this.props} />
             </>

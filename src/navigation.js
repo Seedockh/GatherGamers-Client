@@ -44,6 +44,9 @@ const AppNavigator = createStackNavigator({
     },
     DetailGames: {
         screen: DetailGames,
+        navigationOptions: {
+          //title:
+        }
     },
     JoinEvent: {
         screen: JoinEvent,

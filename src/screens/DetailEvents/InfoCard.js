@@ -1,19 +1,33 @@
 import React from 'react';
 import { View, AsyncStorage } from 'react-native';
-import { Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Content, Card, CardItem, Body, Text, Button, Toast } from 'native-base';
 
 export default class InfoCard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            token: ""
+            token: "",
+            eventAuthor: ""
         }
+    }
+
+    componentDidMount() {
+        this.fetchAuthor()
     }
 
     getToken = async () => {
         const token = await AsyncStorage.getItem('token');
         this.setState({ token })
+    }
+
+    toastMessage(status, message) {
+        Toast.show({
+            text: `${message}`,
+            buttonText: "Okay",
+            type: `${status}`,
+            duration: 3000
+        })
     }
 
     subscribe = async () => {
@@ -36,10 +50,34 @@ export default class InfoCard extends React.Component {
             )
             .then(async (response) => {
                 if(response.status == 401) {
-                    alert("Unauthorized!")
+                    this.toastMessage("danger", "Unauthorized!")
                 } else {
                     await response.json()
-                    alert("See you at the event!")
+                    this.toastMessage("success", "See you at the event!")
+                }
+        })
+    }
+
+    fetchAuthor = async () => {
+        await this.getToken()
+        const url = "https://gathergamers.herokuapp.com/api/user/" + this.props.navigation.state.params.event.user
+        await fetch(
+            url,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.state.token
+                }
+            }
+            )
+            .then(async (response) => {
+                if(response.status == 401) {
+                    this.toastMessage("danger", "Unauthorized!")
+                } else {
+                    let responseJSON = await response.json()
+                    this.setState({eventAuthor: responseJSON.nickname}) 
                 }
         })
     }
@@ -60,8 +98,8 @@ export default class InfoCard extends React.Component {
                                 <Text>{this.props.navigation.state.params.event.title}</Text>
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                                <Text>Author</Text>
-                                <Text>{this.props.navigation.state.params.event.user}</Text>
+                                <Text>Auteur</Text>
+                                <Text>{this.state.eventAuthor}</Text>
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Date</Text>

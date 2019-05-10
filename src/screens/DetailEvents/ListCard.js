@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, AsyncStorage } from 'react-native';
-import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail } from 'native-base';
+import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail, Toast } from 'native-base';
 
 const participants = []
 export default class ListCard extends React.Component {
@@ -23,6 +23,15 @@ export default class ListCard extends React.Component {
         this.setState({ token })
     }
 
+    toastMessage(status, message) {
+        Toast.show({
+            text: `${message}`,
+            buttonText: "Okay",
+            type: `${status}`,
+            duration: 3000
+        })
+    }
+
     fetchParticipants = async () => {
         await this.getToken()
         const url = "https://gathergamers.herokuapp.com/api/participant/event/" + this.props.navigation.state.params.event.id
@@ -39,18 +48,45 @@ export default class ListCard extends React.Component {
             )
             .then(async (response) => {
                 if(response.status == 401) {
-                    alert("Unauthorized!")
+                    this.toastMessage("danger", "Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    responseJSON.data.participants.Users.forEach(function(participant) {
+                    await responseJSON.data.participants.Users.forEach(async function(participant) {
+                        const token = await AsyncStorage.getItem('token');
+                        const url = "https://gathergamers.herokuapp.com/api/user/" + participant.id
+                        let nickname = ""
+                        await fetch(
+                            url,
+                            {
+                                method: "GET",
+                                headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer " + token
+                                }
+                            }
+                            )
+                            .then(async (response) => {
+                                if(response.status == 401) {
+                                    this.toastMessage("danger", "Unauthorized!")
+                                } else {
+                                    let responseJSON = await response.json()
+                                    nickname = responseJSON.nickname
+                                }
+                        })
                         let participantToPush = {
-                            id: participant.id,
+                            nickname
                         }
-                        participants.push(participantToPush)
-                    });
+                        await participants.push(participantToPush)
+                        this.setState({participantsCount: participants.length})
+                    }.bind(this));
                 }
         })
-        this.setState({participantsCount: participants.length})
+    }
+
+    fetchParticipantsNickname = async (id) => {
+        await this.getToken()
+        
     }
 
     renderItem(item, index) {
@@ -61,7 +97,7 @@ export default class ListCard extends React.Component {
                     <Thumbnail square source={require('../../../assets/rouge.jpg')} />
                 </Left>
                 <Body>
-                    <Text>{item.id}</Text>
+                    <Text>{item.nickname}</Text>
                 </Body>
             </ListItem>
         </List>)

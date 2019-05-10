@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Image, AsyncStorage, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Image, AsyncStorage, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { Text } from 'native-base';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
@@ -9,12 +9,20 @@ export default class TabThree extends React.Component {
         super(props);
         this.state = {
             token: null,
-            gamesFetch: null
+            gamesFetch: null,
+            refreshing: false,
         }
     }
 
     componentDidMount() {
         this.fetchFavorite()
+    }
+
+    _onRefresh = () => {
+      this.setState({refreshing: true});
+      this.fetchFavorite().then(() => {
+        this.setState({refreshing: false});
+      });
     }
 
     getToken = async () => {
@@ -60,32 +68,41 @@ export default class TabThree extends React.Component {
         const { gamesFetch } = this.state
 
         return (
-            <ScrollView style={Style.scrollview}>
 
-                {gamesFetch ? (
-                    gamesFetch.map((item, index) => (
+            <ScrollView style={{ flex: 1 }} refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }>
+                {!gamesFetch &&(
+                  <View style={{ flex: 1, justifyContent: 'center'}}>
+                    <ActivityIndicator style={{marginTop:20}} size="large" color="#000000" />
+                  </View>
+                )}
+                {gamesFetch && gamesFetch.length>0 && (
+                  gamesFetch.map((item, index) => (
+                      <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.onDetails(index)}>
+                          <View style={{ borderWidth: 3, borderColor: "#000", marginHorizontal: 24, marginVertical: 16, justifyContent: "center", alignItems: "center" }}>
 
-                        <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.onDetails(index)}>
-                            <View style={Style.container}>
+                              <View style={{ paddingBottom: 8, justifyContent: "center", alignItems: "center", backgroundColor: "white", marginTop: -12, paddingHorizontal: 8 }}>
+                                  <Text style={{ fontWeight: "500" }}>{item.name}</Text>
+                              </View>
 
-                                <View style={Style.view}>
-                                    <Image
-                                        style={Style.picture}
-                                        source={{ uri: item.cover }}
-                                    />
-                                </View>
+                              <View style={{ padding: 8 }}>
+                                  <Image
+                                      style={{ width: vmin(20), height: vmin(20) }}
+                                      source={{ uri: item.cover }}
+                                  />
+                              </View>
 
-                                <View style={Style.viewname}>
-                                    <Text style={Style.name}>{item.name}</Text>
-                                </View>
-
-                            </View>
-                        </TouchableOpacity>
-
-                    ))
-                ) : (
-                        <Text tyle={Style.textnonotif}>You have no favorites</Text>
-                    )}
+                          </View>
+                      </TouchableOpacity>
+                  ))
+                )}
+                {gamesFetch && gamesFetch.length===0 &&(
+                  <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> You have no favorites yet. </Text>
+                )}
 
             </ScrollView>
         );
