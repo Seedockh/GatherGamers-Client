@@ -2,7 +2,7 @@ import React from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { Content, Card, CardItem, Body, Text } from 'native-base';
 import JWT from 'expo-jwt'
-import Style from '../../styles/profile'
+import Style from '../../styles/cardfix'
 import ENV from '../../../env'
 
 export default class CardFix extends React.Component {
@@ -56,28 +56,28 @@ export default class CardFix extends React.Component {
 
         return (
 
-            <Content style={{ marginHorizontal: 16 }}>
+            <Content style={Style.content}>
                 <Card>
                     <CardItem header bordered>
-                        <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                            <Text style={{ color: "black" }}>Informations</Text>
+                        <View style={Style.view}>
+                            <Text style={Style.text}>Informations</Text>
                         </View>
                     </CardItem>
                     <CardItem bordered>
                         <Body>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
+                            <View style={Style.view}>
                                 <Text>Nickname :</Text>
                                 <Text>{nickname}</Text>
                             </View>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
+                            <View style={Style.view}>
                                 <Text>Firstname :</Text>
                                 <Text>{firstname}</Text>
                             </View>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
+                            <View style={Style.view}>
                                 <Text>Lastname :</Text>
                                 <Text>{lastname}</Text>
                             </View>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
+                            <View style={Style.view}>
                                 <Text>Email :</Text>
                                 <Text>{email}</Text>
                             </View>

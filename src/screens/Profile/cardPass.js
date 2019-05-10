@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, AsyncStorage, TextInput } from 'react-native';
 import { Card, CardItem, Body, Text, Button, Toast } from 'native-base';
-import Style from '../../styles/profile'
+import Style from '../../styles/cardpass'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
 
@@ -76,25 +76,25 @@ export default class CardPass extends React.Component {
         return (
 
             <>
-                <View style={{ marginHorizontal: 16, flex: 2 }}>
+                <View style={Style.content}>
                     <Card>
                         <CardItem header bordered>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                                <Text style={{ color: "black" }}>Password Update</Text>
+                            <View style={Style.viewheader}>
+                                <Text style={Style.text}>Password Update</Text>
                             </View>
 
                         </CardItem>
                         <CardItem bordered>
                             <Body>
 
-                                <View style={{ flex: 1, alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 16 }}>
-                                    <TextInput secureTextEntry={true} onChangeText={(old_password) => this.setState({ old_password })} placeholder="Current Password" style={{ width:"100%", height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "center", marginRight: 4 }} />
+                                <View style={Style.view}>
+                                    <TextInput secureTextEntry={true} onChangeText={(old_password) => this.setState({ old_password })} placeholder="Current Password" style={Style.textinput} />
                                 </View>
-                                <View style={{ flex: 1, alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 16 }}>
-                                    <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({ password })} placeholder="New Password" style={{ width:"100%", height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "center", marginRight: 4 }} />
+                                <View style={Style.view}>
+                                    <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({ password })} placeholder="New Password" style={Style.textinput} />
                                 </View>
-                                <View style={{ flex: 1, alignItems: "center", flexDirection: "row", width: "100%", padding: 2, marginVertical: 16 }}>
-                                    <TextInput secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({ password_confirmation })} placeholder="Confirm Password" style={{ width:"100%", height: 20, borderColor: 'gray', borderBottomWidth: 1, textAlign: "center", marginRight: 4 }} />
+                                <View style={Style.view}>
+                                    <TextInput secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({ password_confirmation })} placeholder="Confirm Password" style={Style.textinput} />
                                 </View>
 
                             </Body>
@@ -102,11 +102,11 @@ export default class CardPass extends React.Component {
                     </Card>
                 </View>
 
-                <View style={{ marginHorizontal: 16, flex: 1, marginTop: 40 }}>
-                    <Button block dark onPress={() => this.onPressSave()} style={{ marginVertical: 8 }}>
+                <View style={Style.viewbutton}>
+                    <Button block dark onPress={() => this.onPressSave()} style={Style.button}>
                         <Text>Save</Text>
                     </Button>
-                    <Button block dark onPress={() => this.props.onFix()} style={{ marginVertical: 8 }}>
+                    <Button block dark onPress={() => this.props.onFix()} style={Style.button}>
                         <Text>Cancel</Text>
                     </Button>
                 </View>

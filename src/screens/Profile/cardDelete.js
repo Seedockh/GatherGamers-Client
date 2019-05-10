@@ -2,7 +2,7 @@ import React from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { Button, Text } from 'native-base';
 import JWT from 'expo-jwt'
-import Style from '../../styles/profile'
+import Style from '../../styles/carddelete'
 import ENV from '../../../env'
 
 export default class CardDelete extends React.Component {
@@ -44,12 +44,12 @@ export default class CardDelete extends React.Component {
 
         return (
 
-            <View style={{ marginHorizontal: 16, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ marginVertical: 16, marginTop: "90%" }}>Are you sure you want to delete your account?</Text>
-                <Button block danger onPress={() => this.deleteData()} style={{ marginVertical: 8 }}>
+            <View style={Style.content}>
+                <Text style={Style.text}>Are you sure you want to delete your account?</Text>
+                <Button block danger onPress={() => this.deleteData()} style={Style.button}>
                     <Text>Delete Account</Text>
                 </Button>
-                <Button block dark onPress={() => this.props.onFix()} style={{ marginVertical: 8 }}>
+                <Button block dark onPress={() => this.props.onFix()} style={Style.button}>
                         <Text>Cancel</Text>
                 </Button>
             </View>
