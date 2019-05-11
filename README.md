@@ -25,6 +25,9 @@
 | **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
+| **Show events created** | ❌ | Not started | | 🚫 |
+| **Update events created** | ❌ | Not started | | 🚫 |
+| **Delete events created** | ❌ | Not started | | 🚫 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
 | **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
 | **Gamers Geolocalisation** | ⌛ | In progress | Pierre | 🚫 |
