@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Content, Card, CardItem, Body, Text, Button, Toast } from 'native-base';
+import ENV from '../../../env'
+import JWT from 'expo-jwt'
 
 export default class InfoCard extends React.Component {
 
@@ -8,7 +10,7 @@ export default class InfoCard extends React.Component {
         super(props);
         this.state = {
             token: "",
-            eventAuthor: ""
+            eventAuthor: "",
         }
     }
 
@@ -32,6 +34,8 @@ export default class InfoCard extends React.Component {
 
     subscribe = async () => {
         await this.getToken()
+        const { token } = this.state
+        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
         const url = "https://gathergamers.herokuapp.com/api/participant/add"
         await fetch(
             url,
@@ -43,7 +47,7 @@ export default class InfoCard extends React.Component {
                     "Authorization": "Bearer " + this.state.token
                 },
                 body: JSON.stringify({
-                    UserId: this.props.navigation.state.params.event.user,
+                    UserId: decodedToken.id,
                     EventId: this.props.navigation.state.params.event.id,
                 })
             }
@@ -77,13 +81,20 @@ export default class InfoCard extends React.Component {
                     this.toastMessage("danger", "Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    this.setState({eventAuthor: responseJSON.nickname}) 
+                    this.setState({eventAuthor: responseJSON.nickname})
                 }
         })
     }
 
     render() {
         return (
+          <>
+            {this.state.eventAuthor==="" && (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+              </View>
+            )}
+            {this.state.eventAuthor!=="" && (
             <View style={{ marginHorizontal: 16 }}>
                 <Card>
                     <CardItem header bordered>
@@ -107,7 +118,8 @@ export default class InfoCard extends React.Component {
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Lieu</Text>
-                                <Text>{this.props.navigation.state.params.event.place}</Text>
+                                <Text>Latitude : {this.props.navigation.state.params.event.place.coordinates[0]}</Text>
+                                <Text>Longitude : {this.props.navigation.state.params.event.place.coordinates[1]}</Text>
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Nombre de joueurs</Text>
@@ -128,6 +140,8 @@ export default class InfoCard extends React.Component {
                     </CardItem>
                 </Card>
             </View>
+            )}
+          </>
         )
     }
 }
