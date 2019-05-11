@@ -46,7 +46,7 @@ export default class ListCard extends React.Component {
                     nickname
                 }
                 await participants.push(participantToPush)
-                this.setState({participantsCount: participants.length})
+                this.setState({participantsCount: participants.length, fetchDone: true})
             }.bind(this));
         }
     }
