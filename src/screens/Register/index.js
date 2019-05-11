@@ -19,6 +19,14 @@ export default class Home extends React.Component {
         }
     }
 
+    sendEmail = async() => {
+      const { email} = this.state
+      const url = 'https://gathergamers.herokuapp.com/api/mailgun/register'
+      const body = JSON.stringify({
+          useremail:
+      })
+    }
+
     Register = async () => {
         const { firstname, lastname, nickname, email, password, password_confirmation } = this.state;
         if (firstname != "" && lastname != "" && nickname != "" && email != "" && password != "" && password_confirmation != "") {
@@ -38,7 +46,7 @@ export default class Home extends React.Component {
                                 password_confirmation
                             });
                             this.setState({ loading: true });
-                            const response = await Func.fetch(url, "POST", body);                    
+                            const response = await Func.fetch(url, "POST", body);
                             if (response.status >= 200 && response.status < 300) {
                                 this.setState({ loading: false });
                                 this.props.navigation.navigate('Login');
