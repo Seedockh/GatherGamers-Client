@@ -55,13 +55,13 @@ export default class CardPass extends React.Component {
                         <CardItem bordered>
                             <Body>
                                 <View style={Style.view}>
-                                    <TextInput secureTextEntry={true} onChangeText={(old_password) => this.setState({ old_password })} placeholder="Current Password" style={Style.textinput} />
+                                    <TextInput secureTextEntry={true} onChangeText={(old_password) => this.setState({ old_password })} placeholder="Current Password" style={Style.textinput} autoCapitalize = 'none'/>
                                 </View>
                                 <View style={Style.view}>
-                                    <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({ password })} placeholder="New Password" style={Style.textinput} />
+                                    <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({ password })} placeholder="New Password" style={Style.textinput} autoCapitalize = 'none'/>
                                 </View>
                                 <View style={Style.view}>
-                                    <TextInput secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({ password_confirmation })} placeholder="Confirm Password" style={Style.textinput} />
+                                    <TextInput secureTextEntry={true} onChangeText={(password_confirmation) => this.setState({ password_confirmation })} placeholder="Confirm Password" style={Style.textinput} autoCapitalize = 'none'/>
                                 </View>
                             </Body>
                         </CardItem>

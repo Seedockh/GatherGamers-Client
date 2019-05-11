@@ -95,7 +95,7 @@ export default class CardEdit extends React.Component {
                                 </View>
                                 <View style={Style.view}>
                                     <Text>Email :</Text>
-                                    <TextInput value={email} onChangeText={(email) => this.setState({ email })} style={Style.lastinput} />
+                                    <TextInput value={email} onChangeText={(email) => this.setState({ email })} style={Style.lastinput} autoCapitalize = 'none'/>
                                 </View>
                             </Body>
                         </CardItem>

@@ -83,11 +83,11 @@ export default class Home extends React.Component {
                                 <Form>
                                 <Item floatingLabel style={Style.item}>
                                     <Label>Email</Label>
-                                    <Input onChangeText={(email) => this.setState({email})}/>
+                                    <Input onChangeText={(email) => this.setState({email})} autoCapitalize = 'none'/>
                                 </Item>
                                 <Item floatingLabel style={Style.item}>
                                     <Label>Password</Label>
-                                    <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})}/>
+                                    <Input secureTextEntry={true} onChangeText={(password) => this.setState({password})} autoCapitalize = 'none'/>
                                 </Item>
                                 </Form>
                                 <View style={Style.buttonContainer}>
