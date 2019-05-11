@@ -28,13 +28,13 @@ export default StyleSheet.create({
     },
 
     item: {
-        width: "60%", 
+        width: "60%",
         alignSelf: "center"
     },
 
     button: {
-        backgroundColor: "#000", 
-        width: vmin(60), 
+        backgroundColor: "#000",
+        width: vmin(60),
         justifyContent: 'center',
         alignSelf: 'center'
     },
@@ -45,6 +45,11 @@ export default StyleSheet.create({
         width: vmin(100),
     },
 
+    touchableOpacity: {
+        padding: 2,
+        alignItems: "center"
+    },
+    
     registerText: {
         color: 'white',
     },
