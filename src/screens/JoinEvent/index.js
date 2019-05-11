@@ -9,6 +9,7 @@ import ENV from '../../../env'
 import JWT from 'expo-jwt'
 import KEY from '../../../secretenv.js'
 import Func from '../../functions.js';
+import geolib from 'geolib';
 
 const events = []
 
@@ -26,17 +27,18 @@ export default class JoinEvents extends React.Component {
             allowGeoloc: false,
             location: {
               type: 'Point',
-              coordinates: [37.78825,-122.4324]
+              coordinates: [48,2]
             },
-            locationResult: false
+            locationResult: false,
+            fetchDone: false,
         }
         events.length = 0;
     }
 
     async componentDidMount() {
         await this.checkGeolocation();
-        await this.fetchEvents();
         if (this.state.allowGeoloc) await this.getUserLocation();
+        await this.fetchEvents();
     }
 
     async checkGeolocation() {
@@ -54,39 +56,49 @@ export default class JoinEvents extends React.Component {
     fetchEvents = async () => {
         const token = await Func.getToken()
         this.setState({ token })
-        const url = "https://gathergamers.herokuapp.com/api/event/"
+        const url = "https://gathergamers.herokuapp.com/api/event/game/"+this.props.navigation.state.params.gameid ;
         const auth = `Bearer ${token}`
         const response = await Func.fetch(url, "GET", null, auth)
         if(response.status == 401) {
           Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json()
-              responseJSON.data.events.forEach(async (event) => {
-                   const address =
-                   await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${event.place.coordinates[0]},${event.place.coordinates[1]}&key=${KEY.MAPS_API_KEY}`)
-                         .then(res => res.json())
-                         .then((json) => {
-                           if (json.status !== 'OK') {
-                             throw new Error(`Geocode error: ${json.status}`);
-                           }
-                         return json.results[0].formatted_address;
-                       });
-                     const eventToPush = {
-                    id: event.id,
-                    title: event.name,
-                    date: event.date,
-                    place: event.place,
-                    address: address,
-                    gameid: event.GameId,
-                    players: event.players,
-                    price: event.price,
-                    type: event.type,
-                    user: event.UserId
-                }
-                events.push(eventToPush)
+            // When game's events are fetched
+              responseJSON.map(async (event) => {
+                // Get distance from current user
+               const distFromUser = this.state.allowGeoloc ?
+                  await geolib.getDistanceSimple(
+                    {latitude: this.state.location.coordinates[0], longitude: this.state.location.coordinates[1]},
+                    {latitude: event.place.coordinates[0], longitude: event.place.coordinates[1]}
+                  ) / 1000 : null;
+               // Get address string from event coordinates
+               const address =
+               await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${event.place.coordinates[0]},${event.place.coordinates[1]}&key=${KEY.MAPS_API_KEY}`)
+                     .then(res => res.json())
+                     .then((json) => {
+                       if (json.status !== 'OK') {
+                         throw new Error(`Geocode error: ${json.status}`);
+                       }
+                     return json.results[0].formatted_address;
+                   });
+              // Push the event with all infos
+              const eventToPush = {
+                id: event.id,
+                title: event.name,
+                date: event.date,
+                place: event.place,
+                address: address,
+                distance: distFromUser,
+                gameid: event.GameId,
+                players: event.players,
+                price: event.price,
+                type: event.type,
+                user: event.UserId
+              }
+              events.push(eventToPush)
+              if (events.length===responseJSON.length) this.setState({fetchDone: true});
             });
         }
-        this.setState({eventsCount: events.length})
     }
 
     // Checks if user has Accepted Geolocation and returns his position to DB
@@ -121,7 +133,7 @@ export default class JoinEvents extends React.Component {
         Func.toaster("Unauthorized!", "Okay", "danger", 3000);
       } else {
         let responseJSON = await response.json();
-        // TODO
+        return responseJSON;
       }
     }
 
@@ -130,55 +142,40 @@ export default class JoinEvents extends React.Component {
     };
 
     getDetails(index) {
-        this.props.navigation.navigate('DetailEvents', {event: events[index]})
+        this.props.navigation.navigate('DetailEvents', {event: events[index], userLocation: this.state.location})
     }
 
     renderMarker(item,index) {
-      if (item.title.indexOf(this.state.searchText) !== -1 && this.props.navigation.state.params!==undefined) {
-          if (item.gameid == this.props.navigation.state.params.gameid) {
-            return(
-              <MapView.Marker key={index}
-                coordinate={{
-                  latitude: item.place.coordinates[0],
-                  longitude: item.place.coordinates[1]
-                }}
-                title={"'"+item.title+"'"}
-                description={"'"+item.address+"'"}
-                pinColor={ 'black' }
-              />
-            )
-          } else {
-              return null
-          }
-      } else {
-          return null
-      }
+      return(
+        <MapView.Marker key={index}
+          coordinate={{
+            latitude: item.place.coordinates[0],
+            longitude: item.place.coordinates[1]
+          }}
+          title={item.title}
+          description={item.address}
+          pinColor={ 'blue' }
+        />
+      )
     }
 
     renderItem(item, index) {
-        if (item.title.indexOf(this.state.searchText) !== -1 && this.props.navigation.state.params!==undefined) {
-            if (item.gameid == this.props.navigation.state.params.gameid) {
-                return(
-                    <List key={index} >
-                        <ListItem thumbnail>
-                        <TouchableOpacity key={index} activeOpacity={0} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
-                            <Left>
-                                <Thumbnail square source={require('../../../assets/rouge.jpg')} />
-                            </Left>
-                            <Body>
-                                <Text>{item.title}</Text>
-                                <Text note numberOfLines={1}>{item.date}</Text>
-                                <Text note numberOfLines={1}>{item.address}</Text>
-                            </Body>
-                        </TouchableOpacity>
-                        </ListItem>
-                    </List>)
-            } else {
-                return null
-            }
-        } else {
-            return null
-        }
+      return(
+          <List key={index} >
+              <ListItem thumbnail>
+              <TouchableOpacity key={index} activeOpacity={0} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
+                  <Left>
+                      <Thumbnail square source={require('../../../assets/rouge.jpg')} />
+                  </Left>
+                  <Body>
+                      <Text>{item.title}</Text>
+                      <Text note numberOfLines={1}>{item.date}</Text>
+                      <Text note numberOfLines={1}>{item.address}</Text>
+                      <Text note numberOfLines={1}>Distance : {item.distance}km</Text>
+                  </Body>
+              </TouchableOpacity>
+              </ListItem>
+          </List>)
     }
 
     render() {
@@ -209,7 +206,7 @@ export default class JoinEvents extends React.Component {
                       description="This where you are actually located."
                     />
                   }
-                  {events.length>0 ? events.map((item,index)=>this.renderMarker(item,index)) : null}
+                  {this.state.fetchDone ? events.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
               }
                 <View style={{ flex: 1 }}>
@@ -219,9 +216,16 @@ export default class JoinEvents extends React.Component {
                             <Input placeholder="Search" onChangeText={(searchText) => this.setState({searchText})} />
                         </Item>
                     </Header>
-                    <ScrollView>
-                        {events.length > 0 ? events.map((item, index) => this.renderItem(item, index)) : null}
-                    </ScrollView>
+                    {!this.state.fetchDone && (
+                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                        <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+                      </View>
+                    )}
+                    {this.state.fetchDone && (
+                      <ScrollView>
+                          {events.map((item, index) => this.renderItem(item, index))}
+                      </ScrollView>
+                    )}
                 </View>
                 <FooterTabs {...this.props} />
             </>

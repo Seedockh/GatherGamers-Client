@@ -2,6 +2,8 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Card, CardItem, Body, Text, Button } from 'native-base';
 import Func from '../../functions.js';
+import ENV from '../../../env'
+import JWT from 'expo-jwt'
 
 export default class InfoCard extends React.Component {
     constructor(props) {
@@ -9,19 +11,21 @@ export default class InfoCard extends React.Component {
         this.state = {
             token: "",
             eventAuthor: "",
+            isParticipating: this.props.participates,
         }
     }
 
-    componentDidMount() {
-        this.fetchAuthor()
+    async componentDidMount() {
+       await this.fetchAuthor()
     }
 
     subscribe = async () => {
         const token = await Func.getToken()
+        let decodedToken = await JWT.decode(token, ENV.JWT_KEY)
         this.setState({ token })
         const url = "https://gathergamers.herokuapp.com/api/participant/add"
         const body = JSON.stringify({
-            UserId: this.props.navigation.state.params.event.user,
+            UserId: decodedToken.id,
             EventId: this.props.navigation.state.params.event.id,
         })
         const auth = `Bearer ${token}`
@@ -30,7 +34,26 @@ export default class InfoCard extends React.Component {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             await response.json()
-            Func.toaster("See you at the event!", "Okay", "success", 3000);
+            this.setState({ participates: true });
+            this.props.getParticipants();
+            Func.toaster("See you at the event!", "Okay", "success", 1000);
+        }
+    }
+
+    unsubscribe = async () => {
+        const token = await Func.getToken()
+        let decodedToken = await JWT.decode(token, ENV.JWT_KEY)
+        this.setState({ token });
+        const url = "https://gathergamers.herokuapp.com/api/participant/delete/"+this.props.navigation.state.params.event.id+"/"+decodedToken.id
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "DELETE", null, auth)
+        if(response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            await response.json()
+            this.setState({ participates: false });
+            this.props.getParticipants();
+            Func.toaster("Subscription cancelled", "Okay", "warning", 1000);
         }
     }
 
@@ -49,14 +72,15 @@ export default class InfoCard extends React.Component {
     }
 
     render() {
+        const { eventAuthor } = this.state;
         return (
           <>
-            {this.state.eventAuthor==="" && (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+            {!this.props.fetchDone && (
+              <View style={{ flex: 1, justifyContent: 'center', marginVertical: 50, flexDirection: 'row'}}>
                 <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
               </View>
             )}
-            {this.state.eventAuthor!=="" && (
+            {this.props.fetchDone && (
             <View style={{ marginHorizontal: 16 }}>
                 <Card>
                     <CardItem header bordered>
@@ -80,8 +104,11 @@ export default class InfoCard extends React.Component {
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Lieu</Text>
-                                <Text>Latitude : {this.props.navigation.state.params.event.place.coordinates[0]}</Text>
-                                <Text>Longitude : {this.props.navigation.state.params.event.place.coordinates[1]}</Text>
+                                <Text>{this.props.navigation.state.params.event.address}</Text>
+                            </View>
+                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
+                                <Text>Distance</Text>
+                                <Text>{this.props.navigation.state.params.event.distance}km</Text>
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Nombre de joueurs</Text>
@@ -95,9 +122,22 @@ export default class InfoCard extends React.Component {
                                 <Text>Prix en jeux</Text>
                                 <Text>{this.props.navigation.state.params.event.price}€</Text>
                             </View>
-                            <Button block success onPress={() => this.subscribe()}>
-                                <Text>SUBSCRIBE</Text>
-                            </Button>
+                          {!this.props.fetchDone && (
+                            <View style={{ flex: 1, justifyContent: 'center', marginVertical: 50, flexDirection: 'row'}}>
+                              <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+                            </View>
+                          )}
+                           {this.props.fetchDone && !this.props.participates && (
+                               <Button block success onPress={() => this.subscribe()}>
+                                   <Text>SUBSCRIBE</Text>
+                               </Button>
+                            )}
+                            {this.props.fetchDone && this.props.participates && (
+                               <Button block danger onPress={() => this.unsubscribe()}>
+                                   <Text>UNSUBSCRIBE</Text>
+                               </Button>
+                             )}
+
                         </Body>
                     </CardItem>
                 </Card>
