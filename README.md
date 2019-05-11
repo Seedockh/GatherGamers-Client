@@ -15,17 +15,18 @@
 | Feature | Status | Notes | Affected to | MVP |
 |---------|--------|-------|------------|-----|
 | **Register** | ✅ | Done | Antoine | 🆗 |
-| **Registered mail** | ⌛ | Not working yet | Maxime | ⭐ |
+| **Registered mail** | ✅ | Done | Maxime | 🆗 |
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Create an event** | ✅ | Done | Adrien | 🆗 |
 | **Join an event** | ✅ | Done | Antoine | 🆗 |
-| **Check for gamers** | ❌ | Not started | | 🚫 |
+| **Gamers Geolocalisation** | ❌ | Not started | | 🚫 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
-| **Show my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
-| **Geolocalisation** | ⌛ | Not working | Peter | ⭐ |
+| **Show my profile** | ✅ | Done | Adrien | 🆗 |
+| **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
+| **Event Geolocalisation** | ✅ | Done | Peter | 🆗 |
 | **My News** | ✅ | Done | Adrien | 🆗 | 
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
@@ -41,3 +42,4 @@
 ## Blocking points :
 
 - **SendGrid** : struggled to configure and authorize our calls
+- **RESOLVED** : now using **_Mailgun_** services, for our 4 authorized mail adresses
