@@ -5,10 +5,12 @@ import Style from '../../styles/register';
 import ENV from '../../../env.js';
 import Func from '../../functions.js';
 
+
 export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            check: false,
             loading: false,
             firstname: "",
             lastname: "",
@@ -17,6 +19,17 @@ export default class Home extends React.Component {
             password: "",
             password_confirmation: ""
         }
+    }
+
+    checkEmail = async() => {
+      const { email } = this.state
+      var emails = ['adrien.masson@hotmail.fr',
+                    'antoine.nivoy@gmail.com',
+                    'maxime.gouenard@gmail.com',
+                    'pierre.herisse@gmail.com']
+      emails.map(e => {
+        if(email == e){ this.setState({ check : true }) }
+      })
     }
 
     sendEmail = async() => {
@@ -40,7 +53,8 @@ export default class Home extends React.Component {
                     if (nickname.length > 5 && password.length > 7) {
                         // TODO:
                         // Server verification is different and failed with j@j.j
-                        if (/\S+@\S+\.\S+/.test(email)) {
+                        await this.checkEmail(email)
+                        if (/\S+@\S+\.\S+/.test(email) && this.state.check == true) {
                             const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_REGISTER : ENV.HEROKU_API_URL_REGISTER;
                             const body = JSON.stringify({
                                 firstname,
@@ -52,7 +66,7 @@ export default class Home extends React.Component {
                             });
                             this.setState({ loading: true });
                             const response = await Func.fetch(url, "POST", body);
-                            if (response.status >= 200 && response.status < 300) {
+                            if (response.status >= 200 && response.status < 300 && this.state.check == true) {
                                 this.setState({ loading: false });
                                 await this.sendEmail(email)
                                 this.props.navigation.navigate('Login');
