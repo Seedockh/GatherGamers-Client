@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MapView, Location, Permissions } from 'expo';
 import ENV from '../../../env'
 import JWT from 'expo-jwt'
+import KEY from '../../../secretenv.js'
 import Func from '../../functions.js';
 
 const events = []
@@ -60,12 +61,22 @@ export default class JoinEvents extends React.Component {
           Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json()
-            responseJSON.data.events.forEach(function(event) {
-                let eventToPush = {
+              responseJSON.data.events.forEach(async (event) => {
+                   const address =
+                   await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${event.place.coordinates[0]},${event.place.coordinates[1]}&key=${KEY.MAPS_API_KEY}`)
+                         .then(res => res.json())
+                         .then((json) => {
+                           if (json.status !== 'OK') {
+                             throw new Error(`Geocode error: ${json.status}`);
+                           }
+                         return json.results[0].formatted_address;
+                       });
+                     const eventToPush = {
                     id: event.id,
                     title: event.name,
                     date: event.date,
                     place: event.place,
+                    address: address,
                     gameid: event.GameId,
                     players: event.players,
                     price: event.price,
@@ -123,17 +134,25 @@ export default class JoinEvents extends React.Component {
     }
 
     renderMarker(item,index) {
-      console.log(item);
-      return(
-        <MapView.Marker key={index}
-          coordinate={{
-            latitude: item.place.coordinates[0],
-            longitude: item.place.coordinates[1]
-          }}
-          title={"'"+item.title+"'"}
-          description={"'"+item.address+"'"}
-        />
-      )
+      if (item.title.indexOf(this.state.searchText) !== -1 && this.props.navigation.state.params!==undefined) {
+          if (item.gameid == this.props.navigation.state.params.gameid) {
+            return(
+              <MapView.Marker key={index}
+                coordinate={{
+                  latitude: item.place.coordinates[0],
+                  longitude: item.place.coordinates[1]
+                }}
+                title={"'"+item.title+"'"}
+                description={"'"+item.address+"'"}
+                pinColor={ 'black' }
+              />
+            )
+          } else {
+              return null
+          }
+      } else {
+          return null
+      }
     }
 
     renderItem(item, index) {

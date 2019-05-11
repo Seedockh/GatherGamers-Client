@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { Card, CardItem, Body, Text, Button } from 'native-base';
 import Func from '../../functions.js';
 
@@ -25,13 +25,13 @@ export default class InfoCard extends React.Component {
             EventId: this.props.navigation.state.params.event.id,
         })
         const auth = `Bearer ${token}`
-        await Func.fetch(url, "POST", body, auth)
+        const response = await Func.fetch(url, "POST", body, auth)
         if(response.status == 401) {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             await response.json()
             Func.toaster("See you at the event!", "Okay", "success", 3000);
-        }        
+        }
     }
 
     fetchAuthor = async () => {
@@ -39,12 +39,12 @@ export default class InfoCard extends React.Component {
         this.setState({ token })
         const url = `https://gathergamers.herokuapp.com/api/user/${this.props.navigation.state.params.event.user}`
         const auth = `Bearer ${token}`
-        await Func.fetch(url, "GET", null, auth)
+        const response = await Func.fetch(url, "GET", null, auth);
         if(response.status == 401) {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json()
-            this.setState({eventAuthor: responseJSON.nickname}) 
+            this.setState({eventAuthor: responseJSON.nickname})
         }
     }
 
