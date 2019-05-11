@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail, Toast } from 'native-base';
 
 const participants = []
@@ -9,7 +9,8 @@ export default class ListCard extends React.Component {
         super(props);
         this.state = {
             participantsCount: 0,
-            token: ""
+            token: "",
+            fetchDone: false
         }
         participants.length = 0
     }
@@ -48,6 +49,7 @@ export default class ListCard extends React.Component {
             )
             .then(async (response) => {
                 if(response.status == 401) {
+                    this.setState({ fetchDone: false });
                     this.toastMessage("danger", "Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
@@ -69,9 +71,11 @@ export default class ListCard extends React.Component {
                             .then(async (response) => {
                                 if(response.status == 401) {
                                     this.toastMessage("danger", "Unauthorized!")
+                                    this.setState({ fetchDone: false });
                                 } else {
                                     let responseJSON = await response.json()
                                     nickname = responseJSON.nickname
+                                    this.setState({ fetchDone: true });
                                 }
                         })
                         let participantToPush = {
@@ -86,7 +90,7 @@ export default class ListCard extends React.Component {
 
     fetchParticipantsNickname = async (id) => {
         await this.getToken()
-        
+
     }
 
     renderItem(item, index) {
@@ -102,9 +106,16 @@ export default class ListCard extends React.Component {
             </ListItem>
         </List>)
     }
-    
+
     render() {
         return (
+          <>
+            {!this.state.fetchDone && (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+              </View>
+            )}
+            {this.state.fetchDone && (
             <View style={{ marginHorizontal: 16 }}>
                 <Card>
                     <CardItem header bordered>
@@ -119,6 +130,8 @@ export default class ListCard extends React.Component {
                     </CardItem>
                 </Card>
             </View>
+            )}
+          </>
         )
     }
 }

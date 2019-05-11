@@ -10,6 +10,7 @@ import JWT from 'expo-jwt'
 import KEY from '../../../secretenv.js'
 
 const events = []
+
 export default class JoinEvents extends React.Component {
 
     static navigationOptions = {
@@ -30,13 +31,13 @@ export default class JoinEvents extends React.Component {
             },
             locationResult: false
         }
-        events.length = 0
+        events.length = 0;
     }
 
     async componentDidMount() {
         await this.checkGeolocation();
-        this.fetchEvents();
-        if (this.state.allowGeoloc) this.getUserLocation();
+        await this.fetchEvents();
+        if (this.state.allowGeoloc) await this.getUserLocation();
     }
 
     async checkGeolocation() {
@@ -70,12 +71,22 @@ export default class JoinEvents extends React.Component {
                     alert("Unauthorized!")
                 } else {
                     let responseJSON = await response.json()
-                    responseJSON.data.events.forEach(function(event) {
-                        let eventToPush = {
+                    responseJSON.data.events.forEach(async (event) => {
+                      const address =
+                      await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${event.place.coordinates[0]},${event.place.coordinates[1]}&key=${KEY.MAPS_API_KEY}`)
+                            .then(res => res.json())
+                            .then((json) => {
+                              if (json.status !== 'OK') {
+                                throw new Error(`Geocode error: ${json.status}`);
+                              }
+                            return json.results[0].formatted_address;
+                          });
+                        const eventToPush = {
                             id: event.id,
                             title: event.name,
                             date: event.date,
                             place: event.place,
+                            address: address,
                             gameid: event.GameId,
                             players: event.players,
                             price: event.price,
@@ -85,9 +96,8 @@ export default class JoinEvents extends React.Component {
                         events.push(eventToPush)
                     });
                 }
-                console.log(events);
         })
-        this.setState({eventsCount: events.length})
+        this.setState({eventsCount: events.length});
     }
 
     // Checks if user has Accepted Geolocation and returns his position to DB
@@ -145,6 +155,20 @@ export default class JoinEvents extends React.Component {
         this.props.navigation.navigate('DetailEvents', {event: events[index]})
     }
 
+    renderMarker(item,index) {
+      console.log(item);
+      return(
+        <MapView.Marker key={index}
+          coordinate={{
+            latitude: item.place.coordinates[0],
+            longitude: item.place.coordinates[1]
+          }}
+          title={"'"+item.title+"'"}
+          description={"'"+item.address+"'"}
+        />
+      )
+    }
+
     renderItem(item, index) {
         if (item.title.indexOf(this.state.searchText) !== -1 && this.props.navigation.state.params!==undefined) {
             if (item.gameid == this.props.navigation.state.params.gameid) {
@@ -158,7 +182,7 @@ export default class JoinEvents extends React.Component {
                             <Body>
                                 <Text>{item.title}</Text>
                                 <Text note numberOfLines={1}>{item.date}</Text>
-                                <Text note numberOfLines={1}>{item.place.coordinates}</Text>
+                                <Text note numberOfLines={1}>{item.address}</Text>
                             </Body>
                         </TouchableOpacity>
                         </ListItem>
@@ -179,7 +203,7 @@ export default class JoinEvents extends React.Component {
                   <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
                 </View>
               }
-              {this.state.allowGeoloc && this.state.locationResult &&
+              {this.state.locationResult &&
                 <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
                     style={{ flex: 1 }}
                     initialRegion={{
@@ -189,14 +213,17 @@ export default class JoinEvents extends React.Component {
                       longitudeDelta: 0.0421,
                     }}
                   >
-                  <MapView.Marker
-                    coordinate={{
-                      latitude: this.state.location.coordinates[0],
-                      longitude: this.state.location.coordinates[1]
-                    }}
-                    title="Your position"
-                    description="This where you are actually located."
-                  />
+                  {this.state.allowGeoloc &&
+                    <MapView.Marker
+                      coordinate={{
+                        latitude: this.state.location.coordinates[0],
+                        longitude: this.state.location.coordinates[1]
+                      }}
+                      title="Your position"
+                      description="This where you are actually located."
+                    />
+                  }
+                  {events.length>0 ? events.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
               }
                 <View style={{ flex: 1 }}>
