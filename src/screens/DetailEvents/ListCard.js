@@ -10,7 +10,8 @@ export default class ListCard extends React.Component {
         super(props);
         this.state = {
             participantsCount: 0,
-            token: ""
+            token: "",
+            fetchDone: false
         }
         participants.length = 0
     }
@@ -63,9 +64,16 @@ export default class ListCard extends React.Component {
             </ListItem>
         </List>)
     }
-    
+
     render() {
         return (
+          <>
+            {!this.state.fetchDone && (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+              </View>
+            )}
+            {this.state.fetchDone && (
             <View style={{ marginHorizontal: 16 }}>
                 <Card>
                     <CardItem header bordered>
@@ -80,6 +88,8 @@ export default class ListCard extends React.Component {
                     </CardItem>
                 </Card>
             </View>
+            )}
+          </>
         )
     }
 }

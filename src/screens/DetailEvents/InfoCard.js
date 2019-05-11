@@ -8,7 +8,7 @@ export default class InfoCard extends React.Component {
         super(props);
         this.state = {
             token: "",
-            eventAuthor: ""
+            eventAuthor: "",
         }
     }
 
@@ -50,6 +50,13 @@ export default class InfoCard extends React.Component {
 
     render() {
         return (
+          <>
+            {this.state.eventAuthor==="" && (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+              </View>
+            )}
+            {this.state.eventAuthor!=="" && (
             <View style={{ marginHorizontal: 16 }}>
                 <Card>
                     <CardItem header bordered>
@@ -73,7 +80,8 @@ export default class InfoCard extends React.Component {
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Lieu</Text>
-                                <Text>{this.props.navigation.state.params.event.place}</Text>
+                                <Text>Latitude : {this.props.navigation.state.params.event.place.coordinates[0]}</Text>
+                                <Text>Longitude : {this.props.navigation.state.params.event.place.coordinates[1]}</Text>
                             </View>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text>Nombre de joueurs</Text>
@@ -94,6 +102,8 @@ export default class InfoCard extends React.Component {
                     </CardItem>
                 </Card>
             </View>
+            )}
+          </>
         )
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import { ScrollView, View, Image, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Header, Item, Input, Icon, Text } from 'native-base';
 import Style from '../../styles/listgames'
 import Func from '../../functions.js';
@@ -79,6 +79,13 @@ export default class ListGames extends React.Component {
 
     render() {
         return (
+          <>
+            {this.state.gamesCount===0 && (
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000" />
+                </View>
+            )}
+            {this.state.gamesCount>0 && (
             <>
                 <View style={Style.viewheader}></View>
                 <Header searchBar rounded style={Style.header}>
@@ -92,6 +99,8 @@ export default class ListGames extends React.Component {
                     {games.length > 0 ? games.map((item, index) => this.renderItem(item, index)) : null}
                 </ScrollView>
             </>
+            )}
+          </>
         );
     }
 }
