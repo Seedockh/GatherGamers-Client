@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Image, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base';
 import Style from '../../styles/register';
 import ENV from '../../../env.js';
@@ -17,6 +17,19 @@ export default class Home extends React.Component {
             password: "",
             password_confirmation: ""
         }
+    }
+
+    sendEmail = async() => {
+      const { email } = this.state
+      const url = 'https://gathergamers.herokuapp.com/api/mailgun/register'
+      const body = JSON.stringify({
+          useremail: email
+      })
+      const response = await Func.fetch(url, "POST", body);
+    }
+
+    login = async () => {
+        this.props.navigation.navigate('Login')
     }
 
     Register = async () => {
@@ -38,11 +51,12 @@ export default class Home extends React.Component {
                                 password_confirmation
                             });
                             this.setState({ loading: true });
-                            const response = await Func.fetch(url, "POST", body);                    
+                            const response = await Func.fetch(url, "POST", body);
                             if (response.status >= 200 && response.status < 300) {
                                 this.setState({ loading: false });
+                                await this.sendEmail(email)
                                 this.props.navigation.navigate('Login');
-                                Func.toaster("Account successfully created!", "Okay", "success", 3000);
+                                Func.toaster("Account successfully created! And You have received an email", "Okay", "success", 3000);
                             } else {
                                 Func.toaster("Something went wrong :(", "Okay", "danger", 3000);
                             }
@@ -107,6 +121,9 @@ export default class Home extends React.Component {
                                 <Button title="Connexion" onPress={this.Register.bind(this)} style={Style.button}>
                                     <Text style={Style.registerText}>Register</Text>
                                 </Button>
+                                <TouchableOpacity onPress={this.login.bind(this)} style={Style.touchableOpacity}>
+                                    <Text style={Style.formText}>Already have an account ?</Text>
+                                </TouchableOpacity>
                             </View>
                         ) : (
                             <View style={Style.buttonContainer}>
