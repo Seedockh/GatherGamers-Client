@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail } from 'native-base';
 import Func from '../../functions.js';
 
@@ -25,7 +25,7 @@ export default class ListCard extends React.Component {
         this.setState({ token })
         const url = `https://gathergamers.herokuapp.com/api/participant/event/${this.props.navigation.state.params.event.id}`
         const auth = `Bearer ${token}`
-        await Func.fetch(url, "GET", null, auth)
+        const response = await Func.fetch(url, "GET", null, auth)
         if(response.status == 401) {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
@@ -35,7 +35,7 @@ export default class ListCard extends React.Component {
                 this.setState({ token })
                 const url = `https://gathergamers.herokuapp.com/api/user/${participant.id}`
                 let nickname = ""
-                await Func.fetch(url, "GET", null, auth)
+                const response = await Func.fetch(url, "GET", null, auth)
                 if(response.status == 401) {
                     Func.toaster("Unauthorized!", "Okay", "danger", 3000);
                 } else {
@@ -46,7 +46,7 @@ export default class ListCard extends React.Component {
                     nickname
                 }
                 await participants.push(participantToPush)
-                this.setState({participantsCount: participants.length})
+                this.setState({participantsCount: participants.length, fetchDone: true})
             }.bind(this));
         }
     }
