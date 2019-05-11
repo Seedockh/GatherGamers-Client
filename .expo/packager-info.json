@@ -3,8 +3,8 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://qy-bbc.cracky.gathergamers-client.exp.direct",
+  "packagerNgrokUrl": "https://packager.qy-bbc.cracky.gathergamers-client.exp.direct",
+  "ngrokPid": 5888,
   "webpackServerPort": null
 }
