@@ -18,22 +18,24 @@
 | **Registered mail** | ✅ | Done | Maxime | 🆗 |
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
+| **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
-| **Create an event** | ✅ | Done | Adrien | 🆗 |
-| **Join an event** | ✅ | Done | Antoine | 🆗 |
-| **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
-| **Show my profile** | ✅ | Done | Adrien | 🆗 |
+| **Create an event** | ✅ | Done | Adrien | 🆗 |
 | **Show events created** | ❌ | Not started | | 🚫 |
 | **Update events created** | ❌ | Not started | | 🚫 |
 | **Delete events created** | ❌ | Not started | | 🚫 |
+| **Join an event** | ✅ | Done | Antoine | 🆗 |
+| **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
+| **Show my profile** | ✅ | Done | Adrien | 🆗 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
-| **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
-| **Gamers Geolocalisation** | ⌛ | In progress | Pierre | 🚫 |
 | **My News** | ✅ | Done | Adrien | 🆗 | 
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
+| **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
+| **Gamers Geolocalisation** | ⌛ | In progress | Pierre | ⭐ |
+| **OptinGeoloc Switch** | ❌ | Not started | Pierre | 🚫 |
 | **AWS service** | ⌛ | Not working yet | Maxime | ⭐ |
 
 ## Future features
@@ -42,10 +44,9 @@
 |---------|--------|-------|------------|-----|
 | **Forum** | ❌ | Not started | | 🚫 |
 | **Messenger** | ❌ | Not started | | 🚫 |
-| **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
-| **OptinGeoloc Switch** | ❌ | Not started | | 🚫 |
 
 ## Blocking points :
 
 - **SendGrid** : struggled to configure and authorize our calls
    - **RESOLVED** : now using **_Mailgun_** services, for our 4 authorized mail adresses
+
