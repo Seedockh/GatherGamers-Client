@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View } from 'react-native';
 import { Content, Card, CardItem, Body, Text } from 'native-base';
 import JWT from 'expo-jwt'
 import Style from '../../styles/cardfix'
 import ENV from '../../../env'
+import Func from '../../functions.js';
 
 export default class CardFix extends React.Component {
     constructor(props) {
@@ -21,27 +22,13 @@ export default class CardFix extends React.Component {
         this.recoverData()
     }
 
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
     recoverData = async () => {
-        
-        await this.getToken()
-        const { token } = this.state
-
-        let decodedToken = JWT.decode(token, ENV.JWT_KEY)
-
-        let response = await fetch("https://gathergamers.herokuapp.com/api/user/" + decodedToken.id, {
-            headers: {
-                "Authorization": 'Bearer ' + token,
-                "Content-Type": 'application/json'
-            },
-            method: "GET"
-        })
-        .catch( error => {return console.log("error", error)})
-
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(token, ENV.JWT_KEY)
+        const url = `https://gathergamers.herokuapp.com/api/user/${decodedToken.id}`
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "GET", null, auth)
         const json = await response.json();
         if (json.error) {
             return null
@@ -50,12 +37,9 @@ export default class CardFix extends React.Component {
         }
     }
 
-
     render() {
         const { firstname, lastname, nickname, email } = this.state
-
         return (
-
             <Content style={Style.content}>
                 <Card>
                     <CardItem header bordered>
@@ -85,7 +69,6 @@ export default class CardFix extends React.Component {
                     </CardItem>
                 </Card>
             </Content>
-
         );
     }
 }

@@ -25,8 +25,8 @@ export default class Home extends React.Component {
             if (password == password_confirmation) {
                 if (nickname != password) {
                     if (nickname.length > 5 && password.length > 7) {
-                        //TODO:
-                        //Server verification is different and failed with j@j.j
+                        // TODO:
+                        // Server verification is different and failed with j@j.j
                         if (/\S+@\S+\.\S+/.test(email)) {
                             const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_REGISTER : ENV.HEROKU_API_URL_REGISTER;
                             const body = JSON.stringify({

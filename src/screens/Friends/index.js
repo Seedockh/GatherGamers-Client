@@ -14,22 +14,20 @@ export default class Friends extends React.Component {
         this.state = {}
     }
 
-    onPressSave() {
+    save() {
         this.props.onEditTrue()
     }
 
     render() {
         return (
-
             <>
                 <Content style={{ marginHorizontal: 16 }}>
                     <Card>
                         <CardItem header bordered>
                             <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
                                 <Text style={{ color: "black" }}>Informations</Text>
-                                <Icon name="create" onPress={() => this.onPressSave()} />
+                                <Icon name="create" onPress={() => this.save()} />
                             </View>
-
                         </CardItem>
                         <CardItem bordered>
                             <Body>
@@ -47,7 +45,6 @@ export default class Friends extends React.Component {
                         </CardItem>
                     </Card>
                 </Content>
-
                 <FooterTabs {...this.props} />
             </>
         );

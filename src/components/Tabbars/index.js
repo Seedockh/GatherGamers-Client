@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container, Header, Tab, Tabs, TabHeading, Icon, Text } from 'native-base';
+import { Tab, Tabs, TabHeading, Text } from 'native-base';
 import Tab1 from './Tabs/tabOne'
 import Tab2 from './Tabs/tabTwo'
 import Tab3 from './Tabs/tabThree'

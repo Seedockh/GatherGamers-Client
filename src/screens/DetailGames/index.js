@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Image, AsyncStorage, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { Text, Switch, Button } from 'native-base'
 import Style from '../../styles/detailgame'
 import FooterTabs from '../../components/FooterTabs'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
+import Func from '../../functions.js';
+
 export default class DetailGames extends React.Component {
 
     constructor(props) {
@@ -33,90 +35,56 @@ export default class DetailGames extends React.Component {
         else this.setState({ fetchesDone: false });
     }
 
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
     fetchGames = async () => {
-        await this.getToken()
-        const url = "https://gathergamers.herokuapp.com/api/game/" + this.props.navigation.state.params.id
-        await fetch(
-            url,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-            }
-        )
-            .then(async (response) => {
-                if (response.status == 401) {
-                    alert("Unauthorized!")
-                } else {
-                    let responseJSON = await response.json()
-                    this.setState({ cover: responseJSON.cover, name: responseJSON.name, summary: responseJSON.summary });
-                    this.props.navigation.setParams({ title: responseJSON.name });
-                    this.setFetchStatus();
-                }
-            })
+        const token = await Func.getToken()
+        this.setState({ token })
+        const url = `https://gathergamers.herokuapp.com/api/game/${this.props.navigation.state.params.id}`
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "GET", null, auth)
+        if (response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json()
+            this.setState({ cover: responseJSON.cover, name: responseJSON.name, summary: responseJSON.summary });
+            this.props.navigation.setParams({ title: responseJSON.name });
+            this.setFetchStatus();
+        }
     }
 
     fetchFavorite = async () => {
-
-        await this.getToken()
-        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
-
-        const url = "https://gathergamers.herokuapp.com/api/favourite/user/" + decodedToken.id
-        await fetch(
-            url,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-            }
-        )
-            .then(async (response) => {
-                if (response.status == 401) {
-                    alert("Unauthorized!")
-                } else {
-                    let responseJSON = await response.json()
-                    this.setState({ gamesFetch: responseJSON.data.favourite.Games })
-                    this.setState({ switchValue: false })
-                    for await (let gameObject of this.state.gamesFetch) {
-                        if (gameObject.name === this.state.name) {
-                            this.setState({ switchValue: true, gameid: gameObject.id })
-                        }
-                    }
-                    this.setFetchStatus();
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
+        const url = `https://gathergamers.herokuapp.com/api/favourite/user/${decodedToken.id}`
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "GET", null, auth)
+        if (response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json()
+            this.setState({ gamesFetch: responseJSON.data.favourite.Games })
+            this.setState({ switchValue: false })
+            for await (let gameObject of this.state.gamesFetch) {
+                if (gameObject.name === this.state.name) {
+                    this.setState({ switchValue: true, gameid: gameObject.id })
                 }
-            })
-
+            }
+            this.setFetchStatus();
+        }
     }
 
     pushNotif = async (message, type) => {
-        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
         const url = "https://gathergamers.herokuapp.com/api/notification/add"
-        let response = await fetch(
-            url,
-            {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-                body: JSON.stringify({
-                    UserId: decodedToken.id,
-                    message: message,
-                    type: type
-                })
-            })
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
     }
 
     onJoinEvent() {
@@ -131,10 +99,9 @@ export default class DetailGames extends React.Component {
         this.props.navigation.navigate('CreateEvent', { ...this.props })
     }
 
-    async CHANGEDESTATETAMERE() {
+    async changeStatus() {
         await this.setState({ switchValue: !this.state.switchValue });
         await this.onSwitch();
-
         if (this.state.switchValue) {
             await this.pushNotif(`You have added ${this.state.name} to your favorites`, 1)
         } else {
@@ -143,36 +110,21 @@ export default class DetailGames extends React.Component {
     }
 
     onSwitch = async () => {
-        let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
-
+        const token = await Func.getToken()
+        this.setState({ token })
+        let decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
         if (this.state.switchValue === true) {
             const url = "https://gathergamers.herokuapp.com/api/favourite/add"
-            let response = await fetch(
-                url,
-                {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + this.state.token
-                    },
-                    body: JSON.stringify({
-                        UserId: decodedToken.id,
-                        GameId: this.props.navigation.state.params.id
-                    })
-                })
+            const body = JSON.stringify({
+                UserId: decodedToken.id,
+                GameId: this.props.navigation.state.params.id
+            })
+            const auth = `Bearer ${token}`
+            await Func.fetch(url, "POST", body, auth)
         } else if (this.state.switchValue === false) {
             const url = "https://gathergamers.herokuapp.com/api/favourite/delete/" + decodedToken.id + "/" + this.state.gameid;
-            let response = await fetch(
-                url,
-                {
-                    headers: {
-                        "Accept": "application/json",
-                        "Authorization": 'Bearer ' + this.state.token,
-                        "Content-Type": 'application/json'
-                    },
-                    method: "DELETE"
-                })
+            const auth = `Bearer ${token}`
+            await Func.fetch(url, "DELETE", null, auth)
         }
     }
 
@@ -182,7 +134,7 @@ export default class DetailGames extends React.Component {
             <>
                 {!fetchesDone && (
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000" />
+                        <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000"/>
                     </View>
                 )}
                 {fetchesDone && (
@@ -202,7 +154,7 @@ export default class DetailGames extends React.Component {
 
                             <View style={Style.viewswitch}>
                                 <Text>Add {name} as favorite</Text>
-                                <Switch value={switchValue} onValueChange={() => this.CHANGEDESTATETAMERE()} />
+                                <Switch value={switchValue} onValueChange={() => this.changeStatus()} />
                             </View>
 
                             <View style={Style.viewbutton}>

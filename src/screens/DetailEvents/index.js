@@ -19,23 +19,15 @@ export default class DetailEvents extends React.Component {
     }
 
     render() {
-
         return (
             <>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginBottom: 16 }}>
-                        <Image
-                            style={{ width: vmin(20), height: vmin(30), flex: 1 }}
-                            source={require('../../../assets/rouge.jpg')}
-                        />
+                        <Image style={{ width: vmin(20), height: vmin(30), flex: 1 }} source={require('../../../assets/rouge.jpg')}/>
                     </View>
-
                     <InfoCard {...this.props}/>
-
                     <ListCard {...this.props}/>
-
                 </ScrollView>
-
                 <FooterTabs {...this.props} />
             </>
         )

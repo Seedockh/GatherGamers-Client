@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, AsyncStorage } from 'react-native';
-import { Content, Card, CardItem, Body, Text, Button, Toast } from 'native-base';
+import { View } from 'react-native';
+import { Card, CardItem, Body, Text, Button } from 'native-base';
+import Func from '../../functions.js';
 
 export default class InfoCard extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -16,70 +16,36 @@ export default class InfoCard extends React.Component {
         this.fetchAuthor()
     }
 
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
-    toastMessage(status, message) {
-        Toast.show({
-            text: `${message}`,
-            buttonText: "Okay",
-            type: `${status}`,
-            duration: 3000
-        })
-    }
-
     subscribe = async () => {
-        await this.getToken()
+        const token = await Func.getToken()
+        this.setState({ token })
         const url = "https://gathergamers.herokuapp.com/api/participant/add"
-        await fetch(
-            url,
-            {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-                body: JSON.stringify({
-                    UserId: this.props.navigation.state.params.event.user,
-                    EventId: this.props.navigation.state.params.event.id,
-                })
-            }
-            )
-            .then(async (response) => {
-                if(response.status == 401) {
-                    this.toastMessage("danger", "Unauthorized!")
-                } else {
-                    await response.json()
-                    this.toastMessage("success", "See you at the event!")
-                }
+        const body = JSON.stringify({
+            UserId: this.props.navigation.state.params.event.user,
+            EventId: this.props.navigation.state.params.event.id,
         })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
+        if(response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            await response.json()
+            Func.toaster("See you at the event!", "Okay", "success", 3000);
+        }        
     }
 
     fetchAuthor = async () => {
-        await this.getToken()
-        const url = "https://gathergamers.herokuapp.com/api/user/" + this.props.navigation.state.params.event.user
-        await fetch(
-            url,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                }
-            }
-            )
-            .then(async (response) => {
-                if(response.status == 401) {
-                    this.toastMessage("danger", "Unauthorized!")
-                } else {
-                    let responseJSON = await response.json()
-                    this.setState({eventAuthor: responseJSON.nickname}) 
-                }
-        })
+        const token = await Func.getToken()
+        this.setState({ token })
+        const url = `https://gathergamers.herokuapp.com/api/user/${this.props.navigation.state.params.event.user}`
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "GET", null, auth)
+        if(response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json()
+            this.setState({eventAuthor: responseJSON.nickname}) 
+        }
     }
 
     render() {
