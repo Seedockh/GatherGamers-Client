@@ -26,7 +26,7 @@
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
 | **Event Geolocalisation** | ✅ | Done | Peter | 🆗 |
-| **Gamers Geolocalisation** | ⌛ | In progress | | 🚫 |
+| **Gamers Geolocalisation** | ⌛ | In progress | Peter | 🚫 |
 | **My News** | ✅ | Done | Adrien | 🆗 | 
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
