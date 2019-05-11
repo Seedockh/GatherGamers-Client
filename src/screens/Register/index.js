@@ -20,11 +20,12 @@ export default class Home extends React.Component {
     }
 
     sendEmail = async() => {
-      const { email} = this.state
+      const { email } = this.state
       const url = 'https://gathergamers.herokuapp.com/api/mailgun/register'
       const body = JSON.stringify({
-          useremail:
+          useremail: email
       })
+      const response = await Func.fetch(url, "POST", body);
     }
 
     Register = async () => {
@@ -49,6 +50,7 @@ export default class Home extends React.Component {
                             const response = await Func.fetch(url, "POST", body);
                             if (response.status >= 200 && response.status < 300) {
                                 this.setState({ loading: false });
+                                await this.sendEmail(email)
                                 this.props.navigation.navigate('Login');
                                 Func.toaster("Account successfully created!", "Okay", "success", 3000);
                             } else {
