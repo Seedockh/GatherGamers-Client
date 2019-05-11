@@ -22,11 +22,12 @@
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Create an event** | ✅ | Done | Adrien | 🆗 |
 | **Join an event** | ✅ | Done | Antoine | 🆗 |
+| **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
-| **Event Geolocalisation** | ✅ | Done | Peter | 🆗 |
-| **Gamers Geolocalisation** | ⌛ | In progress | Peter | 🚫 |
+| **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
+| **Gamers Geolocalisation** | ⌛ | In progress | Pierre | 🚫 |
 | **My News** | ✅ | Done | Adrien | 🆗 | 
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
