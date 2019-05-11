@@ -26,11 +26,11 @@
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
 | **Event Geolocalisation** | ✅ | Done | Peter | 🆗 |
-| **Gamers Geolocalisation** | ❌ | In progress | | 🚫 |
+| **Gamers Geolocalisation** | ⌛ | In progress | | 🚫 |
 | **My News** | ✅ | Done | Adrien | 🆗 | 
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
-| **AWS service** | ❌ | Not started | | ⭐ |
+| **AWS service** | ⌛ | Not working yet | Maxime | ⭐ |
 
 ## Future features
 
@@ -39,6 +39,7 @@
 | **Forum** | ❌ | Not started | | 🚫 |
 | **Messenger** | ❌ | Not started | | 🚫 |
 | **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
+| **OptinGeoloc Switch** | ❌ | Not started | | 🚫 |
 
 ## Blocking points :
 
