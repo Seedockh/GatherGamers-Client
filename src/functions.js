@@ -14,7 +14,7 @@ export default Func = {
         const token = await AsyncStorage.getItem('token');
         return token
     },
-    fetch: async function(url, method, body = {}) {
+    fetch: async function(url, method, body = {}, auth = null) {
         try {
             let response = await fetch(
                 url,
@@ -22,7 +22,8 @@ export default Func = {
                     method,
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Authorization": auth
                     },
                     body
                 }
@@ -51,5 +52,8 @@ export default Func = {
         } catch (error) {
             throw error
         }
+    },
+    rmAsyncStorage: async function() {
+        await AsyncStorage.multiRemove(['email', 'password', 'token'])
     }
 }

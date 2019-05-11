@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Form, Item, Input, Label, Button, Spinner, Text } from 'native-base'
 import Style from '../../styles/login'
 import ENV from '../../../env.js'

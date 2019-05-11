@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, AsyncStorage, ActivityIndicator } from 'react-native';
-import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail, Toast } from 'native-base';
+import { View } from 'react-native';
+import { Content, Card, CardItem, Body, Text, List, ListItem, Left, Thumbnail } from 'native-base';
+import Func from '../../functions.js';
 
 const participants = []
 export default class ListCard extends React.Component {
@@ -19,78 +20,35 @@ export default class ListCard extends React.Component {
         this.fetchParticipants()
     }
 
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
-    toastMessage(status, message) {
-        Toast.show({
-            text: `${message}`,
-            buttonText: "Okay",
-            type: `${status}`,
-            duration: 3000
-        })
-    }
-
     fetchParticipants = async () => {
-        await this.getToken()
-        const url = "https://gathergamers.herokuapp.com/api/participant/event/" + this.props.navigation.state.params.event.id
-        await fetch(
-            url,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-            }
-            )
-            .then(async (response) => {
+        const token = await Func.getToken()
+        this.setState({ token })
+        const url = `https://gathergamers.herokuapp.com/api/participant/event/${this.props.navigation.state.params.event.id}`
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "GET", null, auth)
+        if(response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json()
+            await responseJSON.data.participants.Users.forEach(async function(participant) {
+                const token = await Func.getToken()
+                this.setState({ token })
+                const url = `https://gathergamers.herokuapp.com/api/user/${participant.id}`
+                let nickname = ""
+                await Func.fetch(url, "GET", null, auth)
                 if(response.status == 401) {
-                    this.setState({ fetchDone: false });
-                    this.toastMessage("danger", "Unauthorized!")
+                    Func.toaster("Unauthorized!", "Okay", "danger", 3000);
                 } else {
                     let responseJSON = await response.json()
-                    await responseJSON.data.participants.Users.forEach(async function(participant) {
-                        const token = await AsyncStorage.getItem('token');
-                        const url = "https://gathergamers.herokuapp.com/api/user/" + participant.id
-                        let nickname = ""
-                        await fetch(
-                            url,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "Accept": "application/json",
-                                    "Content-Type": "application/json",
-                                    "Authorization": "Bearer " + token
-                                }
-                            }
-                            )
-                            .then(async (response) => {
-                                if(response.status == 401) {
-                                    this.toastMessage("danger", "Unauthorized!")
-                                    this.setState({ fetchDone: false });
-                                } else {
-                                    let responseJSON = await response.json()
-                                    nickname = responseJSON.nickname
-                                    this.setState({ fetchDone: true });
-                                }
-                        })
-                        let participantToPush = {
-                            nickname
-                        }
-                        await participants.push(participantToPush)
-                        this.setState({participantsCount: participants.length})
-                    }.bind(this));
+                    nickname = responseJSON.nickname
                 }
-        })
-    }
-
-    fetchParticipantsNickname = async (id) => {
-        await this.getToken()
-
+                let participantToPush = {
+                    nickname
+                }
+                await participants.push(participantToPush)
+                this.setState({participantsCount: participants.length})
+            }.bind(this));
+        }
     }
 
     renderItem(item, index) {

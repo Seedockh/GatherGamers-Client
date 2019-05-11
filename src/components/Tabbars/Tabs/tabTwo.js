@@ -1,9 +1,11 @@
 import React from 'react';
-import { ScrollView, View, Image, AsyncStorage, ActivityIndicator, RefreshControl } from 'react-native';
-import { Text, Card, CardItem } from 'native-base';
+import { ScrollView, View, ActivityIndicator, RefreshControl } from 'react-native';
+import { Text, CardItem } from 'native-base';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
 import Style from '../../../styles/tabtwo'
+import Func from '../../../functions.js';
+
 export default class TabTwo extends React.Component {
     constructor(props) {
         super(props);
@@ -25,49 +27,26 @@ export default class TabTwo extends React.Component {
         });
     }
 
-    getToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        this.setState({ token })
-    }
-
     eventsFetch = async () => {
-
-        await this.getToken()
+        const token = await Func.getToken()
+        this.setState({ token })
         let decodedToken = JWT.decode(this.state.token, ENV.JWT_KEY)
-
-        const url = "https://gathergamers.herokuapp.com/api/participant/user/" + decodedToken.id
-        await fetch(
-            url,
-            {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.state.token
-                },
-            }
-        )
-            .then(async (response) => {
-                if (response.status == 401) {
-                    alert("Unauthorized!")
-                } else {
-                    let responseJSON = await response.json();
-                    this.setState({ eventsFetch: responseJSON.data.events })
-                }
-            })
+        const url = `https://gathergamers.herokuapp.com/api/participant/user/${decodedToken.id}`
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "GET", null, auth)
+        if (response.status == 401) {
+            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json();
+            this.setState({ eventsFetch: responseJSON.data.events })
+        }
     }
 
     render() {
-
         const { eventsFetch } = this.state
-
         return (
-
             <ScrollView style={Style.scrollview} refreshControl={
-                <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                />
+                <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh}/>
             }>
                 {!eventsFetch && (
                     <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -96,7 +75,6 @@ export default class TabTwo extends React.Component {
                 {eventsFetch && eventsFetch.length === 0 && (
                     <Text style={Style.textnonotif}> You're not participating to any event yet. </Text>
                 )}
-
             </ScrollView>
         );
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, ScrollView } from 'react-native';
-import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body, Right, Button } from 'native-base';
+import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs'
 
@@ -52,9 +52,7 @@ export default class GamersAround extends React.Component {
     }
 
     render() {
-
         const { data } = this.state
-
         return (
             <>
                 <View style={{ flex: 1 }}>
@@ -70,7 +68,6 @@ export default class GamersAround extends React.Component {
                             <Input placeholder="Search" />
                         </Item>
                     </Header>
-
                     <ScrollView>
                         {data.length > 0 ? (
                             data.map((item, index) => (
@@ -92,7 +89,6 @@ export default class GamersAround extends React.Component {
                             )}
                     </ScrollView>
                 </View>
-
                 <FooterTabs {...this.props} />
             </>
         )
