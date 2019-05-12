@@ -15,8 +15,10 @@ let participants = []
 
 export default class DetailEvents extends React.Component {
 
-    static navigationOptions = {
-        headerTitle: "Join Event"
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('screenTitle')
+      }
     }
 
     constructor(props) {
@@ -29,6 +31,7 @@ export default class DetailEvents extends React.Component {
     }
 
     componentDidMount() {
+      this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.event.title })
       this.fetchParticipants().then(()=>this.setState({fetchDone: true}))
     }
 
