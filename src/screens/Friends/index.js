@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Content, Card, CardItem, Body, Text, Icon, Thumbnail, Button } from 'native-base';
+import { Text, Button } from 'native-base';
 import FooterTabs from '../../components/FooterTabs'
-
+import Style from '../../styles/friends'
 export default class Friends extends React.Component {
 
     static navigationOptions = {
@@ -19,32 +19,18 @@ export default class Friends extends React.Component {
     }
 
     render() {
+        console.log(this.props.navigation)
         return (
             <>
-                <Content style={{ marginHorizontal: 16 }}>
-                    <Card>
-                        <CardItem header bordered>
-                            <View style={{ justifyContent: "space-between", alignItems: "center", flexDirection: "row", width: "100%", padding: 2 }}>
-                                <Text style={{ color: "black" }}>Informations</Text>
-                                <Icon name="create" onPress={() => this.save()} />
-                            </View>
-                        </CardItem>
-                        <CardItem bordered>
-                            <Body>
-                                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 16 }}>
-                                    <Thumbnail square source={require('../../../assets/rouge.jpg')} />
-                                    <View style={{ flexDirection: "column", width: "100%", padding: 2, paddingHorizontal: 8 }}>
-                                        <Text>Hyperion</Text>
-                                        <Text>From 24/01/2018</Text>
-                                    </View>
-                                </View>
-                                <Button block success>
-                                    <Text>Add Friend</Text>
-                                </Button>
-                            </Body>
-                        </CardItem>
-                    </Card>
-                </Content>
+                <View style={Style.container}>
+                    <Text>Do you want to add {this.props.navigation.state.params.gamer.nickname} as a friend?</Text>
+                    <Button block success style={Style.buttonadd}>
+                        <Text>Add</Text>
+                    </Button>
+                    <Button block dark style={Style.buttoncancel}>
+                        <Text>Cancel</Text>
+                    </Button>
+                </View>
                 <FooterTabs {...this.props} />
             </>
         );
