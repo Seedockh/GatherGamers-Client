@@ -189,7 +189,7 @@ export default class JoinEvents extends React.Component {
             <ActivityIndicator style={Style.activity} size="large" color="#000000" />
           </View>
         }
-        {this.state.locationResult &&
+
           <MapView 
             style={{flex:1}}
             style={Style.mapview}
