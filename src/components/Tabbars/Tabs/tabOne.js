@@ -73,7 +73,7 @@ export default class TabOne extends React.Component {
                 )}
                 {!deleting && notifsFetch && notifsFetch.length>0 && (
                   <>
-                    <Button block style={{ marginVertical: 8, marginHorizontal: 4, backgroundColor: "black" }} onPress={() => this.deleteAllNotif()}>
+                    <Button block style={{ marginVertical: 8, marginHorizontal: 16, backgroundColor: "black" }} onPress={() => this.deleteAllNotif()}>
                         <Text>Clear All</Text>
                     </Button>
                       {notifsFetch.map((item, index) => (
