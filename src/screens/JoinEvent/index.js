@@ -163,7 +163,7 @@ export default class JoinEvents extends React.Component {
       return(
           <List key={index} >
               <ListItem thumbnail>
-              <TouchableOpacity key={index} activeOpacity={0} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
+              <TouchableOpacity key={index} activeOpacity={0.8} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
                   <Left>
                       <Thumbnail square source={require('../../../assets/rouge.jpg')} />
                   </Left>
