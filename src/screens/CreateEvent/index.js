@@ -7,7 +7,6 @@ import JWT from 'expo-jwt'
 import KEY from '../../../secretenv.js'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Location } from 'expo';
 import Style from '../../styles/createevent'
 import Func from '../../functions.js';
 
@@ -29,21 +28,12 @@ export default class CreateEvent extends React.Component {
             token: null,
             addressData: null,
             addressDetails: null,
-            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
-            locationResult: false,
-            location: {
-                coords: {
-                    latitude: 37.78825,
-                    longitude: -122.4324
-                }
-            },
             lockCreation: true,
         }
     }
 
     componentDidMount() {
         this.fetchGames();
-        this.getUserLocation();
     }
 
     handleMapRegionChange = mapRegion => {
@@ -59,15 +49,9 @@ export default class CreateEvent extends React.Component {
                 },
                 lockCreation: false
             });
-        }
-    }
-
-    async getUserLocation() {
-        if (await Location.hasServicesEnabledAsync()) {
-            let location = await Location.getCurrentPositionAsync({ accuracy: 2 });
-            this.setState({ location: location, locationResult: true })
+            Func.toaster("Address confirmed", "Okay", "success", 2000);
         } else {
-            this.state({ locationResult: 'Location permission not enabled !' });
+          Func.toaster("Address not available", "Okay", "danger", 2000);
         }
     }
 
@@ -138,7 +122,7 @@ export default class CreateEvent extends React.Component {
                             }
                             this.pushNotif(`You created the event ${this.state.nameEvent}`, 1)
                             this.props.navigation.navigate('Home')
-
+                            Func.toaster("Event created", "Okay", "success", 3000);
                         } else {
                             Func.toaster("Wrong Address!", "Okay", "danger", 3000);
                         }
@@ -275,7 +259,7 @@ export default class CreateEvent extends React.Component {
                                 renderRightButton={() =>
                                     <View style={{ flex: 1 }}>
                                         <Button block info onPress={this.validateAddress.bind(this)}>
-                                            <Text>OK</Text>
+                                            <Text>Check</Text>
                                         </Button>
                                     </View>
                                 }

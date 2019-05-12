@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Image, ScrollView } from 'react-native';
-import { MapView } from 'expo';
 import MapViewDirections from 'react-native-maps-directions';
 import { Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { vmin } from 'react-native-expo-viewport-units';
+import { MapView, Location, Permissions } from 'expo';
 import FooterTabs from '../../components/FooterTabs'
 import InfoCard from './InfoCard'
 import ListCard from './ListCard'
@@ -27,7 +27,20 @@ export default class DetailEvents extends React.Component {
           fetchDone: false,
           participantsCount: 0,
           participates: false,
+          allowGeoloc: false,
         }
+    }
+
+    async checkGeolocation() {
+      // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
+      const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status === 'granted') {
+        this.setState({ allowGeoloc: true })
+        return Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      } else {
+        this.setState({ allowGeoloc: false })
+        Func.toaster("Location permission not granted!", "Okay", "danger", 3000);
+      }
     }
 
     componentDidMount() {
@@ -77,7 +90,7 @@ export default class DetailEvents extends React.Component {
     }
 
     render() {
-      const { event, userLocation } = this.props.navigation.state.params;
+      const { event, userLocation, allowGeoloc } = this.props.navigation.state.params;
         return (
             <>
               <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
@@ -98,7 +111,7 @@ export default class DetailEvents extends React.Component {
                     description={event.address}
                     pinColor={ 'blue' }
                   />
-                {userLocation.coordinates[0] && (
+                {userLocation.coordinates[0] && allowGeoloc && (
                   <>
                   <MapView.Marker
                     coordinate={{

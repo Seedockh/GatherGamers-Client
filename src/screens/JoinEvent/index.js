@@ -187,7 +187,7 @@ export default class JoinEvents extends React.Component {
                   <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
                 </View>
               }
-              {this.state.locationResult &&
+
                 <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
                     style={{ flex: 1 }}
                     initialRegion={{
@@ -197,7 +197,7 @@ export default class JoinEvents extends React.Component {
                       longitudeDelta: 0.0421,
                     }}
                   >
-                  {this.state.allowGeoloc &&
+                  {this.state.locationResult &&
                     <MapView.Marker
                       coordinate={{
                         latitude: this.state.location.coordinates[0],
@@ -209,7 +209,7 @@ export default class JoinEvents extends React.Component {
                   }
                   {this.state.fetchDone ? events.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
-              }
+
                 <View style={{ flex: 1 }}>
                     <Header searchBar rounded>
                         <Item>
