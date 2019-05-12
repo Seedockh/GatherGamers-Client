@@ -14,7 +14,7 @@ export default StyleSheet.create({
 
     image: {
         width: vmin(20), 
-        height: vmin(30), 
+        height: vmin(45), 
         flex: 1
     },
 
