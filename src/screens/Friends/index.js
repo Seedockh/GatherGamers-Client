@@ -22,9 +22,9 @@ export default class Friends extends React.Component {
         console.log(this.props.navigation)
         return (
             <>
-                <View style={StyleMedia.container}>
+                <View style={Style.container}>
                     <Text>Do you want to add {this.props.navigation.state.params.gamer.nickname} as a friend?</Text>
-                    <Button block success style={StyleMedia.buttonadd}>
+                    <Button block success style={Style.buttonadd}>
                         <Text>Add</Text>
                     </Button>
                     <Button block dark style={Style.buttoncancel}>

@@ -195,7 +195,7 @@ export default class GamersAround extends React.Component {
                   {this.state.fetchDone ? gamers.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
               }
-                <View style={Style.conatiner}>
+                <View style={Style.container}>
                     <Header searchBar rounded style={{ backgroundColor:"black"}}>
                         <Item>
                             <Icon name="ios-search" />
