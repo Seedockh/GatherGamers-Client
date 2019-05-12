@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Header, Item, Input, Icon, Text, List, ListItem, Thumbnail, Left, Body } from 'native-base';
-import { vmin } from 'react-native-expo-viewport-units';
 import FooterTabs from '../../components/FooterTabs';
 import { MapView, Location, Permissions } from 'expo';
 import ENV from '../../../env'
@@ -9,7 +8,7 @@ import JWT from 'expo-jwt'
 import KEY from '../../../secretenv.js'
 import Func from '../../functions.js';
 import geolib from 'geolib';
-
+import Style from '../../styles/gamersaround'
 let gamers = [];
 
 export default class GamersAround extends React.Component {
@@ -171,13 +170,12 @@ export default class GamersAround extends React.Component {
         return (
             <>
               {this.state.allowGeoloc && !this.state.locationResult &&
-                <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row'}}>
-                  <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+                <View style={Style.activityview}>
+                  <ActivityIndicator style={Style.activity} size="large" color="#000000" />
                 </View>
               }
               {this.state.locationResult &&
-                <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
-                    style={{ flex: 1 }}
+                <MapView style={Style.mapview}
                     initialRegion={{
                       latitude: this.state.location.coordinates[0],
                       longitude: this.state.location.coordinates[1],
@@ -197,16 +195,16 @@ export default class GamersAround extends React.Component {
                   {this.state.fetchDone ? gamers.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
               }
-                <View style={{ flex: 1 }}>
-                    <Header searchBar rounded>
+                <View style={Style.conatiner}>
+                    <Header searchBar rounded style={{ backgroundColor:"black"}}>
                         <Item>
                             <Icon name="ios-search" />
                             <Input placeholder="Search" onChangeText={(searchText) => this.setState({searchText})} />
                         </Item>
                     </Header>
                     {!this.state.fetchDone && (
-                      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-                        <ActivityIndicator style={{justifyContent: 'space-around', padding: 0}} size="large" color="#000000" />
+                      <View style={Style.activityview}>
+                        <ActivityIndicator style={Style.activity} size="large" color="#000000" />
                       </View>
                     )}
                     {this.state.fetchDone && (
