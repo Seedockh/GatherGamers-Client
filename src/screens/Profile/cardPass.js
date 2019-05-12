@@ -17,6 +17,20 @@ export default class CardPass extends React.Component {
         }
     }
 
+    pushNotif = async (message, type) => {
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
+    }
+
     updateData = async () => {
         const { password, password_confirmation } = this.state
         const token = await Func.getToken()
@@ -33,6 +47,7 @@ export default class CardPass extends React.Component {
                 })
                 const auth = `Bearer ${token}`
                 await Func.fetch(url, 'PUT', body, auth)
+                this.pushNotif("You have updated your password", 1)
                 this.props.onFix()
             } else {
                 Func.toaster("New password and confirm password are not the same!", "Okay", "danger", 3000);

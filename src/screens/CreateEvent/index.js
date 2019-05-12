@@ -31,10 +31,12 @@ export default class CreateEvent extends React.Component {
             addressDetails: null,
             mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
             locationResult: false,
-            location: { coords: {
-                latitude: 37.78825,
-                longitude: -122.4324
-            } },
+            location: {
+                coords: {
+                    latitude: 37.78825,
+                    longitude: -122.4324
+                }
+            },
             lockCreation: true,
         }
     }
@@ -49,22 +51,23 @@ export default class CreateEvent extends React.Component {
     };
 
     validateAddress = async () => {
-        if (this.state.addressData!==null && this.state.addressDetails!==null) {
+        if (this.state.addressData !== null && this.state.addressDetails !== null) {
             await this.setState({
-            placeEvent: {
-                type: 'Point',
-                coordinates: [this.state.addressDetails.geometry.location.lat,this.state.addressDetails.geometry.location.lng]
-            },
-            lockCreation: false });
+                placeEvent: {
+                    type: 'Point',
+                    coordinates: [this.state.addressDetails.geometry.location.lat, this.state.addressDetails.geometry.location.lng]
+                },
+                lockCreation: false
+            });
         }
     }
 
     async getUserLocation() {
         if (await Location.hasServicesEnabledAsync()) {
-            let location = await Location.getCurrentPositionAsync({accuracy: 2});
+            let location = await Location.getCurrentPositionAsync({ accuracy: 2 });
             this.setState({ location: location, locationResult: true })
         } else {
-            this.state({ locationResult: 'Location permission not enabled !'});
+            this.state({ locationResult: 'Location permission not enabled !' });
         }
     }
 
@@ -80,6 +83,20 @@ export default class CreateEvent extends React.Component {
             let responseJSON = await response.json()
             this.setState({ cover: responseJSON.cover, name: responseJSON.name })
         }
+    }
+
+    pushNotif = async (message, type) => {
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
     }
 
     createEvent = async () => {
@@ -118,7 +135,8 @@ export default class CreateEvent extends React.Component {
                                 })
                                 const auth = `Bearer ${token}`
                                 await Func.fetch(url, "POST", body, auth)
-                              }
+                            }
+                            this.pushNotif(`You created the event ${this.state.nameEvent}`, 1)
                             this.props.navigation.navigate('Home')
 
                         } else {
@@ -144,17 +162,17 @@ export default class CreateEvent extends React.Component {
             <>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                        <Image style={Style.image} source={{ uri: cover }}/>
+                        <Image style={Style.image} source={{ uri: cover }} />
                     </View>
                     <View>
                         <View style={Style.viewname}>
-                            <TextInput onChangeText={(nameEvent) => this.setState({ nameEvent })} placeholder={"Event Name"} style={Style.textinput}/>
+                            <TextInput onChangeText={(nameEvent) => this.setState({ nameEvent })} placeholder={"Event Name"} style={Style.textinput} />
                         </View>
                         <View style={Style.view1}>
                             <Text style={Style.type}>Event Type :</Text>
                             <Picker
                                 mode="dropdown"
-                                iosIcon={<Icon name="arrow-down"/>}
+                                iosIcon={<Icon name="arrow-down" />}
                                 style={{ flex: 1 }}
                                 placeholder="Select type"
                                 placeholderStyle={{ color: "#bfc6ea" }}
@@ -162,11 +180,11 @@ export default class CreateEvent extends React.Component {
                                 selectedValue={this.state.typeEvent}
                                 onValueChange={(typeEvent) => this.setState({ typeEvent })}
                             >
-                                <Picker.Item label="LAN" value="LAN"/>
-                                <Picker.Item label="Speed Run" value="Speed Run"/>
-                                <Picker.Item label="Tournois" value="Tournois"/>
-                                <Picker.Item label="Esport" value="Esport"/>
-                                <Picker.Item label="Autres" value="Autres"/>
+                                <Picker.Item label="LAN" value="LAN" />
+                                <Picker.Item label="Speed Run" value="Speed Run" />
+                                <Picker.Item label="Tournois" value="Tournois" />
+                                <Picker.Item label="Esport" value="Esport" />
+                                <Picker.Item label="Autres" value="Autres" />
                             </Picker>
                         </View>
                         <View style={Style.view1}>
@@ -222,13 +240,13 @@ export default class CreateEvent extends React.Component {
 
                                 styles={{
                                     textInputContainer: {
-                                    width: '100%'
+                                        width: '100%'
                                     },
                                     description: {
-                                    fontWeight: 'bold'
+                                        fontWeight: 'bold'
                                     },
                                     predefinedPlacesDescription: {
-                                    color: '#1faadb'
+                                        color: '#1faadb'
                                     }
                                 }}
 
@@ -254,17 +272,17 @@ export default class CreateEvent extends React.Component {
 
                                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
                                 //renderLeftButton={()  => <Text>renderLeftButton</Text>}
-                                renderRightButton={()=>
+                                renderRightButton={() =>
                                     <View style={{ flex: 1 }}>
-                                    <Button block info onPress={this.validateAddress.bind(this)}>
-                                        <Text>OK</Text>
-                                    </Button>
+                                        <Button block info onPress={this.validateAddress.bind(this)}>
+                                            <Text>OK</Text>
+                                        </Button>
                                     </View>
                                 }
                             />
                             {/*<TextInput onChangeText={(placeEvent) => this.setState({ placeEvent })} style={{ borderColor: 'gray', borderBottomWidth: 1 }} />*/}
                         </View>
-                        <View style={{ marginHorizontal: 16,  marginVertical: 32, flex: 1 }}>
+                        <View style={{ marginHorizontal: 16, marginVertical: 32, flex: 1 }}>
                             <Button block success onPress={this.createEvent.bind(this)} disabled={lockCreation}>
 
                                 <Text>Create Event</Text>
@@ -272,7 +290,7 @@ export default class CreateEvent extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
-                <FooterTabs {...this.props}/>
+                <FooterTabs {...this.props} />
             </>
         )
     }

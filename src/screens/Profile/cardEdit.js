@@ -41,6 +41,20 @@ export default class CardEdit extends React.Component {
         }
     }
 
+    pushNotif = async (message, type) => {
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
+    }
+
     updateData = async () => {
         const { nickname, email } = this.state
         if (nickname.length > 5) {
@@ -59,6 +73,7 @@ export default class CardEdit extends React.Component {
                 })
                 const auth = `Bearer ${token}`
                 await Func.fetch(url, "PUT", body, auth)
+                this.pushNotif("You have updated your account information", 1)
                 this.props.onFix()
             } else {
                 Func.toaster("Wrong Email!", "Okay", "danger", 3000);
