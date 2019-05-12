@@ -19,6 +19,20 @@ export default class InfoCard extends React.Component {
        await this.fetchAuthor()
     }
 
+    pushNotif = async (message, type) => {
+        const token = await Func.getToken()
+        this.setState({ token })
+        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await Func.fetch(url, "POST", body, auth)
+    }
+
     subscribe = async () => {
         const token = await Func.getToken()
         let decodedToken = await JWT.decode(token, ENV.JWT_KEY)
@@ -37,6 +51,7 @@ export default class InfoCard extends React.Component {
             this.setState({ participates: true });
             this.props.getParticipants();
             Func.toaster("See you at the event!", "Okay", "success", 1000);
+            this.pushNotif(`You have joined the event ${this.props.navigation.state.params.event.id}`, 1)
         }
     }
 
@@ -54,6 +69,7 @@ export default class InfoCard extends React.Component {
             this.setState({ participates: false });
             this.props.getParticipants();
             Func.toaster("Subscription cancelled", "Okay", "warning", 1000);
+            this.pushNotif(`You left the event ${this.props.navigation.state.params.event.id}`, 0)
         }
     }
 
