@@ -9,6 +9,12 @@ import Func from '../../functions.js';
 
 export default class DetailGames extends React.Component {
 
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('screenTitle')
+      }
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -26,8 +32,24 @@ export default class DetailGames extends React.Component {
     }
 
     componentDidMount() {
+        this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.title })
         this.fetchGames();
         this.fetchFavorite();
+    }
+
+    componentWillUnmount() {
+      this.setState({
+          token: null,
+          gameid: null,
+          name: null,
+          cover: null,
+          summary: null,
+          text: false,
+          switchValue: false,
+          nameFetch: null,
+          gamesFetch: null,
+          fetchesDone: false
+      })
     }
 
     setFetchStatus = async () => {
@@ -92,7 +114,7 @@ export default class DetailGames extends React.Component {
     }
 
     onGamersAround() {
-        this.props.navigation.navigate('GamersAround')
+        this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
     }
 
     onCreateEvent() {
@@ -167,9 +189,9 @@ export default class DetailGames extends React.Component {
                                 <Button block style={Style.button} onPress={() => this.onGamersAround()}>
                                     <Text>Check for gamers</Text>
                                 </Button>
-                                <Button block style={Style.button}>
+                                {/*<Button block style={Style.button}>
                                     <Text>Forum</Text>
-                                </Button>
+                                </Button>*/}
                             </View>
                         </View>
                     </ScrollView>

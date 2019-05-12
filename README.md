@@ -30,12 +30,12 @@
 | **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
 | **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
-| **My News** | ✅ | Done | Adrien | 🆗 | 
+| **My News** | ✅ | Done | Adrien | 🆗 |
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
 | **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
-| **Gamers Geolocalisation** | ⌛ | In progress | Pierre | ⭐ |
-| **OptinGeoloc Switch** | ❌ | Not started | Pierre | 🚫 |
+| **Gamers Geolocalisation** | ✅ | Done | Pierre | 🆗 |
+| **OptinGeoloc Switch** | ✅ | Done | Pierre | 🆗 |
 | **AWS service** | ⌛ | Not working yet | Maxime | ⭐ |
 
 ## Future features
@@ -49,4 +49,4 @@
 
 - **SendGrid** : struggled to configure and authorize our calls
    - **RESOLVED** : now using **_Mailgun_** services, for our 4 authorized mail adresses
-
+- **AWS** : using AWS ElasticCache but still struggling to configue

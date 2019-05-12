@@ -21,7 +21,6 @@ export default class JoinEvents extends React.Component {
         super(props);
         this.state = {
             searchText: "",
-            token: "",
             eventsCount: 0,
             token: null,
             allowGeoloc: false,
@@ -160,6 +159,7 @@ export default class JoinEvents extends React.Component {
     }
 
     renderItem(item, index) {
+      if (item.title.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1) {
       return(
           <List key={index} >
               <ListItem thumbnail>
@@ -176,6 +176,7 @@ export default class JoinEvents extends React.Component {
               </TouchableOpacity>
               </ListItem>
           </List>)
+      } else return null;
     }
 
     render() {

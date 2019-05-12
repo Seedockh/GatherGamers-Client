@@ -11,6 +11,8 @@ import GamersAround from './screens/GamersAround'
 import Friends from './screens/Friends'
 import CreateEvent from './screens/CreateEvent'
 
+
+
 const AppNavigator = createStackNavigator({
     Login: {
         screen: Login,
@@ -44,8 +46,7 @@ const AppNavigator = createStackNavigator({
     },
     DetailGames: {
         screen: DetailGames,
-        navigationOptions: {
-          //title:
+          navigationOptions: {
         }
     },
     JoinEvent: {

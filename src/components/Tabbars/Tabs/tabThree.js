@@ -23,7 +23,7 @@ export default class TabThree extends React.Component {
     _onRefresh = () => {
         this.setState({ refreshing: true });
         this.fetchFavorite().then(() => {
-            this.setState({ refreshing: false });
+          this.setState({ refreshing: false });
         });
     }
 
@@ -44,7 +44,7 @@ export default class TabThree extends React.Component {
 
     getDetails(index) {
         const { gamesFetch } = this.state
-        this.props.navigation.navigate('DetailGames', { id: gamesFetch[index].id })
+        this.props.navigation.navigate('DetailGames', { id: gamesFetch[index].id, title: gamesFetch[index].name })
     }
 
     render() {

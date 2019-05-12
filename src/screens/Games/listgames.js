@@ -8,7 +8,7 @@ const games = [];
 export default class ListGames extends React.Component {
 
     static navigationOptions = {
-        header: false
+        headerTitle: false
     }
 
     constructor(props) {
@@ -48,11 +48,11 @@ export default class ListGames extends React.Component {
     }
 
     showDetails(index) {
-        this.props.navigation.navigate('DetailGames', { id: games[index].id })
+        this.props.navigation.navigate('DetailGames', { id: games[index].id, title: games[index].title })
     }
 
     renderItem(item, index) {
-        if (item.title.indexOf(this.state.searchText) !== -1) {
+        if (item.title.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1) {
             return (
                 <TouchableOpacity key={index} activeOpacity={0} onPress={() => this.showDetails(index)}>
                     <View style={Style.container}>
