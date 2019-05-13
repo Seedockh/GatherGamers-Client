@@ -36,55 +36,14 @@ export default class GamersAround extends React.Component {
     async componentDidMount() {
       const token = await Func.getToken()
       let decodedToken = await JWT.decode(token, ENV.JWT_KEY)
-      await this.setState({ token, decodedToken })
-      await this.checkGeolocation();
-      if (this.state.allowGeoloc) await this.getUserLocation();
+      const location = await Func.checkGeolocation();
+
+      this.setState({ token, decodedToken, location: location[0], allowGeoloc: location[1] });
+      if (this.state.allowGeoloc) {
+        const response = await Func.getUserLocation(token,decodedToken);
+        this.setState({ location: response[0], locationResult: response[1] })
+      }
       await this.fetchUsers();
-    }
-
-    async checkGeolocation() {
-      // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
-      const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status === 'granted') {
-        this.setState({ allowGeoloc: true })
-        return Location.getCurrentPositionAsync({enableHighAccuracy: true});
-      } else {
-        this.setState({ allowGeoloc: false })
-        Func.toaster("Location permission not granted!", "Okay", "danger", 3000);
-      }
-    }
-
-    // Checks if user has Accepted Geolocation and returns his position to DB
-    async getUserLocation() {
-      if (await Location.hasServicesEnabledAsync()) {
-        let location = await Location.getCurrentPositionAsync({accuracy: 2});
-        await this.setState({ location: {
-          type: 'Point',
-          coordinates: [location.coords.latitude,location.coords.longitude]
-        }, locationResult: true })
-
-        // Sending last User Location to DB
-        this.updateUserLocation();
-      } else {
-        this.state({ locationResult: 'Location permission not enabled !'});
-      }
-    }
-
-    async updateUserLocation() {
-      const { location, token, decodedToken } = this.state
-      const url = `https://gathergamers.herokuapp.com/api/user/updatelocation/${decodedToken.id}`
-      const body = JSON.stringify({
-        latitude: location.coordinates[0],
-        longitude: location.coordinates[1],
-      })
-      const auth = `Bearer ${token}`
-      const response = await Func.fetch(url, 'PUT', body, auth)
-      if (response.status == 401) {
-        Func.toaster("Unauthorized!", "Okay", "danger", 3000);
-      } else {
-        let responseJSON = await response.json();
-        return responseJSON;
-      }
     }
 
     fetchUsers = async () => {
