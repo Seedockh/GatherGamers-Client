@@ -54,7 +54,7 @@ export default class Home extends React.Component {
                         // TODO:
                         // Server verification is different and failed with j@j.j
                         await this.checkEmail(email)
-                        if (/\S+@\S+\.\S+/.test(email) && this.state.check == true) {
+                        if (/\S+@\S+\.\S+/.test(email)) {
                             const url = ENV.NODE_ENV == "dev" ? ENV.LOCAL_API_URL_REGISTER : ENV.HEROKU_API_URL_REGISTER;
                             const body = JSON.stringify({
                                 firstname,
@@ -66,13 +66,13 @@ export default class Home extends React.Component {
                             });
                             this.setState({ loading: true });
                             const response = await Func.fetch(url, "POST", body);
+                            this.setState({ loading: false });
+                            this.props.navigation.navigate('Login');
+                            Func.toaster("Account successfully created! And You have received an email", "Okay", "success", 3000);
                             if (response.status >= 200 && response.status < 300 && this.state.check == true) {
-                                this.setState({ loading: false });
-                                await this.sendEmail(email)
-                                this.props.navigation.navigate('Login');
-                                Func.toaster("Account successfully created! And You have received an email", "Okay", "success", 3000);
+                              await this.sendEmail(email)
                             } else {
-                                Func.toaster("Something went wrong :(", "Okay", "danger", 3000);
+                                Func.toaster("Not an admin account, no mail sent.", "Okay", "danger", 3000);
                             }
                             this.setState({ loading: false });
                         } else {
@@ -124,8 +124,8 @@ export default class Home extends React.Component {
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Confirm Password</Label>
-                                <Input secureTextEntry={true} 
-                                onChangeText={(password_confirmation) => this.setState({ password_confirmation })} 
+                                <Input secureTextEntry={true}
+                                onChangeText={(password_confirmation) => this.setState({ password_confirmation })}
                                 autoCapitalize = 'none'/>
                             </Item>
                         </Form>

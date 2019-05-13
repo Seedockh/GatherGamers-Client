@@ -194,9 +194,9 @@ export default class CreateEvent extends React.Component {
                         <View style={Style.view1}>
                             <Text style={Style.text} >Date :</Text>
                             <DatePicker
-                                defaultDate={new Date(2019, 4, 14)}
-                                minimumDate={new Date(2019, 4, 14)}
-                                maximumDate={new Date(2020, 4, 14)}
+                                defaultDate={Date.now()}
+                                minimumDate={Date.now()}
+                                maximumDate={new Date(2021, 1, 1)}
                                 locale={"en"}
                                 timeZoneOffsetInMinutes={undefined}
                                 modalTransparent={false}

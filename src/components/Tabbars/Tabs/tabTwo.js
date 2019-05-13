@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, View, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { Text, CardItem,  List, ListItem, Body, Right, Icon } from 'native-base';
-import { Permissions, Location } from 'expo';
 import JWT from 'expo-jwt'
 import ENV from '../../../../env'
 import KEY from '../../../../secretenv.js'
@@ -26,25 +25,9 @@ export default class TabTwo extends React.Component {
     }
 
     async componentDidMount() {
-        await this.checkGeolocation();
-        this.eventsFetch()
-    }
-
-    async checkGeolocation() {
-      // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
-      const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status === 'granted') {
-        let location =  await Location.getCurrentPositionAsync({ accuracy: 2 });
-               this.setState({
-                 locationResult: true
-              })
-        await this.setState({ allowGeoloc: true, location: {
-          type: 'Point', coordinates: [location.coords.latitude, location.coords.longitude]
-        } });
-      } else {
-        this.setState({ allowGeoloc: false })
-        Func.toaster("Location permission not granted!", "Okay", "danger", 3000);
-      }
+      const location = await Func.checkGeolocation();
+      this.setState({ location: location[0], allowGeoloc: location[1] });
+      this.eventsFetch()
     }
 
     _onRefresh = () => {
