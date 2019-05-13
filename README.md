@@ -41,11 +41,11 @@
 | Feature | Status | Notes | Affected to | MVP |
 |---------|--------|-------|------------|-----|
 | **Forum** | ❌ | Not started | | 🚫 |
-| **Messenger** | ❌ | Not started | | 🚫 |
+| **Chat** | ❌ | Not started | | 🚫 |
 | **Find better games API** | ❌ | Not started | | 🚫 |
-| **Starting Loader & Fetcher** | ❌ | Not started | Pierre | 🚫 |
-| **Manage events** | ❌ | Not started | Pierre | 🚫 |
-| **Manage friends** | ❌ | Not started | Pierre | 🚫 |
+| **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
+| **CRUD events** | ❌ | Not started | | 🚫 |
+| **CRUD friends** | ❌ | Not started | | 🚫 |
 
 ## Blocking points :
 

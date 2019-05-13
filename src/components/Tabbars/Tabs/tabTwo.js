@@ -7,7 +7,7 @@ import KEY from '../../../../secretenv.js'
 import Style from '../../../styles/tabtwo'
 import Func from '../../../functions.js';
 
-const events = []
+let events = []
 
 export default class TabTwo extends React.Component {
     constructor(props) {
@@ -30,11 +30,10 @@ export default class TabTwo extends React.Component {
       this.eventsFetch()
     }
 
-    _onRefresh = () => {
-        this.setState({ refreshing: true });
-        this.eventsFetch().then(() => {
-            this.setState({ refreshing: false });
-        });
+    _onRefresh = async () => {
+        this.setState({ refreshing: true, fetchDone: false });
+        await this.eventsFetch();
+        this.setState({ refreshing: false });
     }
 
     eventsFetch = async () => {
@@ -48,8 +47,8 @@ export default class TabTwo extends React.Component {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json();
-            if (responseJSON.data.events.length===0) this.setState({ fetchDone: true });
-            return false;
+            if (responseJSON.data.events.length===0) return this.setState({ fetchDone: true });
+            events = [];
             responseJSON.data.events.map(async (event) => {
               event.formatedDate = await Func.formatDate(event.date)
               // Get distance from current user
@@ -91,7 +90,7 @@ export default class TabTwo extends React.Component {
                     players: event.players,
                     price: event.price,
                     type: event.type,
-                    user: event.UserId,
+                    userid: event.UserId,
                     playersSubscribed: playersSubscribed
                   }
                   events.push(eventToPush)
@@ -101,12 +100,11 @@ export default class TabTwo extends React.Component {
     }
 
     getDetails(index) {
-
       this.props.navigation.navigate('DetailEvents', { event: events[index], userLocation: this.state.location, allowGeoloc: this.state.allowGeoloc })
     }
 
     render() {
-        const { fetchDone } = this.state
+        const { fetchDone, refreshing } = this.state
         return (
             <ScrollView style={Style.scrollview} refreshControl={
                 <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh}/>
@@ -116,7 +114,7 @@ export default class TabTwo extends React.Component {
                         <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000" />
                     </View>
                 )}
-                {fetchDone && events.length > 0 && (
+                {fetchDone && events.length > 0 && !refreshing &&  (
                     events.map((item, index) => (
                       <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this.getDetails(index)}>
                         <View key={index} style={{ marginHorizontal: 16, marginVertical: 4, marginTop: index === 0 ? 8 : 0 }}>
@@ -137,7 +135,7 @@ export default class TabTwo extends React.Component {
                       </TouchableOpacity>
                     ))
                 )}
-                {fetchDone && events.length === 0 && (
+                {fetchDone && events.length === 0 && !refreshing && (
                     <Text style={Style.textnonotif}> You're not participating to any event yet. </Text>
                 )}
             </ScrollView>

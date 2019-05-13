@@ -75,20 +75,6 @@ export default class CreateEvent extends React.Component {
         }
     }
 
-    pushNotif = async (message, type) => {
-        const token = await Func.getToken()
-        this.setState({ token })
-        const decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
-        const url = "https://gathergamers.herokuapp.com/api/notification/add"
-        const body = JSON.stringify({
-            UserId: decodedToken.id,
-            message: message,
-            type: type
-        })
-        const auth = `Bearer ${token}`
-        await Func.fetch(url, "POST", body, auth)
-    }
-
     createEvent = async () => {
         const { nameEvent, playersEvent, dateEvent, priceEvent, placeEvent } = this.state
         if (nameEvent != null) {
@@ -126,9 +112,9 @@ export default class CreateEvent extends React.Component {
                                 const auth = `Bearer ${token}`
                                 await Func.fetch(url, "POST", body, auth)
                             }
-                            this.pushNotif(`You created the event ${this.state.nameEvent}`, 1)
-                            this.props.navigation.navigate('Home')
+                            Func.pushNotif(`You created the event ${this.state.nameEvent}`, 1, token, decodedToken)
                             Func.toaster("Event created", "Okay", "success", 3000);
+                            this.props.navigation.navigate('Home')
                         } else {
                             Func.toaster("Wrong Address!", "Okay", "danger", 3000);
                         }

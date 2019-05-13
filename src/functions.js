@@ -13,6 +13,16 @@ export default Func = {
             duration
         })
     },
+    pushNotif: async function (message, type, token, decodedToken) {
+        const url = "https://gathergamers.herokuapp.com/api/notification/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            message: message,
+            type: type
+        })
+        const auth = `Bearer ${token}`
+        await this.fetch(url, "POST", body, auth)
+    },
     getToken: async function() {
         const token = await AsyncStorage.getItem('token');
         return token
