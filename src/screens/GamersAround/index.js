@@ -26,7 +26,7 @@ export default class GamersAround extends React.Component {
           allowGeoloc: false,
           location: {
             type: 'Point',
-            coordinates: [48,2]
+            coordinates: [48.856614, 2.3522219]
           },
           locationResult: false,
           fetchDone: false,
@@ -128,12 +128,6 @@ export default class GamersAround extends React.Component {
     render() {
         return (
             <>
-              {this.state.allowGeoloc && !this.state.locationResult &&
-                <View style={Style.activityview}>
-                  <ActivityIndicator style={Style.activity} size="large" color="#000000" />
-                </View>
-              }
-              {this.state.locationResult &&
                 <MapView style={Style.mapview}
                     initialRegion={{
                       latitude: this.state.location.coordinates[0],
@@ -142,7 +136,7 @@ export default class GamersAround extends React.Component {
                       longitudeDelta: 0.0421,
                     }}
                   >
-                  {this.state.allowGeoloc &&
+                  {this.state.allowGeoloc && this.state.locationResult &&
                     <MapView.Marker
                       coordinate={{
                         latitude: this.state.location.coordinates[0],
@@ -153,7 +147,6 @@ export default class GamersAround extends React.Component {
                   }
                   {this.state.fetchDone ? gamers.map((item,index)=>this.renderMarker(item,index)) : null}
                 </MapView>
-              }
                 <View style={Style.container}>
                     <Header searchBar rounded style={{ backgroundColor:"black"}}>
                         <Item>

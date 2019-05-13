@@ -103,7 +103,7 @@ export default Func = {
         const responseJSON = await response.json();
         return responseJSON;
       }
-    }
+    },
 
     formatDate: async function(unformatedDate) {
         const date = new Date(unformatedDate)

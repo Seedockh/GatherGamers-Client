@@ -115,8 +115,10 @@ export default class DetailGames extends React.Component {
         this.props.navigation.navigate('JoinEvent', { gameid: this.props.navigation.state.params.id })
     }
 
-    onGamersAround() {
-        this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
+    async onGamersAround() {
+      const checkGeoloc = await Func.checkGeolocation();
+      if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
+      else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
     }
 
     onCreateEvent() {
