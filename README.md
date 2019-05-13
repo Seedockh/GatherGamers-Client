@@ -19,7 +19,7 @@
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **Format dates** | ✅ | Done | Antoine | 🆗 |
-| **Refacto Geoloc** | ✅ | Done | Antoine | 🆗 |
+| **Refacto Geoloc** | ✅ | Done | Pierre | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
@@ -46,6 +46,7 @@
 | **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
 | **CRUD events** | ❌ | Not started | | 🚫 |
 | **CRUD friends** | ❌ | Not started | | 🚫 |
+
 
 ## Blocking points :
 
