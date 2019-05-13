@@ -65,7 +65,7 @@ class TabOne extends React.Component {
           let responseJSON = await response.json()
           await responseJSON.data.notifs.map(async notif => {
             notif.formatedDate = await Func.formatDate(notif.createdAt)
-            this.setState({ notifsFetch: responseJSON.data.notifs })
+            this.setState({ notifsFetch: responseJSON.data.notifs.reverse() })
           })
       }
     }
