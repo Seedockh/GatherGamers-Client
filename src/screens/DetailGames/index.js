@@ -29,9 +29,11 @@ export default class DetailGames extends React.Component {
             gamesFetch: null,
             fetchesDone: false
         }
+        this.baseState = this.state;
     }
 
     componentDidMount() {
+        this.setState(this.baseState)
         this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.title })
         this.fetchGames();
         this.fetchFavorite();

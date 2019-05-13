@@ -63,7 +63,7 @@ export default class TabThree extends React.Component {
                 )}
                 {gamesFetch && gamesFetch.length > 0 && (
                     gamesFetch.map((item, index) => (
-                        <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => this.getDetails(index)}>
+                        <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this.getDetails(index)}>
                             <View style={Style.container}>
 
                                 <View style={Style.view}>

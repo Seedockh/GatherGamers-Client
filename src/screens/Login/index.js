@@ -29,14 +29,14 @@ export default class Home extends React.Component {
     storeData = async (email, password, token) => {
         await Func.setAsyncStorage(email, password, token)
     }
-    
+
     restoreData = async () => {
         let response = await Func.getAsyncStorage()
         if (response.token !== null && response.password !== null && response.email !== null) {
             await this.setState({
                 email: response.email,
                 password: response.password,
-                token: response.token 
+                token: response.token
             });
             this.login()
         }

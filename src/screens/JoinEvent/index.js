@@ -63,6 +63,7 @@ export default class JoinEvents extends React.Component {
     } else {
       let responseJSON = await response.json()
       // When game's events are fetched
+      if (responseJSON.length===0) { this.setState({ fetchDone: true }) }
       responseJSON.map(async (event) => {
         // Get distance from current user
         const distFromUser = this.state.allowGeoloc ?
@@ -143,7 +144,7 @@ export default class JoinEvents extends React.Component {
   };
 
   getDetails(index) {
-    this.props.navigation.navigate('DetailEvents', { event: events[index], userLocation: this.state.location })
+    this.props.navigation.navigate('DetailEvents', { event: events[index], userLocation: this.state.location, allowGeoloc: this.state.allowGeoloc })
   }
 
   renderMarker(item, index) {
@@ -165,7 +166,7 @@ export default class JoinEvents extends React.Component {
       return (
         <List key={index} >
           <ListItem >
-            <TouchableOpacity key={index} activeOpacity={0.8} style={Style.touchable} onPress={() => this.getDetails(index)}>
+            <TouchableOpacity key={index} activeOpacity={0.5} style={Style.touchable} onPress={() => this.getDetails(index)}>
               <Body>
                 <Text>{item.title}</Text>
                 <Text note numberOfLines={1}>{item.date}</Text>
@@ -189,8 +190,8 @@ export default class JoinEvents extends React.Component {
             <ActivityIndicator style={Style.activity} size="large" color="#000000" />
           </View>
         }
-
-          <MapView 
+        {this.state.allowGeoloc && this.state.locationResult &&
+          <MapView
             style={{flex:1}}
             style={Style.mapview}
             initialRegion={{
@@ -200,7 +201,7 @@ export default class JoinEvents extends React.Component {
               longitudeDelta: 0.0421,
             }}
           >
-            {this.state.allowGeoloc &&
+            {this.state.locationResult &&
               <MapView.Marker
                 coordinate={{
                   latitude: this.state.location.coordinates[0],
@@ -210,6 +211,20 @@ export default class JoinEvents extends React.Component {
                 description="This where you are actually located."
               />
             }
+            {this.state.fetchDone ? events.map((item, index) => this.renderMarker(item, index)) : null}
+          </MapView>
+        }
+        {!this.state.allowGeoloc && !this.state.locationResult &&
+          <MapView
+            style={{flex:1}}
+            style={Style.mapview}
+            initialRegion={{
+              latitude: 48.856614,
+              longitude: 2.3522219,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
             {this.state.fetchDone ? events.map((item, index) => this.renderMarker(item, index)) : null}
           </MapView>
         }
@@ -225,7 +240,7 @@ export default class JoinEvents extends React.Component {
               <ActivityIndicator style={Style.activity} size="large" color="#000000" />
             </View>
           )}
-          {this.state.fetchDone && (
+          {this.state.fetchDone && events.length > 0 && (
             <ScrollView>
               {events.map((item, index) => this.renderItem(item, index))}
             </ScrollView>

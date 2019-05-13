@@ -54,7 +54,7 @@ export default class ListGames extends React.Component {
     renderItem(item, index) {
         if (item.title.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1) {
             return (
-                <TouchableOpacity key={index} activeOpacity={0.8} onPress={() => this.showDetails(index)}>
+                <TouchableOpacity key={index} activeOpacity={0.5} onPress={() => this.showDetails(index)}>
                     <View style={Style.container}>
 
                         <View style={Style.view}>
