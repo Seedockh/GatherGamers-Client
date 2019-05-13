@@ -41,7 +41,7 @@ export default StyleSheet.create({
     },
 
     type: {
-        flex: 2
+        flex: 1.2
     },
 
     text: {
@@ -67,8 +67,7 @@ export default StyleSheet.create({
     },
 
     viewadresse: {
-        marginHorizontal: 16, 
-        marginVertical: 4 
+        marginHorizontal: 16
     },
 
     viewevent: {
@@ -79,5 +78,13 @@ export default StyleSheet.create({
     adresseinput: {
         borderColor: 'gray', 
         borderBottomWidth: 1
+    },
+
+    text2: {
+        fontSize: 12
+    },
+
+    adresseinput: {
+        marginVertical: 12
     }
 })
