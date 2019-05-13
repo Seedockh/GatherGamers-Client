@@ -66,6 +66,16 @@ export default class TabTwo extends React.Component {
                     }
                     return json.results[0].formatted_address;
                   });
+                  const url = `https://gathergamers.herokuapp.com/api/participant/event/${event.id}`
+                  const response = await Func.fetch(url, "GET", null, auth)
+                  let playersSubscribed = 0
+                  if(response.status == 401) {
+                      Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+                  } else {
+                      let responseJSON = await response.json()
+                      participants = [];
+                      playersSubscribed = await responseJSON.data.participants.Users.length
+                  }
               // Push the event with all infos
               const eventToPush = {
                 id: event.id,
@@ -79,7 +89,8 @@ export default class TabTwo extends React.Component {
                 players: event.players,
                 price: event.price,
                 type: event.type,
-                user: event.UserId
+                user: event.UserId,
+                playersSubscribed: playersSubscribed
               }
               events.push(eventToPush)
               if (events.length === responseJSON.data.events.length) this.setState({ fetchDone: true });
@@ -111,11 +122,11 @@ export default class TabTwo extends React.Component {
                               <View style={Style.container}>
                                   <Text style={Style.name}>{item.title}</Text>
                                   <View style={Style.view}>
-                                      <Text>Nombre de participants :</Text>
-                                      <Text>{item.players}</Text>
+                                      <Text>Players:</Text>
+                                      <Text>{item.playersSubscribed} on {item.players}</Text>
                                   </View>
                                   <View style={Style.view}>
-                                      <Text>Date :</Text>
+                                      <Text>Date:</Text>
                                       <Text>{item.formatedDate}</Text>
                                   </View>
                               </View>
