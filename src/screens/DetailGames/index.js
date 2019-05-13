@@ -118,16 +118,10 @@ export default class DetailGames extends React.Component {
     }
 
     async onGamersAround() {
-<<<<<<< Updated upstream
-        this.setState({ press: true })
-        const checkGeoloc = await Func.checkGeolocation();
-        if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
-        else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
-=======
+      this.setState({ press: true })
       const checkGeoloc = await Func.checkGeolocation();
       if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
       else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
->>>>>>> Stashed changes
     }
 
     onCreateEvent() {
