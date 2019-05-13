@@ -61,7 +61,7 @@ export default class Profile extends React.Component {
                         <View style={Style.viewimage}>
                             <Image
                                 style={Style.image}
-                                source={require('../../../assets/picture.png')}
+                                source={{uri: 'https://s3.eu-west-3.amazonaws.com/gathergamers94800/assets/picture.png'}}
                             />
                         </View>
 

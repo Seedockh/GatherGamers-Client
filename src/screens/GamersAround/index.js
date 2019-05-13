@@ -106,7 +106,7 @@ export default class GamersAround extends React.Component {
       if (item.latitude===undefined || item.longitude===undefined ||
           item.distance===null || item.id===this.state.decodedToken.id)
             return null;
-      const randPicture = index%2===0 ? require(`../../../assets/profile${1}.png`) : require(`../../../assets/profile${2}.png`);
+      const randPicture = index%2===0 ? {uri:`https://s3.eu-west-3.amazonaws.com/gathergamers94800/assets/profile1.png`} : {uri:`https://s3.eu-west-3.amazonaws.com/gathergamers94800/assets/profile2.png`}
       if (item.nickname.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1) {
         return(
             <List key={index} >
