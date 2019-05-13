@@ -13,9 +13,9 @@ class TabOne extends React.Component {
         super(props);
         this.state = {
             token: null,
-            notifsFetch: null,
+            notifsFetch: [],
             refreshing: false,
-            deleting: false,
+            deleting: false
         }
     }
 
@@ -25,11 +25,10 @@ class TabOne extends React.Component {
       }
     }
 
-    _onRefresh = () => {
+    _onRefresh = async () => {
       this.setState({refreshing: true});
-      this.fetchNotif().then(() => {
-        this.setState({refreshing: false});
-      });
+      await this.fetchNotif()
+      this.setState({refreshing: false});
     }
 
     deleteAllNotif = async () => {
@@ -43,6 +42,7 @@ class TabOne extends React.Component {
       if (response.status == 401) {
         Func.toaster("Unauthorized!", "Okay", "danger", 3000);
       } else {
+          this.setState({notifsFetch: []})
           await this.fetchNotif();
           this.setState({ deleting: false })
       }
@@ -63,7 +63,10 @@ class TabOne extends React.Component {
           Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
           let responseJSON = await response.json()
-          this.setState({ notifsFetch: responseJSON.data.notifs })
+          await responseJSON.data.notifs.map(async notif => {
+            notif.formatedDate = await Func.formatDate(notif.createdAt)
+            this.setState({ notifsFetch: responseJSON.data.notifs })
+          })
       }
     }
 
@@ -88,7 +91,7 @@ class TabOne extends React.Component {
                             <CardItem style={{ backgroundColor: item.type ? "#48CA75" : "#EE4F5E", borderRadius: 10}}>
                                 <View>
                                     <Text>{item.message}</Text>
-                                    <Text note style={Style.textnote} >{item.createdAt}</Text>
+                                    <Text note style={Style.textnote} >{item.formatedDate}</Text>
                                 </View>
                             </CardItem>
                         </View>
