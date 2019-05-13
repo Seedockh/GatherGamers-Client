@@ -19,16 +19,12 @@ export default class Friends extends React.Component {
     }
 
     render() {
-        console.log(this.props.navigation)
         return (
             <>
                 <View style={Style.container}>
                     <Text>Do you want to add {this.props.navigation.state.params.gamer.nickname} as a friend?</Text>
                     <Button block success style={Style.buttonadd}>
                         <Text>Add</Text>
-                    </Button>
-                    <Button block dark style={Style.buttoncancel}>
-                        <Text>Cancel</Text>
                     </Button>
                 </View>
                 <FooterTabs {...this.props} />
