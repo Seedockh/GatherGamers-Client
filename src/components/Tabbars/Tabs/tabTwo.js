@@ -48,6 +48,8 @@ export default class TabTwo extends React.Component {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json();
+            if (responseJSON.data.events.length===0) this.setState({ fetchDone: true });
+            return false;
             responseJSON.data.events.map(async (event) => {
               event.formatedDate = await Func.formatDate(event.date)
               // Get distance from current user
@@ -76,25 +78,25 @@ export default class TabTwo extends React.Component {
                       participants = [];
                       playersSubscribed = await responseJSON.data.participants.Users.length
                   }
-              // Push the event with all infos
-              const eventToPush = {
-                id: event.id,
-                title: event.name,
-                date: event.date,
-                formatedDate: event.formatedDate.split(" ")[0],
-                place: event.place,
-                address: address,
-                distance: distFromUser,
-                gameid: event.GameId,
-                players: event.players,
-                price: event.price,
-                type: event.type,
-                user: event.UserId,
-                playersSubscribed: playersSubscribed
-              }
-              events.push(eventToPush)
-              if (events.length === responseJSON.data.events.length) this.setState({ fetchDone: true });
-            });
+                  // Push the event with all infos
+                  const eventToPush = {
+                    id: event.id,
+                    title: event.name,
+                    date: event.date,
+                    formatedDate: event.formatedDate.split(" ")[0],
+                    place: event.place,
+                    address: address,
+                    distance: distFromUser,
+                    gameid: event.GameId,
+                    players: event.players,
+                    price: event.price,
+                    type: event.type,
+                    user: event.UserId,
+                    playersSubscribed: playersSubscribed
+                  }
+                  events.push(eventToPush)
+                  if (events.length === responseJSON.data.events.length ) this.setState({ fetchDone: true });
+                });
         }
     }
 

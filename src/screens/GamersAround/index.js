@@ -31,6 +31,7 @@ export default class GamersAround extends React.Component {
           },
           locationResult: false,
           fetchDone: false,
+          userHasFavorite: false,
         }
     }
 
@@ -56,30 +57,31 @@ export default class GamersAround extends React.Component {
           Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json()
+            gamers = [];
             // When users are fetched
               responseJSON.data.favourites.Users.map(async (gamer) => {
                 // Get distance from current user
-               const distFromUser = this.state.allowGeoloc && gamer.lastLocation!==null ?
-                  await geolib.getDistanceSimple(
-                    {latitude: this.state.location.coordinates[0], longitude: this.state.location.coordinates[1]},
-                    {latitude: gamer.lastLocation.coordinates[0], longitude: gamer.lastLocation.coordinates[1]}
-                  ) / 1000 : null;
-              // Push the gamer with all infos
-              const gamerToPush = {
-                id: gamer.id,
-                nickname: gamer.nickname,
-                picture: gamer.picture,
-                distance: distFromUser===null ? null : distFromUser.toString().match(/^[0-9]*[^\.]/g)[0]+' km',
-              }
-              if (gamer.lastLocation!==null) {
-                gamerToPush.latitude = gamer.lastLocation.coordinates[0]
-                gamerToPush.longitude = gamer.lastLocation.coordinates[1]
-              }
-
-              gamers.push(gamerToPush);
-              if (gamers.length===responseJSON.data.favourites.Users.length-1) this.setState({fetchDone: true});
-              if (responseJSON.data.favourites.Users.length===0) this.setState({ fetchDone: true })
+                const distFromUser = this.state.allowGeoloc && gamer.lastLocation!==null ?
+                    await geolib.getDistanceSimple(
+                      {latitude: this.state.location.coordinates[0], longitude: this.state.location.coordinates[1]},
+                      {latitude: gamer.lastLocation.coordinates[0], longitude: gamer.lastLocation.coordinates[1]}
+                    ) / 1000 : null;
+                // Push the gamer with all infos
+                const gamerToPush = {
+                  id: gamer.id,
+                  nickname: gamer.nickname,
+                  picture: gamer.picture,
+                  distance: distFromUser===null ? null : distFromUser.toString().match(/^[0-9]*[^\.]/g)[0]+' km',
+                }
+                if (gamer.lastLocation!==null) {
+                  gamerToPush.latitude = gamer.lastLocation.coordinates[0]
+                  gamerToPush.longitude = gamer.lastLocation.coordinates[1]
+                }
+                gamers.push(gamerToPush);
+                if (gamers.length===responseJSON.data.favourites.Users.length) this.setState({fetchDone: true});
+                if (Object.values(gamerToPush).indexOf(this.state.decodedToken.id)!==-1) this.setState({ userHasFavorite: true })
             });
+            if (responseJSON.data.favourites.Users.length<2) this.setState({ fetchDone: true })
         }
     }
 
@@ -161,14 +163,14 @@ export default class GamersAround extends React.Component {
                         <ActivityIndicator style={Style.activity} size="large" color="#000000" />
                       </View>
                     )}
-                    {this.state.fetchDone && gamers.length!==0 && (
+                    {this.state.fetchDone && ( (gamers.length>0 && !this.state.userHasFavorite) || (gamers.length>1 && this.state.userHasFavorite) ) && (
                       <ScrollView>
                           {gamers.map((item, index) => this.renderItem(item, index))}
                       </ScrollView>
                     )}
-                    {this.state.fetchDone && gamers.length===0 && (
+                    {this.state.fetchDone && ( gamers.length===0 || (gamers.length===1 && this.state.userHasFavorite) ) && (
                       <View style={Style.activityview}>
-                        <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No gamers have added this game to their favourites. </Text>
+                        <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No gamers saved this game yet. </Text>
                       </View>
                     )}
                 </View>
