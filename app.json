@@ -10,11 +10,14 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/gg-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/gg.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
+    },
+    "android": {
+      "package": "com.gathergames.gathergamers"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
