@@ -98,7 +98,6 @@ export default class TabTwo extends React.Component {
                 type: event.type,
                 user: event.UserId
               }
-              console.log(event.formatedDate)
               events.push(eventToPush)
               if (events.length === responseJSON.data.events.length) this.setState({ fetchDone: true });
             });

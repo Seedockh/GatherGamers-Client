@@ -53,6 +53,7 @@ class TabOne extends React.Component {
     }
 
     fetchNotif = async () => {
+      this.setState({refreshing: true});
         const token = await Func.getToken()
         this.setState({ token })
         let decodedToken = await JWT.decode(this.state.token, ENV.JWT_KEY)
@@ -63,20 +64,21 @@ class TabOne extends React.Component {
           Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
           let responseJSON = await response.json()
-          await responseJSON.data.notifs.map(async notif => {
+          await responseJSON.data.notifs.reverse().map(async notif => {
             notif.formatedDate = await Func.formatDate(notif.createdAt)
-            this.setState({ notifsFetch: responseJSON.data.notifs.reverse() })
+            this.setState({ notifsFetch: responseJSON.data.notifs })
           })
-      }
+        }
+        this.setState({refreshing: false});
     }
 
     render() {
-        const { notifsFetch, deleting } = this.state
+        const { notifsFetch, deleting, refreshing } = this.state
         return (
             <ScrollView style={Style.scrollview} refreshControl={
                 <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh}/>
               }>
-                {!notifsFetch || deleting &&(
+                {refreshing || deleting &&(
                   <View style={{ flex: 1, justifyContent: 'center'}}>
                     <ActivityIndicator style={{marginTop:20}} size="large" color="#000000" />
                   </View>
@@ -98,7 +100,7 @@ class TabOne extends React.Component {
                       ))}
                     </>
                 )}
-                {!deleting && notifsFetch && notifsFetch.length===0 &&(
+                {!refreshing && !deleting && notifsFetch && notifsFetch.length===0 &&(
                   <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> You have no news yet. </Text>
                 )}
             </ScrollView>
