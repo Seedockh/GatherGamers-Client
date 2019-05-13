@@ -26,9 +26,6 @@ export default class Friends extends React.Component {
                     <Button block success style={Style.buttonadd}>
                         <Text>Add</Text>
                     </Button>
-                    <Button block dark style={Style.buttoncancel}>
-                        <Text>Cancel</Text>
-                    </Button>
                 </View>
                 <FooterTabs {...this.props} />
             </>

@@ -10,9 +10,9 @@ import Func from '../../functions.js';
 export default class DetailGames extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
-      return {
-        title: navigation.getParam('screenTitle')
-      }
+        return {
+            title: navigation.getParam('screenTitle')
+        }
     }
 
     constructor(props) {
@@ -27,7 +27,8 @@ export default class DetailGames extends React.Component {
             switchValue: false,
             nameFetch: null,
             gamesFetch: null,
-            fetchesDone: false
+            fetchesDone: false,
+            press: false
         }
         this.baseState = this.state;
     }
@@ -40,18 +41,19 @@ export default class DetailGames extends React.Component {
     }
 
     componentWillUnmount() {
-      this.setState({
-          token: null,
-          gameid: null,
-          name: null,
-          cover: null,
-          summary: null,
-          text: false,
-          switchValue: false,
-          nameFetch: null,
-          gamesFetch: null,
-          fetchesDone: false
-      })
+        this.setState({
+            token: null,
+            gameid: null,
+            name: null,
+            cover: null,
+            summary: null,
+            text: false,
+            switchValue: false,
+            nameFetch: null,
+            gamesFetch: null,
+            fetchesDone: false,
+            press: false
+        })
     }
 
     setFetchStatus = async () => {
@@ -116,9 +118,10 @@ export default class DetailGames extends React.Component {
     }
 
     async onGamersAround() {
-      const checkGeoloc = await Func.checkGeolocation();
-      if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
-      else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
+        this.setState({ press: true })
+        const checkGeoloc = await Func.checkGeolocation();
+        if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
+        else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
     }
     
     onCreateEvent() {
@@ -155,12 +158,12 @@ export default class DetailGames extends React.Component {
     }
 
     render() {
-        const { cover, summary, text, switchValue, name, fetchesDone } = this.state
+        const { cover, summary, text, switchValue, name, fetchesDone, press } = this.state
         return (
             <>
                 {!fetchesDone && (
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000"/>
+                        <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#000000" />
                     </View>
                 )}
                 {fetchesDone && (
@@ -190,9 +193,15 @@ export default class DetailGames extends React.Component {
                                 <Button block style={Style.button} onPress={() => this.onJoinEvent()}>
                                     <Text>Join Event</Text>
                                 </Button>
-                                <Button block style={Style.button} onPress={() => this.onGamersAround()}>
-                                    <Text>Check for gamers</Text>
-                                </Button>
+                                {!press ?
+                                    <Button block style={Style.button} onPress={() => this.onGamersAround()}>
+                                        <Text>Check for gamers</Text>
+                                    </Button>
+                                    :
+                                    <Button block style={Style.button}>
+                                        <Spinner color='white' size="small" />
+                                    </Button>
+                                }
                                 {/*<Button block style={Style.button}>
                                     <Text>Forum</Text>
                                 </Button>*/}
