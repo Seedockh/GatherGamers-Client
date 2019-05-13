@@ -19,7 +19,7 @@
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
 | **Format dates** | ✅ | Done | Antoine | 🆗 |
-| **Refacto Geoloc** | ✅ | Done | Antoine | 🆗 |
+| **Refacto Geoloc** | ✅ | Done | Pierre | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
@@ -43,9 +43,9 @@
 | **Forum** | ❌ | Not started | | 🚫 |
 | **Messenger** | ❌ | Not started | | 🚫 |
 | **Find better games API** | ❌ | Not started | | 🚫 |
-| **Starting Loader & Fetcher** | ❌ | Not started | Pierre | 🚫 |
-| **Manage events** | ❌ | Not started | Pierre | 🚫 |
-| **Manage friends** | ❌ | Not started | Pierre | 🚫 |
+| **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
+| **Manage events** | ❌ | Not started | | 🚫 |
+| **Manage friends** | ❌ | Not started | | 🚫 |
 
 ## Blocking points :
 
