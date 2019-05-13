@@ -49,6 +49,7 @@ export default class TabTwo extends React.Component {
         } else {
             let responseJSON = await response.json();
             responseJSON.data.events.map(async (event) => {
+              event.formatedDate = await Func.formatDate(event.date)
               // Get distance from current user
               const distFromUser = this.state.allowGeoloc ?
                 await geolib.getDistanceSimple(
@@ -70,6 +71,7 @@ export default class TabTwo extends React.Component {
                 id: event.id,
                 title: event.name,
                 date: event.date,
+                formatedDate: event.formatedDate.split(" ")[0],
                 place: event.place,
                 address: address,
                 distance: distFromUser,
@@ -79,6 +81,7 @@ export default class TabTwo extends React.Component {
                 type: event.type,
                 user: event.UserId
               }
+              console.log(event.formatedDate)
               events.push(eventToPush)
               if (events.length === responseJSON.data.events.length) this.setState({ fetchDone: true });
             });
@@ -114,7 +117,7 @@ export default class TabTwo extends React.Component {
                                   </View>
                                   <View style={Style.view}>
                                       <Text>Date :</Text>
-                                      <Text>{item.date}</Text>
+                                      <Text>{item.formatedDate}</Text>
                                   </View>
                               </View>
                           </CardItem>

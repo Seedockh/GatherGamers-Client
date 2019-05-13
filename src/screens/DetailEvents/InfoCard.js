@@ -111,7 +111,7 @@ export default class InfoCard extends React.Component {
                         )}
                         <View style={Style.view}>
                             <Text style={Style.text}>Date :</Text>
-                            <Text>{this.props.navigation.state.params.event.date}</Text>
+                            <Text>{this.props.navigation.state.params.event.formatedDate}</Text>
                         </View>
                         <View style={Style.view}>
                             <Text style={Style.text}>Lieu :</Text>

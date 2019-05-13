@@ -104,4 +104,12 @@ export default Func = {
         return responseJSON;
       }
     }
+
+    formatDate: async function(unformatedDate) {
+        const date = new Date(unformatedDate)
+        let month = date.getMonth() + 1;
+        let formatedMonth = month < 10 ? '0' + month : '' + month;
+        let formatedDate = await `${date.getFullYear()}/${formatedMonth}/${date.getDate()} at ${date.getHours()}:${date.getMinutes()}`
+        return formatedDate
+     }
 }
