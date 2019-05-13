@@ -2,11 +2,11 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
     scrollview: {
-        flex: 1
+        flex: 1,
     },
     carditem: {
-        borderRadius: 10, 
-        borderWidth: 2
+        borderRadius: 10,
+        borderWidth: 2,
     },
     container: {
         flex: 1
@@ -15,13 +15,13 @@ export default StyleSheet.create({
         fontWeight: "600"
     },
     view: {
-        flexDirection: "row", 
+        flexDirection: "row",
         justifyContent: "space-between"
     },
 
     textnonotif: {
-        fontSize:20, 
-        textAlign:'center', 
+        fontSize:20,
+        textAlign:'center',
         marginTop:20,
         alignSelf: "center"
     }

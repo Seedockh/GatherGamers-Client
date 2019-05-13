@@ -152,7 +152,7 @@ export default class GamersAround extends React.Component {
         return(
             <List key={index} >
                 <ListItem thumbnail>
-                <TouchableOpacity key={index} activeOpacity={0.8} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
+                <TouchableOpacity key={index} activeOpacity={0.5} style={{flexDirection : "row"}} onPress={() => this.getDetails(index)}>
                     <Left>
                         <Thumbnail source={randPicture} />
                     </Left>

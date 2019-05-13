@@ -26,7 +26,7 @@ export default class DetailEvents extends React.Component {
         this.state = {
           fetchDone: false,
           participantsCount: 0,
-          participates: false,
+          participates: "",
           allowGeoloc: false,
         }
     }
@@ -113,26 +113,26 @@ export default class DetailEvents extends React.Component {
                   />
                 {userLocation.coordinates[0] && allowGeoloc && (
                   <>
-                  <MapView.Marker
-                    coordinate={{
-                      latitude: userLocation.coordinates[0],
-                      longitude: userLocation.coordinates[1],
-                    }}
-                    title='Your position'
-                  />
-                  <MapViewDirections
-                    origin={{
-                      latitude: userLocation.coordinates[0],
-                      longitude: userLocation.coordinates[1]
-                    }}
-                    destination={{
-                      latitude: event.place.coordinates[0],
-                      longitude: event.place.coordinates[1]
-                    }}
-                    apikey={KEY.MAPS_API_KEY}
-                    strokeWidth={5}
-                    strokeColor="#9b3737"
-                  />
+                    <MapView.Marker
+                      coordinate={{
+                        latitude: userLocation.coordinates[0],
+                        longitude: userLocation.coordinates[1],
+                      }}
+                      title='Your position'
+                    />
+                    <MapViewDirections
+                      origin={{
+                        latitude: userLocation.coordinates[0],
+                        longitude: userLocation.coordinates[1]
+                      }}
+                      destination={{
+                        latitude: event.place.coordinates[0],
+                        longitude: event.place.coordinates[1]
+                      }}
+                      apikey={KEY.MAPS_API_KEY}
+                      strokeWidth={5}
+                      strokeColor="#9b3737"
+                    />
                   </>
                 )}
               </MapView>

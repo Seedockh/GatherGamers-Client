@@ -11,11 +11,12 @@ export default class InfoCard extends React.Component {
         this.state = {
             token: "",
             eventAuthor: "",
-            isParticipating: this.props.participates,
+            isParticipating: "",
         }
     }
 
     async componentDidMount() {
+        this.setState({ isParticipating: this.props.participates })
         await this.fetchAuthor()
     }
 
@@ -48,10 +49,10 @@ export default class InfoCard extends React.Component {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             await response.json()
-            this.setState({ participates: true });
+            this.setState({ isParticipating: true });
             this.props.getParticipants();
             Func.toaster("See you at the event!", "Okay", "success", 1000);
-            this.pushNotif(`You have joined the event ${this.props.navigation.state.params.event.id}`, 1)
+            this.pushNotif(`You have joined the event ${this.props.navigation.state.params.event.title}`, 1)
         }
     }
 
@@ -66,10 +67,10 @@ export default class InfoCard extends React.Component {
             Func.toaster("Unauthorized!", "Okay", "danger", 3000);
         } else {
             await response.json()
-            this.setState({ participates: false });
+            this.setState({ isParticipating: false });
             this.props.getParticipants();
             Func.toaster("Subscription cancelled", "Okay", "warning", 1000);
-            this.pushNotif(`You left the event ${this.props.navigation.state.params.event.id}`, 0)
+            this.pushNotif(`You left the event ${this.props.navigation.state.params.event.title}`, 0)
         }
     }
 
@@ -102,10 +103,12 @@ export default class InfoCard extends React.Component {
                             <Text style={Style.text}>Titre :</Text>
                             <Text>{this.props.navigation.state.params.event.title}</Text>
                         </View>
-                        <View style={Style.view}>
-                            <Text style={Style.text}>Auteur :</Text>
-                            <Text>{this.state.eventAuthor}</Text>
-                        </View>
+                        {this.state.eventAuthor!=="" && (
+                          <View style={Style.view}>
+                              <Text style={Style.text}>Auteur :</Text>
+                              <Text>{this.state.eventAuthor}</Text>
+                          </View>
+                        )}
                         <View style={Style.view}>
                             <Text style={Style.text}>Date :</Text>
                             <Text>{this.props.navigation.state.params.event.date}</Text>
@@ -115,7 +118,7 @@ export default class InfoCard extends React.Component {
                             <View style={Style.adressview}>
                                 <Text style={Style.adresstext}>{this.props.navigation.state.params.event.address}</Text>
                             </View>
-                            
+
                         </View>
                         <View style={Style.view}>
                             <Text style={Style.text}>Distance :</Text>
@@ -133,21 +136,17 @@ export default class InfoCard extends React.Component {
                             <Text style={Style.text}>Prix en jeux :</Text>
                             <Text>{this.props.navigation.state.params.event.price} €</Text>
                         </View>
-                        {!this.props.fetchDone && (
-                            <View style={Style.activityview}>
-                                <ActivityIndicator style={Style.activity}  size="large" color="#000000" />
-                            </View>
-                        )}
-                        {this.props.fetchDone && !this.props.participates && (
+
+                        {this.props.participates===false &&
                             <Button block success onPress={() => this.subscribe()}>
                                 <Text>SUBSCRIBE</Text>
                             </Button>
-                        )}
-                        {this.props.fetchDone && this.props.participates && (
+                        }
+                        {this.props.participates===true &&
                             <Button block danger onPress={() => this.unsubscribe()}>
                                 <Text>UNSUBSCRIBE</Text>
                             </Button>
-                        )}
+                        }
                     </View>
                 )}
             </>

@@ -18,18 +18,19 @@
 | **Registered mail** | ✅ | Done | Maxime | 🆗 |
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
-| **Starting Loader & Fetcher** | ❌ | Not started | | 🚫 |
+| **Format dates** | ❌ | Not started | Antoine | 🚫 |
+| **Refacto Geoloc** | ❌ | Not started | Antoine | 🚫 |
+| **Starting Loader & Fetcher** | ❌ | Not started | Pierre | 🚫 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Create an event** | ✅ | Done | Adrien | 🆗 |
-| **Show events created** | ❌ | Not started | | 🚫 |
-| **Update events created** | ❌ | Not started | | 🚫 |
-| **Delete events created** | ❌ | Not started | | 🚫 |
+| **Manage events** | ❌ | Not started | Pierre | 🚫 |
+| **Manage friends** | ❌ | Not started | Pierre | 🚫 |
 | **Join an event** | ✅ | Done | Antoine | 🆗 |
-| **(Un)Subscribe event** | ✅ | Done | Pierre | 🆗 |
+| **Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
-| **Edit my profile** | ⌛ | Not merged to master / Password update problem | Adrien | 🚫 |
+| **Edit my profile** | ✅ | Done | Adrien | 🆗 |
 | **My News** | ✅ | Done | Adrien | 🆗 |
 | **My events** | ✅ | Done | Adrien | 🆗 |
 | **My favorites** | ✅ | Done | Adrien | 🆗 |
@@ -44,6 +45,7 @@
 |---------|--------|-------|------------|-----|
 | **Forum** | ❌ | Not started | | 🚫 |
 | **Messenger** | ❌ | Not started | | 🚫 |
+| **Find better games API** | ❌ | Not started | | 🚫 |
 
 ## Blocking points :
 
