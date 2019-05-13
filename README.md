@@ -18,15 +18,12 @@
 | **Registered mail** | ✅ | Done | Maxime | 🆗 |
 | **Logout** | ✅ | Done | Antoine | 🆗 |
 | **Login** | ✅ | Done | Antoine | 🆗 |
-| **Format dates** | ❌ | Not started | Antoine | 🚫 |
-| **Refacto Geoloc** | ❌ | Not started | Antoine | 🚫 |
-| **Starting Loader & Fetcher** | ❌ | Not started | Pierre | 🚫 |
+| **Format dates** | ✅ | Done | Antoine | 🆗 |
+| **Refacto Geoloc** | ✅ | Done | Antoine | 🆗 |
 | **List games** | ✅ | Done | Antoine | 🆗 |
 | **Get game details** | ✅ | Done | Adrien | 🆗 |
 | **Add a game to favorite** | ✅ | Done | Adrien | 🆗 |
 | **Create an event** | ✅ | Done | Adrien | 🆗 |
-| **Manage events** | ❌ | Not started | Pierre | 🚫 |
-| **Manage friends** | ❌ | Not started | Pierre | 🚫 |
 | **Join an event** | ✅ | Done | Antoine | 🆗 |
 | **Subscribe event** | ✅ | Done | Pierre | 🆗 |
 | **Show my profile** | ✅ | Done | Adrien | 🆗 |
@@ -37,7 +34,7 @@
 | **Event Geolocalisation** | ✅ | Done | Pierre | 🆗 |
 | **Gamers Geolocalisation** | ✅ | Done | Pierre | 🆗 |
 | **OptinGeoloc Switch** | ✅ | Done | Pierre | 🆗 |
-| **AWS service** | ⌛ | Not working yet | Maxime | ⭐ |
+| **AWS service** | ✅ | Done | Maxime | 🆗 |
 
 ## Future features
 
@@ -46,6 +43,9 @@
 | **Forum** | ❌ | Not started | | 🚫 |
 | **Messenger** | ❌ | Not started | | 🚫 |
 | **Find better games API** | ❌ | Not started | | 🚫 |
+| **Starting Loader & Fetcher** | ❌ | Not started | Pierre | 🚫 |
+| **Manage events** | ❌ | Not started | Pierre | 🚫 |
+| **Manage friends** | ❌ | Not started | Pierre | 🚫 |
 
 ## Blocking points :
 
