@@ -109,7 +109,7 @@ export default Func = {
         const date = new Date(unformatedDate)
         let month = date.getMonth() + 1;
         let formatedMonth = month < 10 ? '0' + month : '' + month;
-        let formatedDate = await `${date.getFullYear()}/${formatedMonth}/${date.getDate()} at ${date.getHours()}:${date.getMinutes()}`
+        let formatedDate = await `${date.getFullYear()}/${formatedMonth}/${date.getDate()} at ${date.getHours()}:${parseInt(date.getMinutes(), 10) > 9 ? date.getMinutes() : "0" + date.getMinutes()}`
         return formatedDate
      }
 }
