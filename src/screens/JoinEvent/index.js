@@ -65,6 +65,7 @@ export default class JoinEvents extends React.Component {
       // When game's events are fetched
       if (responseJSON.length===0) { this.setState({ fetchDone: true }) }
       responseJSON.map(async (event) => {
+        event.formatedDate = await Func.formatDate(event.date)
         // Get distance from current user
         const distFromUser = this.state.allowGeoloc ?
           await geolib.getDistanceSimple(
@@ -86,6 +87,7 @@ export default class JoinEvents extends React.Component {
           id: event.id,
           title: event.name,
           date: event.date,
+          formatedDate: event.formatedDate.split(" ")[0],
           place: event.place,
           address: address,
           distance: distFromUser,
@@ -169,7 +171,7 @@ export default class JoinEvents extends React.Component {
             <TouchableOpacity key={index} activeOpacity={0.5} style={Style.touchable} onPress={() => this.getDetails(index)}>
               <Body>
                 <Text>{item.title}</Text>
-                <Text note numberOfLines={1}>{item.date}</Text>
+                <Text note numberOfLines={1}>{item.formatedDate}</Text>
                 <Text note numberOfLines={1}>{item.address}</Text>
                 <Text note numberOfLines={1}>Distance : {item.distance}km</Text>
               </Body>
