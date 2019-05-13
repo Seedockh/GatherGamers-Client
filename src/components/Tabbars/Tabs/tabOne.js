@@ -5,8 +5,9 @@ import JWT from 'expo-jwt'
 import ENV from '../../../../env'
 import Style from '../../../styles/tabone'
 import Func from '../../../functions.js';
+import { withNavigationFocus } from "react-navigation";
 
-export default class TabOne extends React.Component {
+class TabOne extends React.Component {
 
     constructor(props) {
         super(props);
@@ -16,6 +17,12 @@ export default class TabOne extends React.Component {
             refreshing: false,
             deleting: false,
         }
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.isFocused !== this.props.isFocused) {
+        this.fetchNotif()
+      }
     }
 
     _onRefresh = () => {
@@ -95,3 +102,5 @@ export default class TabOne extends React.Component {
         );
     }
 }
+
+export default withNavigationFocus(TabOne)
