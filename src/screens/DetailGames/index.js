@@ -120,7 +120,7 @@ export default class DetailGames extends React.Component {
       if (checkGeoloc[1]) this.props.navigation.navigate('GamersAround', { gameid: this.props.navigation.state.params.id })
       else Func.toaster("You need to activate geolocation to access this feature !", "Okay", "warning", 3000);
     }
-
+    
     onCreateEvent() {
         this.props.navigation.navigate('CreateEvent', { ...this.props })
     }

@@ -75,7 +75,7 @@ export default class Home extends React.Component {
                 <KeyboardAvoidingView behavior="padding" style={Style.keyboardAvoiding} enabled>
                     <View style={Style.mainContainer}>
                         <View style={Style.logoContainer}>
-                            <Image style={Style.logo} source={require('../../../assets/logo.png')}/>
+                            <Image style={Style.logo} source={require('../../../assets/gg-icon.png')}/>
                         </View>
                         {!loading ?
                             (

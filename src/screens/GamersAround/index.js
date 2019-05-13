@@ -9,6 +9,7 @@ import KEY from '../../../secretenv.js'
 import Func from '../../functions.js';
 import geolib from 'geolib';
 import Style from '../../styles/gamersaround'
+
 let gamers = [];
 
 export default class GamersAround extends React.Component {
@@ -77,6 +78,7 @@ export default class GamersAround extends React.Component {
 
               gamers.push(gamerToPush);
               if (gamers.length===responseJSON.data.favourites.Users.length-1) this.setState({fetchDone: true});
+              if (responseJSON.data.favourites.Users.length===0) this.setState({ fetchDone: true })
             });
         }
     }
@@ -159,10 +161,15 @@ export default class GamersAround extends React.Component {
                         <ActivityIndicator style={Style.activity} size="large" color="#000000" />
                       </View>
                     )}
-                    {this.state.fetchDone && (
+                    {this.state.fetchDone && gamers.length!==0 && (
                       <ScrollView>
                           {gamers.map((item, index) => this.renderItem(item, index))}
                       </ScrollView>
+                    )}
+                    {this.state.fetchDone && gamers.length===0 && (
+                      <View style={Style.activityview}>
+                        <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No gamers have added this game to their favourites. </Text>
+                      </View>
                     )}
                 </View>
                 <FooterTabs {...this.props} />
