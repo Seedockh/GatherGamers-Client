@@ -6,8 +6,9 @@ import FooterTabs from '../../components/FooterTabs'
 import JWT from 'expo-jwt'
 import ENV from '../../../env'
 import Func from '../../functions.js';
+import { withNavigationFocus } from "react-navigation";
 
-export default class DetailGames extends React.Component {
+class DetailGames extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -34,26 +35,22 @@ export default class DetailGames extends React.Component {
     }
 
     componentDidMount() {
-        this.setState(this.baseState)
         this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.title })
         this.fetchGames();
         this.fetchFavorite();
     }
 
+    async componentDidUpdate(prevProps) {
+      if (prevProps.isFocused !== this.props.isFocused) {
+        this.setState(this.baseState)
+        this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.title })
+        this.fetchGames();
+        this.fetchFavorite();
+      }
+    }
+
     componentWillUnmount() {
-        this.setState({
-            token: null,
-            gameid: null,
-            name: null,
-            cover: null,
-            summary: null,
-            text: false,
-            switchValue: false,
-            nameFetch: null,
-            gamesFetch: null,
-            fetchesDone: false,
-            press: false
-        })
+        this.setState({  })
     }
 
     setFetchStatus = async () => {
@@ -215,3 +212,5 @@ export default class DetailGames extends React.Component {
         )
     }
 }
+
+export default withNavigationFocus(DetailGames)
