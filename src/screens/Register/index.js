@@ -23,7 +23,7 @@ export default class Home extends React.Component {
 
     checkEmail = async () => {
         const { email } = this.state
-        var emails = ['adrien.masson@hotmail.fr',
+        var emails = ['adrien.masson22@gmail.com',
             'antoine.nivoy@gmail.com',
             'maxime.gouenard@gmail.com',
             'pierre.herisse@gmail.com']
