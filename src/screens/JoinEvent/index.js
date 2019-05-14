@@ -90,7 +90,7 @@ export default class JoinEvents extends React.Component {
           players: event.players,
           price: event.price,
           type: event.type,
-          user: event.UserId
+          userid: event.UserId
         }
         events.push(eventToPush)
         if (events.length === responseJSON.length) this.setState({ fetchDone: true });

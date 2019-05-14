@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import { View, Image, ScrollView, ActivityIndicator } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
-import { Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Content, Card, CardItem, Body, Text, Button, List, ListItem } from 'native-base';
+import Func from '../../functions.js';
 import { vmin } from 'react-native-expo-viewport-units';
 import { MapView } from 'expo';
 import FooterTabs from '../../components/FooterTabs'
-import InfoCard from './InfoCard'
-import ListCard from './ListCard'
 import ENV from '../../../env'
 import JWT from 'expo-jwt'
 import KEY from '../../../secretenv.js'
+import StyleInfos from '../../styles/infocard'
+import StyleListCards from '../../styles/listcard'
 
 let participants = []
 
@@ -24,18 +25,29 @@ export default class DetailEvents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+          token: null,
+          decodedToken: null,
           fetchDone: false,
           participantsCount: 0,
-          participates: "",
+          participates: false,
           allowGeoloc: false,
+          eventAuthor: "",
+          switchSubscription: false
         }
     }
 
     async componentDidMount() {
+      const token = await Func.getToken()
+      await this.setState({ token: token });
+      const decodedToken = await JWT.decode(token, ENV.JWT_KEY)
       const location = await Func.checkGeolocation();
-      this.setState({ location: location[0], allowGeoloc: location[1] });
+      this.setState({ allowGeoloc: location[1], decodedToken: decodedToken });
       this.props.navigation.setParams({ screenTitle: this.props.navigation.state.params.event.title })
-      this.fetchParticipants().then(()=>this.setState({fetchDone: true}))
+      this.fetchParticipants().then(async ()=>{
+        await this.fetchAuthor()
+        this.setState({fetchDone: true})
+      });
+      fetches = 0;
     }
 
     getParticipants = async() => {
@@ -46,41 +58,103 @@ export default class DetailEvents extends React.Component {
     }
 
     fetchParticipants = async () => {
-        const token = await Func.getToken()
-        const currentUser = await JWT.decode(token, ENV.JWT_KEY)
-        this.setState({ token })
         const url = `https://gathergamers.herokuapp.com/api/participant/event/${this.props.navigation.state.params.event.id}`
-        const auth = `Bearer ${token}`
+        const auth = `Bearer ${this.state.token}`
         const response = await Func.fetch(url, "GET", null, auth)
         if(response.status == 401) {
-            Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+            Func.toaster("Get Event details : Unauthorized!", "Okay", "danger", 3000);
         } else {
             let responseJSON = await response.json()
             participants = [];
+            if (responseJSON.data.participants.Users.length===0) return this.setState({ fetchDone: true })
+
             await responseJSON.data.participants.Users.forEach(async function(participant,index) {
-              this.setState({ token })
               const url = `https://gathergamers.herokuapp.com/api/user/${participant.id}`
               let id = ""
               let nickname = ""
               const response = await Func.fetch(url, "GET", null, auth)
               if(response.status == 401) {
-                  Func.toaster("Unauthorized!", "Okay", "danger", 3000);
+                  Func.toaster("Get Participants : Unauthorized!", "Okay", "danger", 3000);
               } else {
                   let responseJSON = await response.json()
                   id = responseJSON.id
                   nickname = responseJSON.nickname
               }
               let participantToPush = { id, nickname }
-              await participants.push(participantToPush)
-              this.setState({participantsCount: participants.length, fetchDone: true})
-              if (participant.id === currentUser.id) this.setState({participates: true});
-              else if (participants.length===index+1) this.setState({participates: false});
+              await participants.push(participantToPush);
+              this.setState({ participantsCount: participants.length })
+              if (!this.state.switchSubscription) {
+                if (participant.id === this.state.decodedToken.id) this.setState({participates: true});
+              } else {
+                this.setState({ switchSubscription: false })
+              }
             }.bind(this));
         }
     }
 
+    subscribe = async () => {
+        const { token, decodedToken } = this.state;
+        const url = "https://gathergamers.herokuapp.com/api/participant/add"
+        const body = JSON.stringify({
+            UserId: decodedToken.id,
+            EventId: this.props.navigation.state.params.event.id,
+        })
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "POST", body, auth)
+        if (response.status == 401) {
+            Func.toaster("Subscribe : Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            await response.json()
+            await this.setState({ participates: true, switchSubscription: true });
+            this.getParticipants();
+            Func.toaster("See you at the event!", "Okay", "success", 1000);
+            Func.pushNotif(`You have joined the event ${this.props.navigation.state.params.event.title}`, 1, token, decodedToken)
+        }
+    }
+
+    unsubscribe = async () => {
+        const { token, decodedToken } = this.state;
+        const url = "https://gathergamers.herokuapp.com/api/participant/delete/" + this.props.navigation.state.params.event.id + "/" + decodedToken.id
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "DELETE", null, auth)
+        if (response.status == 401) {
+            Func.toaster("Unsubscribe : Unauthorized!", "Okay", "danger", 3000);
+        } else {
+            await response.json()
+            await this.setState({ participates: false, switchSubscription: true });
+            this.getParticipants();
+            Func.toaster("Subscription cancelled", "Okay", "warning", 1000);
+            Func.pushNotif(`You left the event ${this.props.navigation.state.params.event.title}`, 0, token, decodedToken)
+        }
+    }
+
+    fetchAuthor = async () => {
+        const { token } = this.state;
+        const url = `https://gathergamers.herokuapp.com/api/user/${this.props.navigation.state.params.event.userid}`
+        const auth = `Bearer ${token}`
+        const response = await Func.fetch(url, "GET", null, auth);
+        if (response.status == 401) {
+            Func.toaster("Get Author : Unauthorized", "Okay", "danger", 3000);
+        } else {
+            let responseJSON = await response.json()
+            this.setState({ eventAuthor: responseJSON.nickname })
+        }
+    }
+
+    renderItem(item, index) {
+        return (
+            <List key={index}>
+                <ListItem>
+                    <Body>
+                        <Text>{item.nickname}</Text>
+                    </Body>
+                </ListItem>
+            </List>)
+    }
+
     render() {
-      const { event, userLocation, allowGeoloc } = this.props.navigation.state.params;
+      const { event, userLocation } = this.props.navigation.state.params;
+      const { eventAuthor, allowGeoloc, fetchDone, participates } = this.state;
         return (
             <>
               <MapView style={{ width: vmin(20), height: vmin(30), flex: 1 }}
@@ -126,18 +200,85 @@ export default class DetailEvents extends React.Component {
                   </>
                 )}
               </MapView>
-                <ScrollView style={{ flex: 1 }}>
-                    <InfoCard {...this.props}
-                      getParticipants={this.getParticipants}
-                      participants={participants}
-                      fetchDone={this.state.fetchDone}
-                      participates={this.state.participates}
-                    />
-                    <ListCard {...this.props}
-                      getParticipants={this.getParticipants}
-                      participants={participants}
-                      fetchDone={this.state.fetchDone}
-                    />
+              <ScrollView style={{ flex: 1 }}>
+                  {!fetchDone && (
+                      <View style={StyleInfos.activityview}>
+                          <ActivityIndicator style={StyleInfos.activity} size="large" color="#000000" />
+                      </View>
+                  )}
+                  {fetchDone && (
+                      <View style={StyleInfos.container}>
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Titre :</Text>
+                              <Text>{this.props.navigation.state.params.event.title}</Text>
+                          </View>
+                          {this.state.eventAuthor!=="" && (
+                            <View style={StyleInfos.view}>
+                                <Text style={StyleInfos.text}>Auteur :</Text>
+                                <Text>{this.state.eventAuthor}</Text>
+                            </View>
+                          )}
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Date :</Text>
+                              <Text>{event.formatedDate}</Text>
+                          </View>
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Lieu :</Text>
+                              <View style={StyleInfos.adressview}>
+                                  <Text style={StyleInfos.adresstext}>{event.address}</Text>
+                              </View>
+
+                          </View>
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Distance :</Text>
+                              <Text>{event.distance}km</Text>
+                          </View>
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Nombre de joueurs :</Text>
+                              <Text>{event.players}</Text>
+                          </View>
+                          <View style={StyleInfos.view}>
+                              <Text style={StyleInfos.text}>Type :</Text>
+                              <Text>{event.type}</Text>
+                          </View>
+                          <View style={StyleInfos.priceview}>
+                              <Text style={StyleInfos.text}>Prix en jeux :</Text>
+                              <Text>{event.price} €</Text>
+                          </View>
+
+                          {fetchDone && !participates &&
+                              <Button block success onPress={() => this.subscribe()}>
+                                  <Text>SUBSCRIBE</Text>
+                              </Button>
+                          }
+                          {fetchDone && participates &&
+                              <Button block danger onPress={() => this.unsubscribe()}>
+                                  <Text>UNSUBSCRIBE</Text>
+                              </Button>
+                          }
+                      </View>
+                  )}
+                  <View style={StyleListCards.container}>
+                      {!fetchDone && (
+                        <View style={StyleInfos.activityview}>
+                            <ActivityIndicator style={StyleInfos.activity} size="large" color="#000000" />
+                        </View>
+                      )}
+                      {fetchDone && (
+                        <Card>
+                            <CardItem header bordered>
+                                <View style={StyleListCards.view}>
+                                    <Text style={StyleListCards.text}>Participants</Text>
+                                </View>
+                            </CardItem>
+                            <CardItem bordered>
+                                <Content>
+                                    {participants.length > 0 ? participants.map((item, index) => this.renderItem(item, index)) : null}
+                                </Content>
+                            </CardItem>
+                        </Card>
+                      )}
+                  </View>
                 </ScrollView>
                 <FooterTabs {...this.props} />
             </>
