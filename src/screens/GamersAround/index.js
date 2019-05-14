@@ -43,7 +43,7 @@ export default class GamersAround extends React.Component {
       this.setState({ token, decodedToken, location: location[0], allowGeoloc: location[1] });
       if (this.state.allowGeoloc) {
         const response = await Func.getUserLocation(token,decodedToken);
-        this.setState({ location: response[0], locationResult: response[1] })
+        this.setState({ location: response[1], locationResult: response[2] })
       }
       await this.fetchUsers();
     }

@@ -42,7 +42,7 @@ export default class JoinEvents extends React.Component {
     this.setState({ token, decodedToken, location: location[0], allowGeoloc: location[1] });
     if (this.state.allowGeoloc) {
       const response = await Func.getUserLocation(token,decodedToken);
-      this.setState({ location: response[0], locationResult: response[1] })
+      this.setState({ location: response[1], locationResult: response[2] })
     }
     await this.fetchEvents();
   }
@@ -199,6 +199,11 @@ export default class JoinEvents extends React.Component {
             <ScrollView>
               {events.map((item, index) => this.renderItem(item, index))}
             </ScrollView>
+          )}
+          {this.state.fetchDone && events.length===0 && (
+            <View style={Style.activityview}>
+              <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No events created yet. </Text>
+            </View>
           )}
         </View>
         <FooterTabs {...this.props} />

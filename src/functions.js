@@ -72,30 +72,35 @@ export default Func = {
 
     // Return a tab with [ location, allowGeoloc ]
     checkGeolocation: async function() {
-      // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
-      const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-        return [{ type: 'Point', coordinates: [location.coords.latitude, location.coords.longitude] },true]
+      if (await Location.hasServicesEnabledAsync()) {
+        // permissions returns only for location permissions on iOS and under certain conditions, see Permissions.LOCATION
+        const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status === 'granted') {
+          const location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
+          return [{ type: 'Point', coordinates: [location.coords.latitude, location.coords.longitude] },true]
+        } else {
+          Func.toaster("Location permission not granted !", "Okay", "danger", 3000);
+          return [{ type: 'Point', coordinates: [48.856614, 2.3522219] },false];
+        }
       } else {
-        Func.toaster("Location permission not granted!", "Okay", "danger", 3000);
-        return [{ type: 'Point', coordinates: [48.856614, 2.3522219] },false];
+          Func.toaster("Location services not activated !", "Okay", "warning", 3000);
+          return [{ type: 'Point', coordinates: [48.856614, 2.3522219] },false];
       }
     },
 
     // Send UserLocation to DB and returns [ location, locationResult, response ]
     getUserLocation: async function(token,decodedToken) {
       if (await Location.hasServicesEnabledAsync()) {
-        const currentPosition = await Location.getCurrentPositionAsync({ accuracy: 2 });
-        const location = { type: 'Point', coordinates: [currentPosition.coords.latitude, currentPosition.coords.longitude] }
+        const serviceUp = await Location.getCurrentPositionAsync({ accuracy: 2 });
+        const location = { type: 'Point', coordinates: [serviceUp.coords.latitude, serviceUp.coords.longitude] }
         const locationResult = true;
         const result = await this.updateUserLocation(location,locationResult,token,decodedToken);
-        return [location,locationResult,result];
+        return [serviceUp,location,locationResult,result];
       } else {
         const location = { type: 'Point', coordinates: [48.856614, 2.3522219] }
         const locationResult = false;
         const result = await this.updateUserLocation(location,locationResult,token,decodedToken);
-        return [location,locationResult,result];
+        return [serviceUp,location,locationResult,result];
       }
     },
 
