@@ -21,11 +21,12 @@ export default StyleSheet.create({
     },
 
     switch: {
-        marginHorizontal: 16,
+        marginHorizontal: 24,
         marginVertical: 24,
         flex: 1,
-        justifyContent: "space-around",
-        alignItems: "center"
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row"
     },
 
     button: {
