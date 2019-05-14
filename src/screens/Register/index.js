@@ -68,12 +68,12 @@ export default class Home extends React.Component {
                             const response = await Func.fetch(url, "POST", body);
                             this.setState({ loading: false });
                             this.props.navigation.navigate('Login');
-                            Func.toaster("Account successfully created! And You have received an email", "Okay", "success", 3000);
-                            if (response.status >= 200 && response.status < 300 && this.state.check == true) {
+                            Func.toaster("Account successfully created ! And You have received an email", "Okay", "success", 3000);
+                            /*if (response.status >= 200 && response.status < 300 && this.state.check == true) {
                                 await this.sendEmail(email)
                             } else {
                                 Func.toaster("Not an admin account, no mail sent.", "Okay", "danger", 3000);
-                            }
+                            }*/
                             this.setState({ loading: false });
                         } else {
                             Func.toaster("Email is not valid!", "Okay", "danger", 3000);
