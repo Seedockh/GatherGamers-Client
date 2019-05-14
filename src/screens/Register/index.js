@@ -21,24 +21,24 @@ export default class Home extends React.Component {
         }
     }
 
-    checkEmail = async() => {
-      const { email } = this.state
-      var emails = ['adrien.masson@hotmail.fr',
-                    'antoine.nivoy@gmail.com',
-                    'maxime.gouenard@gmail.com',
-                    'pierre.herisse@gmail.com']
-      emails.map(e => {
-        if(email == e){ this.setState({ check : true }) }
-      })
+    checkEmail = async () => {
+        const { email } = this.state
+        var emails = ['adrien.masson@hotmail.fr',
+            'antoine.nivoy@gmail.com',
+            'maxime.gouenard@gmail.com',
+            'pierre.herisse@gmail.com']
+        emails.map(e => {
+            if (email == e) { this.setState({ check: true }) }
+        })
     }
 
-    sendEmail = async() => {
-      const { email } = this.state
-      const url = 'https://gathergamers.herokuapp.com/api/mailgun/register'
-      const body = JSON.stringify({
-          useremail: email
-      })
-      const response = await Func.fetch(url, "POST", body);
+    sendEmail = async () => {
+        const { email } = this.state
+        const url = 'https://gathergamers.herokuapp.com/api/mailgun/register'
+        const body = JSON.stringify({
+            useremail: email
+        })
+        const response = await Func.fetch(url, "POST", body);
     }
 
     login = async () => {
@@ -70,7 +70,7 @@ export default class Home extends React.Component {
                             this.props.navigation.navigate('Login');
                             Func.toaster("Account successfully created! And You have received an email", "Okay", "success", 3000);
                             if (response.status >= 200 && response.status < 300 && this.state.check == true) {
-                              await this.sendEmail(email)
+                                await this.sendEmail(email)
                             } else {
                                 Func.toaster("Not an admin account, no mail sent.", "Okay", "danger", 3000);
                             }
@@ -99,54 +99,54 @@ export default class Home extends React.Component {
                 <ScrollView>
                     <View style={Style.mainContainer}>
                         <View style={Style.logoContainer}>
-                            <Image style={Style.logo} source={require('../../../assets/gg-icon.png')}/>
+                            <Image style={Style.logo} source={require('../../../assets/gg-icon.png')} />
                         </View>
                         <Form>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Firstname</Label>
-                                <Input onChangeText={(firstname) => this.setState({ firstname })}/>
+                                <Input onChangeText={(firstname) => this.setState({ firstname })} />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Lastname</Label>
-                                <Input onChangeText={(lastname) => this.setState({ lastname })}/>
+                                <Input onChangeText={(lastname) => this.setState({ lastname })} />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Nickname</Label>
-                                <Input onChangeText={(nickname) => this.setState({ nickname })}/>
+                                <Input onChangeText={(nickname) => this.setState({ nickname })} />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Email</Label>
-                                <Input onChangeText={(email) => this.setState({ email })} autoCapitalize = 'none'/>
+                                <Input onChangeText={(email) => this.setState({ email })} autoCapitalize='none' />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Password</Label>
-                                <Input secureTextEntry={true} onChangeText={(password) => this.setState({ password })} autoCapitalize = 'none'/>
+                                <Input secureTextEntry={true} onChangeText={(password) => this.setState({ password })} autoCapitalize='none' />
                             </Item>
                             <Item floatingLabel style={Style.item}>
                                 <Label>Confirm Password</Label>
                                 <Input secureTextEntry={true}
-                                onChangeText={(password_confirmation) => this.setState({ password_confirmation })}
-                                autoCapitalize = 'none'/>
+                                    onChangeText={(password_confirmation) => this.setState({ password_confirmation })}
+                                    autoCapitalize='none' />
                             </Item>
                         </Form>
-                    {!loading ?
-                        (
-                            <View style={Style.buttonContainer}>
-                                <Button title="Connexion" onPress={this.Register.bind(this)} style={Style.button}>
-                                    <Text style={Style.registerText}>Register</Text>
-                                </Button>
-                                <TouchableOpacity onPress={this.login.bind(this)} style={Style.touchableOpacity}>
-                                    <Text style={Style.formText}>Already have an account ?</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ) : (
-                            <View style={Style.buttonContainer}>
-                                <Button style={Style.button}>
-                                    <Spinner color='white' size="small"/>
-                                </Button>
-                            </View>
-                        )
-                    }
+                        {!loading ?
+                            (
+                                <View style={Style.buttonContainer}>
+                                    <Button title="Connexion" onPress={this.Register.bind(this)} style={Style.button}>
+                                        <Text style={Style.registerText}>Register</Text>
+                                    </Button>
+                                    <TouchableOpacity onPress={this.login.bind(this)} style={Style.touchableOpacity}>
+                                        <Text style={Style.formText}>Already have an account ?</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (
+                                <View style={Style.buttonContainer}>
+                                    <Button style={Style.button}>
+                                        <Spinner color='white' size="small" />
+                                    </Button>
+                                </View>
+                            )
+                        }
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

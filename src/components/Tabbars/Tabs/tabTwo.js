@@ -6,10 +6,11 @@ import ENV from '../../../../env'
 import KEY from '../../../../secretenv.js'
 import Style from '../../../styles/tabtwo'
 import Func from '../../../functions.js';
+import { withNavigationFocus } from "react-navigation";
 
 let events = []
 
-export default class TabTwo extends React.Component {
+class TabTwo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,6 +23,12 @@ export default class TabTwo extends React.Component {
               coordinates: [48.856614, 2.3522219] // Paris by default
             },
         }
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.isFocused !== this.props.isFocused) {
+        this.eventsFetch()
+      }
     }
 
     async componentDidMount() {
@@ -142,3 +149,5 @@ export default class TabTwo extends React.Component {
         );
     }
 }
+
+export default withNavigationFocus(TabTwo)

@@ -5,14 +5,20 @@ import JWT from 'expo-jwt'
 import ENV from '../../../../env'
 import Style from '../../../styles/tabthree'
 import Func from '../../../functions.js';
-
-export default class TabThree extends React.Component {
+import { withNavigationFocus } from "react-navigation";
+class TabThree extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             token: null,
             gamesFetch: null,
             refreshing: false,
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.isFocused !== this.props.isFocused) {
+            this.fetchFavorite()
         }
     }
 
@@ -23,7 +29,7 @@ export default class TabThree extends React.Component {
     _onRefresh = () => {
         this.setState({ refreshing: true });
         this.fetchFavorite().then(() => {
-          this.setState({ refreshing: false });
+            this.setState({ refreshing: false });
         });
     }
 
@@ -86,3 +92,5 @@ export default class TabThree extends React.Component {
         );
     }
 }
+
+export default withNavigationFocus(TabThree)
