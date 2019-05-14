@@ -32,6 +32,7 @@ export default class GamersAround extends React.Component {
           locationResult: false,
           fetchDone: false,
           userHasFavorite: false,
+          gamersGeolocDisabled: 0,
         }
     }
 
@@ -66,6 +67,10 @@ export default class GamersAround extends React.Component {
                       {latitude: this.state.location.coordinates[0], longitude: this.state.location.coordinates[1]},
                       {latitude: gamer.lastLocation.coordinates[0], longitude: gamer.lastLocation.coordinates[1]}
                     ) / 1000 : null;
+                if (distFromUser===null) {
+                  this.setState({ gamersGeolocDisabled: this.state.gamersGeolocDisabled+1 });
+                  return null;
+                }
                 // Push the gamer with all infos
                 const gamerToPush = {
                   id: gamer.id,
@@ -78,7 +83,7 @@ export default class GamersAround extends React.Component {
                   gamerToPush.longitude = gamer.lastLocation.coordinates[1]
                 }
                 gamers.push(gamerToPush);
-                if (gamers.length===responseJSON.data.favourites.Users.length) this.setState({fetchDone: true});
+                if (gamers.length+this.state.gamersGeolocDisabled===responseJSON.data.favourites.Users.length) this.setState({fetchDone: true});
                 if (Object.values(gamerToPush).indexOf(this.state.decodedToken.id)!==-1) this.setState({ userHasFavorite: true })
             });
             if (responseJSON.data.favourites.Users.length<2) this.setState({ fetchDone: true })
@@ -91,7 +96,7 @@ export default class GamersAround extends React.Component {
 
     renderMarker(item,index) {
       if (item.latitude===undefined || item.longitude===undefined ||
-          item.distance===null || item.id===this.state.decodedToken.id)
+          item.distance===null || item.id===this.state.decodedToken.id )
             return null;
       return(
         <MapView.Marker key={index}
@@ -163,14 +168,14 @@ export default class GamersAround extends React.Component {
                         <ActivityIndicator style={Style.activity} size="large" color="#000000" />
                       </View>
                     )}
-                    {this.state.fetchDone && ( (gamers.length>0 && !this.state.userHasFavorite) || (gamers.length>1 && this.state.userHasFavorite) ) && (
+                    {this.state.fetchDone && ( (gamers.length>(0+this.state.gamersGeolocDisabled) && !this.state.userHasFavorite) || (gamers.length>(1+this.state.gamersGeolocDisabled) && this.state.userHasFavorite) ) && (
                       <ScrollView>
                           {gamers.map((item, index) => this.renderItem(item, index))}
                       </ScrollView>
                     )}
-                    {this.state.fetchDone && ( gamers.length===0 || (gamers.length===1 && this.state.userHasFavorite) ) && (
+                    {this.state.fetchDone && ( gamers.length===0+this.state.gamersGeolocDisabled || (gamers.length===1+this.state.gamersGeolocDisabled && this.state.userHasFavorite) ) && (
                       <View style={Style.activityview}>
-                        <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No gamers saved this game yet. </Text>
+                        <Text style={{fontSize:20, textAlign:'center', marginTop:20}}> No located gamers saved this game yet. </Text>
                       </View>
                     )}
                 </View>

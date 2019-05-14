@@ -3,6 +3,8 @@ import { Root } from "native-base";
 import { Font } from "expo";
 import AppNavigator from './src/navigation'
 
+console.disableYellowBox = true
+
 export default class App extends React.Component {
 
   state = { loading: true }
