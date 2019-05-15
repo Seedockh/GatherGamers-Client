@@ -8,7 +8,18 @@
 | Maxime Gouénard | **Both sides** : API routes + client->server connexions |
 | Pierre Hérissé | **Server side** : Database + API Routes |
 
-## ToDo
+## SETUP
+
+- You will need to create **./secretenv.js** file at root path, containing a Google Map API like this :
+
+```javascript
+export default {
+    MAPS_API_KEY: "your_maps_api_key"
+}
+```
+
+
+## TODOS
 
 🆗 : Done | ⭐ : High priority | 🚫 : Low priority
 
